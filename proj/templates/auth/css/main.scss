@@ -1,0 +1,18 @@
+@use "variables" as *;
+@use "common" as *;
+
+* { box-sizing: border-box; }
+html { height: 100%; font-family: $font; font-size: 14px; color: $color-text; }
+input {
+	outline: none; font-family: $font; font-size: 1rem;
+	&[type="submit"] { @include MixBtn; cursor: pointer; }
+	&[type="text"], &[type="password"]  { @include SampleText; }
+}
+body {
+	margin: 0; height: 100%; display: flex; flex-direction: column;
+	> header { padding: 1rem 0.6rem 1rem 3.5rem; background-color: $color-primary-dark; color: $color-text-primary; /*background-image: url("img/logo/logo.svg"); background-size: 26px; background-repeat: no-repeat; background-position: left 10px center;*/ }
+	> main { flex: auto; display: flex; align-items: center; justify-content: center; padding: 0.2rem; }
+	> footer { padding: 1rem 0.6rem; text-align: center; background-color: $color-primary-dark; color: $color-text-primary; }
+}
+
+@import "entities/user";
