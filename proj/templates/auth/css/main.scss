@@ -15,4 +15,5 @@ body {
 	> footer { padding: 1rem 0.6rem; text-align: center; background-color: $color-primary-dark; color: $color-text-primary; }
 }
 
+@import "entities/base";
 @import "entities/user";

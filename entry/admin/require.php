@@ -14,6 +14,8 @@
 	require_once DIR_BASE . 'link/Intenal.php';
 	require_once DIR_BASE . 'link/Right.php';
 
+	require_once DIR_BASE . 'helper/Response.php';
+
 	require_once DIR_BASE_TEMPLATE . 'Buffer.php';
 	require_once DIR_BASE_TEMPLATE . 'Template.php';
 	require_once DIR_BASE_TEMPLATE . 'Layout.php';

@@ -10,7 +10,10 @@
 <Files index.php>
 	Allow from all
 </Files>
-<Files admin.php>
+<Files admin.html.php>
+    Allow from all
+</Files>
+<Files admin.xhr.php>
     Allow from all
 </Files>
 <IfModule mod_rewrite.c>
@@ -19,7 +22,15 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^admin/?(.*)$ admin.php?__url=$1 [QSA,NC,L]
+    RewriteRule ^(.*)\.([0-9]+)\.([0-9]+)\.([0-9]+)\.(css|js)$ $1.$5 [NC,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^admin/xhr/?(.*)$ admin.xhr.php?__url=$1 [QSA,NC,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^admin/?(.*)$ admin.html.php?__url=$1 [QSA,NC,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

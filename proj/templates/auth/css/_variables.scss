@@ -1,22 +1,30 @@
+
+/* Палитра */
 $palette-main					: #FFFFFF;
 
 $palette-opposite				: #000000;
 
 $palette-primary				: #3E4246;
+$palette-primary-super-light	: #C3C3C3;
 $palette-primary-dark			: #23282C;
 
 $palette-secondary				: #006E95;
-$palette-secondary-dark			: #00506C;
 $palette-secondary-light		: #007fAD;
+$palette-secondary-dark			: #00506C;
 
+$palette-neutral				: $palette-primary-super-light;
+
+$palette-negative				: #950000;
+
+/* Цвета */
 $color-text						: $palette-opposite;
 $color-text-primary				: $palette-main;
 
-//$color-light					: #FFFFFF;
-//
-//$color-primary					: #3E4246;
+$color-light					: $palette-main;
+
+$color-primary					: $palette-primary;
 //$color-primary-light			: #76797C;
-//$color-primary-super-light		: #C3C3C3;
+$color-primary-super-light		: $palette-neutral;
 $color-primary-dark				: $palette-primary-dark;
 
 $color-secondary				: $palette-secondary;
@@ -25,10 +33,10 @@ $color-secondary-light			: $palette-secondary-light;
 //
 //$color-tertiary-light			: #68909F;
 //
-//$color-negative					: #950000;
+$color-negative					: $palette-negative;
 ////$color-negative-light			: #AD675B;
 //
-//$color-neutral					: $color-primary-super-light;
+$color-neutral					: $color-primary-super-light;
 //$color-neutral-light			: #d9d9d9;
 //$color-neutral-extra-light		: #efefef;
 //$color-neutral-black			: $color-primary;
@@ -43,6 +51,6 @@ $color-secondary-light			: $palette-secondary-light;
 //$z-menu							: 10;
 //$z-debugger						: 20;
 //$z-window						: 200;
-//$z-notice						: 300;
+$z-notice						: 300;
 
 $font							: Hack, sans-serif

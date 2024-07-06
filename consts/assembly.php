@@ -2,3 +2,5 @@
 
 	const ASSEMBLY_PRODUCTION = 1;
 	const ASSEMBLY_DEVELOPMENT = 2;
+
+	const ASSEMBLY_VERSION = '2.0.1';

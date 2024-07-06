@@ -13,9 +13,14 @@
 	use Proj\Templates\Auth\Template as AuthTemplate;
 
 	/**
+	 * Базовый контроллер
 	 * @property User $user
 	 */
 	#[AllowDynamicProperties] class Base extends Controller {
+		/**
+		 * Проверяет аутентификацию
+		 * @return void
+		 */
 		#[NoReturn] public function isAuth(): void {
 			$this->user = Model::get('user');
 			if ($this->user->isAuth()) return;
@@ -23,15 +28,19 @@
 			BaseTemplate::load('auth');
 			AuthTemplate::init();
 
-			AuthTemplate::$layout->header->Push('Вход в систему');
+			AuthTemplate::$layout->header->Push(__('Вход в систему'));
 			AuthTemplate::$layout->main->push(View::get('admin.user.form_authorization'));
-			AuthTemplate::$layout->footer->Push('Разработан в © Craft');
+			AuthTemplate::$layout->footer->Push(__('Разработан в © Craft'));
 
 			AuthTemplate::browse();
 
 			die;
 		}
 
+		/**
+		 * Выводит подвал
+		 * @return void
+		 */
 		public function Footer(): void {
 			AdminTemplate::$layout->footer->push('footer admin');
 		}

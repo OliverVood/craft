@@ -1,4 +1,4 @@
-@mixin MixScreen($min: null, $max: null, $screen: false, $print: false) {
+@mixin mixScreen($min: null, $max: null, $screen: false, $print: false) {
 	@if ($min != null or $max != null or $screen or $print) {
 
 		$media: '';
@@ -16,4 +16,24 @@
 	} @else {
 		@content;
 	}
+}
+
+@function getImage($file) {
+	@return url('img/' + $file);
+}
+
+@function getImageUI($file) {
+	@return getImage('ui/' + $file);
+}
+
+@function getImageUIWhite($file) {
+	@return getImageUI('white/' + $file);
+}
+
+@function getImageUIPrimary($file) {
+	@return getImageUI('primary/' + $file);
+}
+
+@function getImageUIPrimaryLight($file) {
+	@return getImageUI('primary_light/' + $file);
 }

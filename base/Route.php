@@ -4,6 +4,9 @@
 
 	use base\data\set\Input;
 
+	/**
+	 * Маршрутизатор
+	 */
 	abstract class Route {
 		private static ?string $entity = 'main';
 		private static ?string $action = 'index';
@@ -12,6 +15,12 @@
 
 		private static array $stack = [];
 
+		/**
+		 * Подготавливает маршрутизатор
+		 * @param $url - URL
+		 * @return void
+		 *
+		 */
 		public static function prepare($url): void {
 			$parts = explode('/', $url);
 
@@ -23,6 +32,10 @@
 			self::$stack[$customer][] = $performer ?: $customer;
 		}
 
+		/**
+		 * Выполняет маршрутизацию
+		 * @return void
+		 */
 		public static function run(): void {
 			self::$input = new Input();
 

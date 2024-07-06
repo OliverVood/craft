@@ -10,6 +10,7 @@
 	use Proj\Templates\Site\Template;
 
 	/**
+	 * Тестовый контроллер
 	 * @property \Proj\Models\Test $test
 	 */
 	#[AllowDynamicProperties] class Test extends Controller {

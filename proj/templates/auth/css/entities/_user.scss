@@ -6,5 +6,5 @@
 		> form { display: flex; flex-direction: column; gap: 0.5rem; }
 	}
 
-	@include MixScreen() { @include ViewUserFormAuthorization(); }
+	@include mixScreen() { @include ViewUserFormAuthorization(); }
 }

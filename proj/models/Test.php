@@ -4,6 +4,9 @@
 
 	use Base\Model;
 
+	/**
+	 * Тестовая модель
+	 */
 	class Test extends Model {
 		public function One(): array {
 			return [

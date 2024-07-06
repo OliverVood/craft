@@ -15,6 +15,10 @@
 		public static JS $js;
 		public static SEO $seo;
 
+		/**
+		 * Инициализирует шаблон
+		 * @return void
+		 */
 		public static function init(): void {
 			self::$name = 'admin';
 			self::$file = 'template.tpl';
@@ -27,11 +31,24 @@
 
 			self::$seo->setTitle('Craft App');
 
+			self::setJS();
 			self::setCSS();
 		}
 
+		/**
+		 * Задаёт перечень JS файлов в шаблоне
+		 * @return void
+		 */
+		private static function setJS():  void {
+//			self::$js->add('/base/template/js/base.js', ASSEMBLY_VERSION);
+		}
+
+		/**
+		 * Задаёт перечень CSS файлов в шаблоне
+		 * @return void
+		 */
 		private static function setCSS(): void {
-			self::$css->add('/proj/templates/admin/css/main.min.css');
+//			self::$css->add('/proj/templates/admin/css/main.min.css');
 		}
 
 	}

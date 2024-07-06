@@ -6,9 +6,11 @@
 
 	const DIR_ROOT = __DIR__ . '/';
 
+	require_once DIR_ROOT . 'consts/base.php';
 	require_once DIR_ROOT . 'consts/assembly.php';
 	require_once DIR_ROOT . 'consts/dirs.php';
 
+	require_once DIR_ENTRY_SITE . 'consts.php';
 	require_once DIR_ENTRY_SITE . 'require.php';
 	require_once DIR_ENTRY_SITE . 'route.php';
 

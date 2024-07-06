@@ -28,6 +28,10 @@
 			self::setCSS();
 		}
 
+		/**
+		 * Задаёт перечень CSS файлов в шаблоне
+		 * @return void
+		 */
 		private static function setCSS(): void {
 			self::$css->add('/proj/templates/site/css/main.min.css');
 		}
