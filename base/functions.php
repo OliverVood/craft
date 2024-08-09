@@ -31,3 +31,13 @@
 		if ($alias == 'Войти') $alias = 'Login';
 		return $alias;
 	}
+
+	/**
+	 * Возвращает значение из $_POST или $_GET по ключу
+	 * @param string $key - Ключ
+	 * @param mixed|null $default - Значение по умолчанию
+	 * @return mixed
+	 */
+	function input(string $key, mixed $default = null): mixed {
+		return $_POST[$key] ?? $_GET[$key] ?? $default;
+	}

@@ -5,6 +5,6 @@
 	/**
 	 * Работа со ссылками через права пользователя
 	 */
-	class Right extends Intenal {
+	class Right extends Internal {
 
 	}

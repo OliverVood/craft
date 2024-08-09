@@ -14,6 +14,28 @@
 			$this->click 	= $click;
 		}
 
+		public function address(): string {
+			return $this->address;
+		}
+
+		/**
+		 * Возвращает ссылку anchor
+		 * @param string $href - Адрес
+		 * @param string $content - Контент
+		 * @param array $data - Данные для замены
+		 * @param array $params - Параметры
+		 * @return string
+		 */
+		public function link(string $href, string $content, array $data = [], array $params = []): string {
+			$params['href'] = $href;
+			$params['onclick'] = $this->click($data);
+
+			$attrsList = [];
+			foreach ($params as $name => $value) $attrsList[] = is_int($name) ? $value : "{$name} = \"{$value}\"";
+			$attrs = implode(' ', $attrsList);
+			return "<a {$attrs}>{$content}</a>";
+		}
+
 		/**
 		 * Возвращает click
 		 * @param array $data - Параметры

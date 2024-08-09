@@ -20,8 +20,7 @@
 		 * @param Input $input - пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function auth(Input $input) {
-
+		#[NoReturn] public function auth(Input $input): void {
 			$this->user = Model::get('user');
 
 			if ($this->user->isAuth()) Helper\Response::sendNoticeError(__('Вы уже вошли систему'));
@@ -29,12 +28,18 @@
 			$login = $input->defined('login')->string('');
 			$password = $input->defined('password')->string('');
 
-			if (!$this->user->auth($login, $password)) {
-//				Response::PushNoticeError('Ошибка доступа');
-//				Response::SendJSON();
-			}die('asd');
+			if (!$this->user->auth($login, $password)) Helper\Response::sendNoticeError(__('Ошибка доступа'));
 
-//			Response::PushData([]);
-//			Response::SendJSON();
+			Helper\Response::sendData([]);
 		}
+
+		#[NoReturn] public function exit(): void {
+			$this->user = Model::get('user');
+
+			$this->user->logout();
+
+			Helper\Response::sendData([]);
+		}
+
+
 	}

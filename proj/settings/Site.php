@@ -1,6 +1,6 @@
 <?php
 
-	namespace Proj\Config;
+	namespace Proj\Settings;
 
 	/**
 	 * Конфиг сайта

@@ -1,7 +1,6 @@
 <?php
 	use Proj\Links\Admin as Action;
 ?>
-
 <div class = "view user form_authorization">
 	<form action = "<?= Action\User::$auth->path(); ?>">
 		<input type = "text" name = "login" placeholder = "<?= __('Логин'); ?>">

@@ -1,5 +1,7 @@
 <?php
 
-	Base\Route::set('*::*', 'admin.base::isAuth');
+	Base\Route::set('*::*', 'admin.authorization::isAuthHTML');
 
-	Base\Route::set('*::*', 'admin.base::footer');
+	Base\Route::set('*::*', 'admin.out::setHead');
+	Base\Route::set('*::*', 'admin.out::setMenu');
+	Base\Route::set('*::*', 'admin.out::setFooter');

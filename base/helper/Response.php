@@ -2,6 +2,7 @@
 
 	namespace Base\Helper;
 
+	use Base\Link\Internal as Link;
 	use JetBrains\PhpStorm\NoReturn;
 
 	/**
@@ -10,14 +11,14 @@
 	class Response {
 		private static array $stack = [];
 
-//		public static function PushSection(string $section, string $html, bool $empty = true): void {
-//			self::Push('section', ['section' => $section, 'html' => $html, 'empty' => $empty]);
-//		}
-//
-//		public static function PushHistory(Action $action, array $data = [], string $handler = null): void {
-//			if (GetInt('no_history')) return;
-//			self::Push('history', ['address' => $action->GetAddress($data), 'xhr' => $action->GetXHR($data), 'handler' => $handler]);
-//		}
+		public static function pushSection(string $section, string $html, bool $empty = true): void {
+			self::push('section', ['section' => $section, 'html' => $html, 'empty' => $empty]);
+		}
+
+		public static function pushHistory(Link $action, array $data = [], string $handler = null): void {
+			if (input('no_history')) return;
+			self::Push('history', ['address' => $action->href($data), 'xhr' => $action->xhr($data), 'handler' => $handler]);
+		}
 //
 //		public static function PushNoticeOk(string $notice): void {
 //			self::PushNotice('ok', $notice);
@@ -46,9 +47,9 @@
 			self::push('notice', ['type' => $type, 'notice' => $notice]);
 		}
 
-//		public static function PushData($data): void {
-//			self::Push('data', $data);
-//		}
+		public static function pushData($data): void {
+			self::Push('data', $data);
+		}
 
 		/**
 		 * Добавляет ответ в стек
@@ -97,6 +98,17 @@
 		#[NoReturn] public static function sendNoticeError(string $notice):void {
 			self::$stack = [];
 			self::pushNoticeError($notice);
+			self::sendJSON();
+		}
+
+		/**
+		 * Отправляет массив данных
+		 * @param array $data - Данные
+		 * @return void
+		 */
+		#[NoReturn] public static function sendData(array $data): void {
+			self::$stack = [];
+			self::pushData($data);
 			self::sendJSON();
 		}
 

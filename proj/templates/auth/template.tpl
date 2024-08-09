@@ -16,6 +16,5 @@
 				Base.GlobalParams.set('xhr', '<?= XHR; ?>');
 			});
 		</script>
-
 	</body>
 </html>

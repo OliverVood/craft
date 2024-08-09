@@ -40,7 +40,8 @@
 		 * @return void
 		 */
 		private static function setJS():  void {
-//			self::$js->add('/base/template/js/base.js', ASSEMBLY_VERSION);
+			self::$js->add('https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js');
+			self::$js->add('/base/template/js/base.js', ASSEMBLY_VERSION);
 		}
 
 		/**
@@ -48,7 +49,7 @@
 		 * @return void
 		 */
 		private static function setCSS(): void {
-//			self::$css->add('/proj/templates/admin/css/main.min.css');
+			self::$css->add('/proj/templates/admin/css/main.min.css');
 		}
 
 	}
