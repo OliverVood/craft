@@ -64,10 +64,7 @@ namespace Base {
 		 * @private
 		 */
 		private static section(data: TypeResponseSectionData): void {
-			let section = document.querySelector(`.section.${data.section}`);
-			if (!section) return;
-			if (data.empty) section.innerHTML = "";
-			section.innerHTML += data.html;
+			Base.Section.append(data.section, data.html, data.empty);
 		}
 
 		/**

@@ -9,20 +9,27 @@
 	use Base\Model;
 	use Base\Template\Buffer;
 	use Base\View;
-	use Proj\Collections\General;
+	use Proj\Collections;
 	use proj\models\User;
+	use Proj\Params\Site;
 	use Proj\Templates\Admin\Template;
 	use Proj\Links\Admin as Links;
 
 	/**
 	 * Контроллер заполнения шаблона
+	 * @controller
 	 * @property User $user
 	 */
-	#[AllowDynamicProperties] class Out extends Controller {
+	#[AllowDynamicProperties] class Out extends Controller implements Collections\Out {
 		use Buffer;
+
+		public function __construct() {
+			parent::__construct(self::ID);
+		}
 
 		/**
 		 * Заполнение шапки
+		 * @controllerMethod
 		 * @return void
 		 */
 		public function setHead(): void {
@@ -42,6 +49,7 @@
 
 		/**
 		 * Заполнение левого меню
+		 * @controllerMethod
 		 * @return void
 		 */
 		public function setMenu(): void {
@@ -53,8 +61,8 @@
 			);
 
 			$menuDevelopment = [];
-			if (Access::allow(General::ACCESS_DB_STRUCTURE, General::ID)) $menuDevelopment['db'][] = Links\DB::$structure->linkHref('Структура');
-			if (Access::allow(General::ACCESS_DB_CHECK, General::ID)) $menuDevelopment['db'][] = Links\DB::$check->linkHref('Проверить');
+			if (Access::allow(Collections\DB::STRUCTURE, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$structure->linkHref('Структура');
+			if (Access::allow(Collections\DB::CHECK, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$check->linkHref('Проверить');
 
 			if ($menuDevelopment) {
 				Template::$layout->menu->push($this->separator());
@@ -67,15 +75,18 @@
 
 		/**
 		 * Заполнение подвала
+		 * @controllerMethod
 		 * @return void
 		 */
-		public function setFooter(): void {//TODO Параметры сайта
-			$data = ['siteName' => 'docroom.pro'/*Params::$site_name*/];
+		public function setFooter(): void {
+			$data = ['siteName' => Site::$siteName];
+
 			Template::$layout->footer->push(View::get('admin.out.footer', $data));
 		}
 
 		/**
 		 * Главная страница
+		 * @controllerMethod
 		 * @return void
 		 */
 		public function home(): void {

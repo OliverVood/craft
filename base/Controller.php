@@ -9,10 +9,15 @@
 	 */
 	abstract class Controller {
 		private static /** @var Controller[] */ array $controllers = [];
+		protected int $id;
+
+		public function __construct(int $id) {
+			$this->id = $id;
+		}
 
 		/**
 		 * Запускает контроллера
-		 * @param string $controller - Имя контроллера
+		 * @param string $controller - Наименование контроллера
 		 * @param string $method - Метод
 		 * @param Input $input - Пользовательские данные
 		 * @return void
@@ -27,7 +32,7 @@
 
 		/**
 		 * Загружает контроллер
-		 * @param string $controller - Имя контроллера
+		 * @param string $controller - Наименование контроллера
 		 * @return void
 		 */
 		public static function load(string $controller): void {
@@ -37,13 +42,22 @@
 
 		/**
 		 * Инициализирует контроллер
-		 * @param string $controller - Имя контроллера
+		 * @param string $controller - Наименование контроллера
 		 * @return void
 		 */
 		public static function init(string $controller): void {
 			$controllerPath = str_replace('.', '\\', $controller);
 			$class = "\\proj\\controllers\\{$controllerPath}";
 			self::$controllers[$controller] = new $class();
+		}
+
+		/**
+		 * Возвращает модель
+		 * @param string $name - Наименование модели
+		 * @return Model
+		 */
+		public function model(string $name): Model {
+			return Model::get($name);
 		}
 
 	}

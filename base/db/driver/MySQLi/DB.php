@@ -2,6 +2,9 @@
 
 	namespace Base\DB\Driver\MySQLi;
 
+	require_once DIR_BASE_DB . 'driver/MySQLi/Table.php';
+	require_once DIR_BASE_DB . 'driver/MySQLi/Structure.php';
+
 	require_once DIR_BASE_DB . 'driver/MySQLi/Response.php';
 
 	require_once DIR_BASE_DB . 'driver/MySQLi/request/Select.php';
@@ -24,21 +27,21 @@
 		/**
 		 * Создаёт новый экземпляр базы данных
 		 * @param string|null $host - Хост
-		 * @param string|null $dbname - Имя БД
+		 * @param string|null $dbname - Наименование БД
 		 * @param string|null $username - Пользователь
 		 * @param string|null $password - Пароль
 		 * @param string|int|null $port - Порт
 		 * @param string|null $socket - Сокет
 		 */
 		protected function __construct(?string $host = null, ?string $dbname = null, ?string $username = null, ?string $password = null, string|int|null $port = null, ?string $socket = null) {
-			parent::__construct();
-
 			$this->host = $host;
 			$this->dbname = $dbname;
 			$this->username = $username;
 			$this->password = $password;
 			$this->port = $port;
 			$this->socket = $socket;
+
+			parent::__construct();
 
 			$this->link();
 		}
@@ -86,6 +89,10 @@
 		 */
 		public function select(): Select {
 			return new Select($this);
+		}
+
+		protected function initStructure(): void {
+			$this->structure = new Structure($this->dbname);
 		}
 
 	}

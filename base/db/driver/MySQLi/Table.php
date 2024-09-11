@@ -1,30 +1,24 @@
 <?php
 
-	namespace Base\DB;
+	namespace Base\DB\Driver\MySQLi;
 
-	require DIR_BASE_DB . 'Field.php';
+	use base\db\driver\MySQLi\keys\Primary;
 
-	class Table {
-		protected string $name;
-		protected string $description;
-		protected array /** @var Field[] $fields */ $fields;
+	require DIR_BASE_DB . 'driver/MySQLi/Field.php';
+	require DIR_BASE_DB . 'driver/MySQLi/Key.php';
+
+	class Table extends \Base\DB\Table {
+		private string $engine = 'InnoDB';
+		private $encoding = 'utf8';
+		private $collate = 'utf8mb4_general_ci';
+
+		private ?Primary $primary = null;
 
 		public function __construct(string $name, string $description = '') {
-			$this->name = $name;
-			$this->description = $description;
-
-			$this->fields = [];
+			parent::__construct($name, $description);
 		}
 
-		/**
-		 * Возвращает структуру таблицы
-		 * @return array
-		 */
-		protected function structure(): array {
-			return [];
-		}
-
-		public function id(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt32($name, $description); return $this->fields[$name]; }
+		public function id(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt32($name, $description); $this->primary = new Primary($name, [$name]); return $this->fields[$name]; }
 		public function bool(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Boolean($name, $description); return $this->fields[$name]; }
 		public function int8(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int8($name, $description); return $this->fields[$name]; }
 		public function int16(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int16($name, $description); return $this->fields[$name]; }
@@ -38,4 +32,33 @@
 		public function uint64(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt64($name, $description); return $this->fields[$name]; }
 		public function string(string $name, int $length, string $description = ''): Field { $this->fields[$name] = new Fields\Line($name, $description); return $this->fields[$name]; }
 		public function timestamp(string $name, bool $update = false, string $description = ''): Field { $this->fields[$name] = new Fields\Timestamp($name, $description); return $this->fields[$name]; }
+
+		public function addPrimary(string $name, array $fields): void { $this->primary = new Primary($name, $fields); }
+
+		/**
+		 * Возвращает структуру таблицы
+		 * @return array
+		 */
+		public function structure(): array {
+			$structure = [
+				'name' => $this->name,
+				'description' => $this->description,
+				'params' => [
+					'engine' => $this->engine,
+					'encoding' => $this->encoding,
+					'collate' => $this->collate
+				],
+				'fields' => [],
+				'keys' => [
+					'primaries' => [],
+					'foreigners' => []
+				]
+			];
+			foreach ($this->fields as $field) $structure['fields'][] = $field->structure();
+			if ($this->primary) $structure['keys']['primaries'][] = $this->primary->structure();
+//			foreach ($this->foreigners as $foreigner) $table['keys']['foreigners'][] = $foreigner->Structure();//TODO Структура
+
+			return $structure;
+		}
+
 	}

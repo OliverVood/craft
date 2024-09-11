@@ -9,14 +9,20 @@
 	use Base\Template\Template as BaseTemplate;
 	use Base\View;
 	use JetBrains\PhpStorm\NoReturn;
-	use proj\models\User;
+	use Proj\Collections;
+	use proj\Models\User;
 	use Proj\Templates\Auth\Template as AuthTemplate;
 
 	/**
 	 * Контроллер авторизации
 	 * @property User $user
 	 */
-	#[AllowDynamicProperties] class Authorization extends Controller {
+	#[AllowDynamicProperties] class Authorization extends Controller implements Collections\Authorization {
+
+		public function __construct() {
+			parent::__construct(self::ID);
+		}
+
 		/**
 		 * Проверяет аутентификацию для HTML
 		 * @return void

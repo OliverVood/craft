@@ -19,6 +19,9 @@
 
 	require_once DIR_PROJ_CONFIGS . 'db.php';
 	require_once DIR_PROJ_CONFIGS . 'user.php';
+
+	require_once DIR_PROJ_PARAMS . 'site.php';
+
 	require_once DIR_PROJ_LINKS . 'admin.php';
 	require_once DIR_PROJ_SETTINGS . 'admin.php';
 

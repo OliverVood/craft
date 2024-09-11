@@ -42,7 +42,7 @@
 
 		/**
 		 * Возвращает одно поле
-		 * @param string $name - Имя поля, по умолчанию возьмёт первое
+		 * @param string $name - Наименование поля, по умолчанию возьмёт первое
 		 * @return string|null
 		 */
 		public function getOneField(string $name = ''): ?string {

@@ -2,6 +2,9 @@
 
 	namespace Base\DB;
 
+	require_once DIR_BASE_DB . 'Table.php';
+	require_once DIR_BASE_DB . 'Structure.php';
+
 	require_once DIR_BASE_DB . 'Response.php';
 
 	require_once DIR_BASE_DB . 'request/Select.php';
@@ -9,11 +12,15 @@
 	use Base\DB\Request\Select;
 
 	abstract class DB {
+		public Structure $structure;
+
 		protected array $history = [];
 
 		protected bool $state;
 
-		protected function __construct() {  }
+		protected function __construct() {
+			$this->initStructure();
+		}
 
 		/**
 		 * Возвращает состояние соединения
@@ -26,7 +33,7 @@
 		 * @param string $query - Текст запроса
 		 * @return void
 		 */
-		protected function addToHistory(string $query) {
+		protected function addToHistory(string $query): void {
 			$this->history[self::class][] = $query;
 		}
 
@@ -55,5 +62,11 @@
 		 * @return Select
 		 */
 		abstract protected function select(): Select;
+
+		/**
+		 * Инициализация структуры
+		 * @return void
+		 */
+		abstract protected function initStructure(): void;
 
 	}

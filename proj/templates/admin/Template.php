@@ -42,6 +42,7 @@
 		private static function setJS():  void {
 			self::$js->add('https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js');
 			self::$js->add('/base/template/js/base.js', ASSEMBLY_VERSION);
+			self::$js->add('/proj/templates/admin/js/db.js', ASSEMBLY_VERSION);
 		}
 
 		/**

@@ -3,16 +3,19 @@
 	namespace Proj\Structures;
 
 	use Base\DB\Structure;
+	use Base\DB\Table;
+	use Proj\DB;
 
 	class Statistic {
+		private Structure $structure;
+
 		private Table $table_ip;
 		private Table $table_act;
 
 		public function __construct() {
-//			$this->db = DBObject::instance();
-			$structure = new Structure();
+			$this->structure = DB\Craft::instance()->structure;
 
-			$this->table_ip = $structure->table('statistics_ip', 'Статистика посещений');
+			$this->table_ip = $this->structure->table('statistics_ip', 'Статистика посещений');
 			$this->table_ip->id('id', 'Идентификатор');
 			$this->table_ip->timestamp('datecr', false, 'Дата создания');
 			$this->table_ip->uint32('ip', 'IP адрес');
@@ -21,7 +24,7 @@
 			$this->table_ip->string('params', 255, 'Параметры');
 //			$this->table_ip->AddForeign('foreign', ['cid'], Consts\Users::TABLES['clients'], ['id']);
 
-			$this->table_act = $structure->table('statistics_act', 'Статистика действий');
+			$this->table_act = $this->structure->table('statistics_act', 'Статистика действий');
 			$this->table_act->id('id', 'Идентификатор');
 			$this->table_act->timestamp('datecr', false, 'Дата создания');
 			$this->table_act->uint32('cid', 'ID клиента');
@@ -32,3 +35,5 @@
 		}
 
 	}
+
+	new Statistic();

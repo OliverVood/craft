@@ -7,13 +7,18 @@
 	use Base\Data\Set\Input;
 	use Base\Helper;
 	use Base\Model;
+	use Proj\Collections;
 	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Контроллер пользователей
 	 * @property \Proj\Models\User $user
 	 */
-	#[AllowDynamicProperties] class User extends Controller {
+	#[AllowDynamicProperties] class User extends Controller implements Collections\User {
+
+		public function __construct() {
+			parent::__construct(self::ID);
+		}
 
 		/**
 		 * Аутентификация пользователя
