@@ -5,6 +5,9 @@
 	use Generator;
 	use mysqli_result;
 
+	/**
+	 * Дря работы с результатом запроса к базе данных mysqli
+	 */
 	class Response extends \Base\DB\Response {
 		private bool | mysqli_result $result;
 

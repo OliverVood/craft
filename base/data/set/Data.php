@@ -9,7 +9,7 @@
 		private array $data;
 		private string $key;
 
-		protected function __construct($data) {
+		protected function __construct(array $data) {
 			$this->data = $data;
 		}
 

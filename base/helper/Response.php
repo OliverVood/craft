@@ -11,10 +11,24 @@
 	class Response {
 		private static array $stack = [];
 
+		/**
+		 * Добавляет контент в секции в стек ответов
+		 * @param string $section - Секция
+		 * @param string $html - Контент
+		 * @param bool $empty - Очистить ли секцию перед вставкой
+		 * @return void
+		 */
 		public static function pushSection(string $section, string $html, bool $empty = true): void {
 			self::push('section', ['section' => $section, 'html' => $html, 'empty' => $empty]);
 		}
 
+		/**
+		 * Добавляет историю в стек ответов
+		 * @param Link $action - Действие
+		 * @param array $data - Данные
+		 * @param string|null $handler - Обработчик
+		 * @return void
+		 */
 		public static function pushHistory(Link $action, array $data = [], string $handler = null): void {
 			if (input('no_history')) return;
 			self::Push('history', ['address' => $action->href($data), 'xhr' => $action->xhr($data), 'handler' => $handler]);
@@ -47,6 +61,11 @@
 			self::push('notice', ['type' => $type, 'notice' => $notice]);
 		}
 
+		/**
+		 * Добавляет данные в стек ответов
+		 * @param $data - Данные
+		 * @return void
+		 */
 		public static function pushData($data): void {
 			self::Push('data', $data);
 		}

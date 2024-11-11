@@ -4,19 +4,21 @@
     "target": "esnext",
     "lib" : ["ESNext", "DOM"],
     "rootDirs": ["./"],
-    "outDir": "../js",
+    "outFile": "../../js/db.js",
     "declaration": true,
     "sourceMap": true,
     "alwaysStrict": true,
-
     "removeComments": true,
     "noEmitOnError": true,
-//    "declarationMap": false,
+    "declarationMap": false,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFactory": "PragmaJSX.createElement"
+//    "jsxFragment": "createElement",
   },
-  "include": ["**/*"],
+  "include": [ "**/*.ts", "../../../../../base/template/js/base.d.ts"],
   "exclude": ["node_module"]
 }

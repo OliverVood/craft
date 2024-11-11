@@ -6,6 +6,9 @@
 	use Base\Template\JS;
 	use Base\Template\SEO;
 
+	/**
+	 * Шаблон сайта
+	 */
 	class Template extends \Base\Template\Template {
 		protected static string $name;
 		protected static string $file;
@@ -15,6 +18,10 @@
 		public static JS $js;
 		public static SEO $seo;
 
+		/**
+		 * Инициализирует шаблон
+		 * @return void
+		 */
 		public static function init(): void {
 			self::$name = 'site';
 			self::$file = 'template.tpl';

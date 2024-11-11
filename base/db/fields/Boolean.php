@@ -4,6 +4,9 @@
 
 	use Base\DB\Field;
 
-	class Boolean extends Field {
+	/**
+	 * Поле Boolean (базовый абстрактный класс)
+	 */
+	abstract class Boolean extends Field {
 
 	}

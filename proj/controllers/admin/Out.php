@@ -16,7 +16,7 @@
 	use Proj\Links\Admin as Links;
 
 	/**
-	 * Контроллер заполнения шаблона
+	 * Работа с шаблоном
 	 * @controller
 	 * @property User $user
 	 */
@@ -104,6 +104,12 @@
 			return "<li>{$link}</li>";
 		}
 
+		/**
+		 * Возвращает группу меню
+		 * @param string $title - Заголовок
+		 * @param array $items - Элементы меню
+		 * @return string
+		 */
 		private function group(string $title, array $items): string {
 			self::start();
 		?>

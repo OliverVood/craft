@@ -5,6 +5,9 @@
 	use Base\DB\DB;
 	use Base\DB\Driver\MySQLi\Response;
 
+	/**
+	 * Для запросов SELECT (базовый абстрактный класс)
+	 */
 	abstract class Select {
 		protected ?DB $db;
 

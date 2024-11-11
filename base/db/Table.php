@@ -4,12 +4,22 @@
 
 	require DIR_BASE_DB . 'Field.php';
 
-	class Table {
+	/**
+	 * Для работы с таблицами базы данных (базовый абстрактный класс)
+	 */
+	abstract class Table {
+		const ACTION_OK						=  1;
+		const ACTION_CREATE					= -1;
+		const ACTION_UPDATE					= -2;
+		const ACTION_DELETE 				= -3;
+
+		protected DB $db;
 		protected string $name;
 		protected string $description;
 		protected array /** @var Field[] $fields */ $fields;
 
-		public function __construct(string $name, string $description = '') {
+		public function __construct(DB $db, string $name, string $description = '') {
+			$this->db = $db;
 			$this->name = $name;
 			$this->description = $description;
 
@@ -20,22 +30,79 @@
 		 * Возвращает структуру таблицы
 		 * @return array
 		 */
-		protected function structure(): array {
-			return [];
+		abstract protected function structure(): array;
+
+		/**
+		 * Проверяет структуру таблицы
+		 * @return array
+		 */
+		abstract protected function check(): array;
+
+		/**
+		 * Создаёт таблицу
+		 * @return void
+		 */
+		abstract public function create(): void;
+
+		/**
+		 * Обновляет таблицу
+		 * @param array $fields - Перечень полей для изменения
+		 * @return bool
+		 */
+		abstract protected function update(array $fields): bool;
+
+		/**
+		 * Возвращает имя таблицы
+		 * @return string
+		 */
+		public function getName(): string {
+			return $this->name;
 		}
 
-		public function id(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt32($name, $description); return $this->fields[$name]; }
-		public function bool(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Boolean($name, $description); return $this->fields[$name]; }
-		public function int8(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int8($name, $description); return $this->fields[$name]; }
-		public function int16(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int16($name, $description); return $this->fields[$name]; }
-		public function int24(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int24($name, $description); return $this->fields[$name]; }
-		public function int32(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int32($name, $description); return $this->fields[$name]; }
-		public function int64(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\Int64($name, $description); return $this->fields[$name]; }
-		public function uint8(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt8($name, $description); return $this->fields[$name]; }
-		public function uint16(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt16($name, $description); return $this->fields[$name]; }
-		public function uint24(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt24($name, $description); return $this->fields[$name]; }
-		public function uint32(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt32($name, $description); return $this->fields[$name]; }
-		public function uint64(string $name, string $description = ''): Field { $this->fields[$name] = new Fields\UInt64($name, $description); return $this->fields[$name]; }
-		public function string(string $name, int $length, string $description = ''): Field { $this->fields[$name] = new Fields\Line($name, $description); return $this->fields[$name]; }
-		public function timestamp(string $name, bool $update = false, string $description = ''): Field { $this->fields[$name] = new Fields\Timestamp($name, $description); return $this->fields[$name]; }
+		abstract public function id(string $name, string $description = ''): Field;
+		abstract public function bool(string $name, string $description = ''): Field;
+		abstract function int8(string $name, string $description = ''): Field;
+		abstract public function int16(string $name, string $description = ''): Field;
+		abstract public function int24(string $name, string $description = ''): Field;
+		abstract public function int32(string $name, string $description = ''): Field;
+		abstract public function int64(string $name, string $description = ''): Field;
+		abstract public function uint8(string $name, string $description = ''): Field;
+		abstract public function uint16(string $name, string $description = ''): Field;
+		abstract public function uint24(string $name, string $description = ''): Field;
+		abstract public function uint32(string $name, string $description = ''): Field;
+		abstract public function uint64(string $name, string $description = ''): Field;
+		abstract public function float(string $name, string $description = ''): Field;
+		abstract public function double(string $name, string $description = ''): Field;
+		abstract public function string(string $name, int $length, string $description = ''): Field;
+		abstract public function text(string $name, string $description = ''): Field;
+		abstract public function timestamp(string $name, bool $update = false, string $description = ''): Field;
+		abstract public function enum(string $name, array $enum, string $description = ''): Field;
+		abstract public function set(string $name, array $set, string $description = ''): Field;
+
+		abstract public function addForeign(string $name, array $fields, string $references_table, array $references_fields, int $relationship_from = Structure::ER_RELATIONSHIP_MANY, int $relationship_to = Structure::ER_RELATIONSHIP_ONE): void;
+
+		/**
+		 * Возвращает имена полей таблицы в структуре приложения
+		 * @return array
+		 */
+		protected function getFieldsApp(): array {
+			$out = [];
+			foreach ($this->fields as $name => $field) $out[] = $name;
+
+			return $out;
+		}
+
+		/**
+		 * Возвращает имена полей таблицы и их данные из базы данных
+		 * @return array
+		 */
+		abstract protected function getFieldsAndDataDB(): array;
+
+		/**
+		 * Удаляет поле из таблицы
+		 * @param string $name - Наименование поля
+		 * @return void
+		 */
+		abstract protected function deleteFieldFromTable(string $name): void;
+
 	}

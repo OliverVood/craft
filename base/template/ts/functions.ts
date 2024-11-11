@@ -11,3 +11,20 @@ function getContent(route: string = ''): void {
 
 	Base.Query.sendToAddress(`${href}${pathname}${params}`, undefined, {request: ''});
 }
+
+/**
+ * Функция декоратор для создания элементов
+ * @param $name - Имя элемента
+ * @param attributes - Атрибуты элемента
+ */
+function el($name: string, attributes?: Base.TypeElementAttributes): Base.Element {
+	return new Base.Element($name, attributes);
+}
+
+/**
+ * Функция перевода
+ * @param text - Текст для перевода
+ */
+function __(text: string): string {
+	return text;
+}

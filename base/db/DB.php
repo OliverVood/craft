@@ -11,6 +11,9 @@
 
 	use Base\DB\Request\Select;
 
+	/**
+	 * Для работы с базой данных (базовый абстрактный класс)
+	 */
 	abstract class DB {
 		public Structure $structure;
 
@@ -55,7 +58,7 @@
 		 * @param string $query - Текст запроса
 		 * @return Response
 		 */
-		abstract protected function query(string $query): Response;
+		abstract public function query(string $query): Response;
 
 		/**
 		 * Выборка данных

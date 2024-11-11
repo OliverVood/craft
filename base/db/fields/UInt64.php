@@ -4,6 +4,9 @@
 
 	use Base\DB\Field;
 
-	class UInt64 extends Field {
+	/**
+	 * Поле UInt64 (базовый абстрактный класс)
+	 */
+	abstract class UInt64 extends Field {
 
 	}

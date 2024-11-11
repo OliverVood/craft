@@ -2,6 +2,9 @@
 
 	namespace Base;
 
+	/**
+	 * Базовый класс для работы с контроллерами с учётом прав доступа
+	 */
 	abstract class ControllerAccess extends Controller {
 
 		public function __construct(int $id) {

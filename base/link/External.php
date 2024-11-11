@@ -14,6 +14,10 @@
 			$this->click 	= $click;
 		}
 
+		/**
+		 * Добавляет внутренний адрес
+		 * @return string
+		 */
 		public function address(): string {
 			return $this->address;
 		}

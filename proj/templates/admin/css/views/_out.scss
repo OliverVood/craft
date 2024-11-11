@@ -1,4 +1,5 @@
 @use "../variables" as *;
+@use '../functions' as *;
 
 &.out {
 
@@ -6,7 +7,7 @@
 		display: flex;
 		> div { flex: auto; padding: 1rem 0.6rem 1rem 3.5rem; }
 		> .logout {
-			flex: none; width: 40px; background-image: url("img/ui/white/exit.svg"); background-size: 19px;
+			flex: none; width: 40px; background-image: getImageTemplateUI("exit.svg"); background-size: 19px;
 			&:hover { background-color: $color-primary; }
 		}
 	}

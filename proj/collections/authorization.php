@@ -5,7 +5,7 @@
 	use Base\Collection;
 
 	interface Authorization extends Collection {
-		const ID						= 4;
+		const ID						= COLLECTION_AUTHORIZATION_ID;
 		const NAME						= 'authorization';
 		const TITLE						= 'Авторизация';
 	}

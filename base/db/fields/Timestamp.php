@@ -4,6 +4,9 @@
 
 	use Base\DB\Field;
 
-	class Timestamp extends Field {
+	/**
+	 * Поле Timestamp (базовый абстрактный класс)
+	 */
+	abstract class Timestamp extends Field {
 
 	}

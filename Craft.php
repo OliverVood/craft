@@ -1,10 +1,19 @@
 <?php
 
+	//TODO Переработать.
+
+	/**
+	 * Craft. Работа с командной строкой.
+	 */
 	abstract class Craft {
 		const ENTITY_CONTROLLER			= 'controller';
 		const ENTITY_MODEL				= 'model';
 		const ENTITY_TEMPLATE			= 'template';
 
+		/**
+		 * Запускает интерпретатор
+		 * @return void
+		 */
 		public static function run(): void {
 			$command = $_SERVER['argv'][1] ?? null;
 			$entity = $_SERVER['argv'][2] ?? null;

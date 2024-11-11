@@ -14,6 +14,10 @@
 		public static Right $check;
 		public static Right $make;
 
+		/**
+		 * Регистрирует ссылки
+		 * @return void
+		 */
 		public static function reg(): void {
 			self::$structure	= new Right(self::NAME, 'structure', 'default', /** @lang JavaScript */ "Base.Query.sendToAddress('/db/structure'); return false;");
 			self::$check		= new Right(self::NAME, 'check', 'default', /** @lang JavaScript */ "Base.Query.sendToAddress('/db/check'/*, Admin.General.Render.CheckDB*/); return false;");

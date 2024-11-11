@@ -1,0 +1,8 @@
+<?php
+
+	const COLLECTION_GENERAL_ID				= 1;
+	const COLLECTION_DB_ID					= 2;
+	const COLLECTION_STATISTIC_ID			= 3;
+	const COLLECTION_USER_ID				= 10;
+	const COLLECTION_AUTHORIZATION_ID		= 11;
+	const COLLECTION_OUT_ID					= 20;

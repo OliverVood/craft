@@ -9,6 +9,7 @@
 	const DIR_PROJ_PARAMS = DIR_PROJ . 'params/';
 	const DIR_PROJ_CONTROLLERS = DIR_PROJ . 'controllers/';
 	const DIR_PROJ_COLLECTIONS = DIR_PROJ . 'collections/';
+	const DIR_PROJ_CONSTS = DIR_PROJ . 'consts/';
 	const DIR_PROJ_DB = DIR_PROJ . 'db/';
 	const DIR_PROJ_LINKS = DIR_PROJ . 'links/';
 	const DIR_PROJ_MODELS = DIR_PROJ . 'models/';

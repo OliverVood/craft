@@ -5,7 +5,7 @@
 	use Base\Collection;
 
 	interface Out extends Collection {
-		const ID						= 5;
+		const ID						= COLLECTION_OUT_ID;
 		const NAME						= 'out';
 		const TITLE						= 'Вывод';
 	}

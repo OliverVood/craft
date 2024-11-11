@@ -11,17 +11,18 @@
 	use JetBrains\PhpStorm\NoReturn;
 
 	/**
-	 * Контроллер пользователей
+	 * Работа с пользователями
+	 * @controller
 	 * @property \Proj\Models\User $user
 	 */
 	#[AllowDynamicProperties] class User extends Controller implements Collections\User {
-
 		public function __construct() {
 			parent::__construct(self::ID);
 		}
 
 		/**
 		 * Аутентификация пользователя
+		 * @controllerMethod
 		 * @param Input $input - пользовательские данные
 		 * @return void
 		 */
@@ -38,6 +39,11 @@
 			Helper\Response::sendData([]);
 		}
 
+		/**
+		 * Выход из системы
+		 * @controllerMethod
+		 * @return void
+		 */
 		#[NoReturn] public function exit(): void {
 			$this->user = Model::get('user');
 
@@ -45,6 +51,5 @@
 
 			Helper\Response::sendData([]);
 		}
-
 
 	}

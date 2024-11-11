@@ -4,6 +4,9 @@
 
 	use Base\Template\Section;
 
+	/**
+	 * Макет сайта
+	 */
 	class Layout extends \Base\Template\Layout {
 		public Section $header;
 		public Section $main;

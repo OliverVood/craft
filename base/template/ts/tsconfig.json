@@ -8,15 +8,17 @@
     "declaration": true,
     "sourceMap": true,
     "alwaysStrict": true,
-
     "removeComments": true,
     "noEmitOnError": true,
-//    "declarationMap": false,
+    "declarationMap": false,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFragment": "createElement",
+    "reactNamespace": "PragmaJSX"
   },
-  "include": ["**/*"],
+//  "include": ["**/*"],
   "exclude": ["node_module"]
 }

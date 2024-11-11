@@ -6,6 +6,9 @@
 	use Base\Template\JS;
 	use Base\Template\SEO;
 
+	/**
+	 * Шаблон админки
+	 */
 	class Template extends \Base\Template\Template {
 		protected static string $name;
 		protected static string $file;

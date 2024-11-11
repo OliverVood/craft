@@ -4,6 +4,9 @@
 
 	use Base\DB\Field;
 
-	class Int16 extends Field {
+	/**
+	 * Поле Int16 (базовый абстрактный класс)
+	 */
+	abstract class Int16 extends Field {
 
 	}

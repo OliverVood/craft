@@ -14,17 +14,18 @@
 	use Proj\Templates\Auth\Template as AuthTemplate;
 
 	/**
-	 * Контроллер авторизации
+	 * Работа с Авторизацией
+	 * @controller
 	 * @property User $user
 	 */
 	#[AllowDynamicProperties] class Authorization extends Controller implements Collections\Authorization {
-
 		public function __construct() {
 			parent::__construct(self::ID);
 		}
 
 		/**
 		 * Проверяет аутентификацию для HTML
+		 * @controllerMethod
 		 * @return void
 		 */
 		#[NoReturn] public function isAuthHTML(): void {
@@ -46,6 +47,7 @@
 
 		/**
 		 * Проверяет аутентификацию для XHR
+		 * @controllerMethod
 		 * @return void
 		 */
 		public function isAuthXHR(): void {

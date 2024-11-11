@@ -1,5 +1,8 @@
 namespace Base {
 
+	/**
+	 * Работа с секциями
+	 */
 	export class Section {
 
 		/**

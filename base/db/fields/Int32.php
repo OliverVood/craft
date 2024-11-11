@@ -4,6 +4,9 @@
 
 	use Base\DB\Field;
 
-	class Int32 extends Field {
+	/**
+	 * Поле Int32 (базовый абстрактный класс)
+	 */
+	abstract class Int32 extends Field {
 
 	}

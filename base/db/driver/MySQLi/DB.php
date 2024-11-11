@@ -12,6 +12,9 @@
 	use Base\DB\Driver\MySQLi\Request\Select;
 	use mysqli;
 
+	/**
+	 * Для работы с базой данных mysqli
+	 */
 	abstract class DB extends \Base\DB\DB {
 		protected mysqli $db;
 
@@ -91,8 +94,12 @@
 			return new Select($this);
 		}
 
+		/**
+		 * Инициализация структуры
+		 * @return void
+		 */
 		protected function initStructure(): void {
-			$this->structure = new Structure($this->dbname);
+			$this->structure = new Structure($this, $this->dbname);
 		}
 
 	}
