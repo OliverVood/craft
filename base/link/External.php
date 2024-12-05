@@ -3,7 +3,7 @@
 	namespace Base\Link;
 
 	/**
-	 * Работа с внутренними ссылками
+	 * Работа с внешними ссылками
 	 */
 	class External {
 		protected string $address;

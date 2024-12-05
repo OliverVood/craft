@@ -8,11 +8,15 @@
 
 	require DIR_BASE . 'data/set/Input.php';
 
+	require DIR_BASE_TEMPLATE . 'Buffer.php';
+
 	require DIR_BASE . 'Route.php';
 	require DIR_BASE . 'Collection.php';
 	require DIR_BASE . 'Controller.php';
 	require DIR_BASE . 'ControllerAccess.php';
 	require DIR_BASE . 'Model.php';
+	require DIR_BASE . 'editor/Controller.php';
+	require DIR_BASE . 'editor/Model.php';
 
 	require DIR_BASE . 'Access.php';
 
@@ -20,9 +24,10 @@
 	require DIR_BASE . 'link/Internal.php';
 	require DIR_BASE . 'link/Right.php';
 
+	require DIR_BASE . 'helper/Accumulator.php';
 	require DIR_BASE . 'helper/Response.php';
+	require DIR_BASE . 'helper/Pagination.php';
 
-	require DIR_BASE_TEMPLATE . 'Buffer.php';
 	require DIR_BASE_TEMPLATE . 'Template.php';
 	require DIR_BASE_TEMPLATE . 'Layout.php';
 	require DIR_BASE_TEMPLATE . 'Section.php';

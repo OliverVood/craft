@@ -3,7 +3,7 @@
 	namespace Base\Link;
 
 	/**
-	 * Работа со ссылками
+	 * Работа с внутренними ссылками
 	 */
 	class Internal extends External {
 		private string $entity;

@@ -8,6 +8,7 @@
 	use Base\View;
 	use Proj\Collections;
 	use Proj\Links\Admin as Links;
+	use Proj\Access\Admin as Access;
 
 	/**
 	 * Работа с базой данных
@@ -24,13 +25,13 @@
 		 * @return void
 		 */
 		public function structure(): void {
-			if (!$this->allow(self::STRUCTURE)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
+			if (!$this->allow(Access\DB::ACCESS_DB_STRUCTURE)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
 
 			/** @var \Proj\Models\DB $dbModel */ $dbModel = $this->model('db');
 
 			$structure = $dbModel->structure();
 
-			Response::PushHistory(Links\DB::$structure);
+			Response::pushHistory(Links\DB::$structure);
 			Response::pushSection('content', View::get('admin.db.structure', compact('structure')));
 			Response::SendJSON();
 		}
@@ -41,14 +42,14 @@
 		 * @return void
 		 */
 		public function check(): void {
-			if (!$this->allow(self::CHECK)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
+			if (!$this->allow(Access\DB::ACCESS_DB_CHECK)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
 
 			/** @var \Proj\Models\DB $dbModel */ $dbModel = $this->model('db');
 
 			$data = $dbModel->check();
 			$action = Links\DB::$make->xhr();
 
-			Response::PushHistory(Links\DB::$check);
+			Response::pushHistory(Links\DB::$check);
 			Response::pushSection('content', View::get('admin.db.check', compact('data', 'action')));
 			Response::SendJSON();
 		}
@@ -60,7 +61,7 @@
 		 * @return void
 		 */
 		public function make(Input $input): void {
-			if (!$this->allow(self::MAKE)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
+			if (!$this->allow(Access\DB::ACCESS_DB_MAKE)) Response::sendNoticeError(__(self::TEXT_ERROR_ACCESS));
 
 			/** @var \Proj\Models\DB $dbModel */ $dbModel = $this->model('db');
 

@@ -58,4 +58,18 @@
 			return $this->data[$this->key] ?? $default;
 		}
 
+		/**
+		 * Возвращает все данные
+		 * @param bool $requestData - Возвращает ли данные запроса
+		 * @return array
+		 */
+		public function all(bool $requestData = false): array {
+			if ($requestData) return $this->data;
+
+			$data = $this->data;
+			if (isset($data['__url'])) unset($data['__url']);
+
+			return $data;
+		}
+
 	}

@@ -33,11 +33,16 @@
 			if (input('no_history')) return;
 			self::Push('history', ['address' => $action->href($data), 'xhr' => $action->xhr($data), 'handler' => $handler]);
 		}
-//
-//		public static function PushNoticeOk(string $notice): void {
-//			self::PushNotice('ok', $notice);
-//		}
-//
+
+		/**
+		 * Добавляет уведомление об успехе в стек ответов
+		 * @param string $notice - Текст сообщения
+		 * @return void
+		 */
+		public static function pushNoticeOk(string $notice): void {
+			self::PushNotice('ok', $notice);
+		}
+
 //		public static function PushNoticeInfo(string $notice): void {
 //			self::PushNotice('info', $notice);
 //		}

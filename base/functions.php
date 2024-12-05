@@ -1,5 +1,9 @@
 <?php
 
+	use Base\Controller;
+	use Base\Data\Set\Old;
+	use Base\Model;
+	use Base\Route;
 	use JetBrains\PhpStorm\NoReturn;
 
 	/**
@@ -9,7 +13,7 @@
 	 * @return void
 	 */
 	function dump(mixed $var, string $title = ''): void {
-		Base\Debugger::Dump($var, $title);
+		Base\Debugger::dump($var, $title);
 	}
 
 	/**
@@ -19,7 +23,7 @@
 	 * @return void
 	 */
 	#[NoReturn] function dd(mixed $var, string $title = ''): void {
-		Base\Debugger::DumpAndDie($var, $title);
+		Base\Debugger::dd($var, $title);
 	}
 
 	/**
@@ -40,4 +44,50 @@
 	 */
 	function input(string $key, mixed $default = null): mixed {
 		return $_POST[$key] ?? $_GET[$key] ?? $default;
+	}
+
+	/**
+	 * Возвращает данные от предыдущего запроса
+	 * @param string|null $key - Ключ
+	 * @return Old
+	 */
+	function old(?string $key = null): Old {
+		return Route::getOld($key);
+	}
+
+	/**
+	 * Возвращает контроллер
+	 * @param string $name - Наименование контроллера
+	 * @return Controller
+	 * @throws Exception
+	 */
+	function controller(string $name): Controller {
+		return Controller::get($name, Route::SOURCE_CONTROLLERS);
+	}
+
+	/**
+	 * Возвращает контроллер-редактор
+	 * @param string $name - Наименование контроллера
+	 * @return Controller
+	 */
+	function controllerEditor(string $name): Controller {
+		return Controller::get($name, Route::SOURCE_EDITORS);
+	}
+
+	/**
+	 * Возвращает модель
+	 * @param string $name - Наименование модели
+	 * @return Model
+	 */
+	function model(string $name): Model {
+		return Model::get($name);
+	}
+
+	/**
+	 * Возвращает модель-редактор
+	 * @param string $name - Наименование модели
+	 * @return Model
+	 */
+	function modelEditor(string $name): Model {
+		return Model::get($name, Model::SOURCE_EDITORS);
 	}

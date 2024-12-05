@@ -14,7 +14,7 @@
 		 * @param string $title - Заголовок
 		 * @return void
 		 */
-		public static function Dump(mixed $var, string $title = ''): void { ?>
+		public static function dump(mixed $var, string $title = ''): void { ?>
 			<b><?= $title; ?></b>
 			<pre><?php var_dump($var); ?></pre>
 		<?php }
@@ -25,8 +25,8 @@
 		 * @param string $title - Заголовок
 		 * @return void
 		 */
-		#[NoReturn] public static function DumpAndDie(mixed $var, string $title = ''): void {
-			self::Dump($var, $title);
+		#[NoReturn] public static function dd(mixed $var, string $title = ''): void {
+			self::dump($var, $title);
 			die();
 		}
 

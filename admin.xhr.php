@@ -6,6 +6,8 @@
 	use Proj\Configs;
 	use Proj\DB;
 
+	const POINTER = 'xhr';
+
 	const DIR_ROOT = __DIR__ . '/';
 
 	require_once DIR_ROOT . 'consts/assembly.php';
@@ -16,6 +18,7 @@
 	require_once DIR_ENTRY_ADMIN . 'require.php';
 	require_once DIR_ENTRY_ADMIN . 'route.xhr.php';
 	require_once DIR_ENTRY_ADMIN . 'collections.php';
+	require_once DIR_ENTRY_ADMIN . 'access.php';
 
 	require_once DIR_PROJ_CONFIGS . 'db.php';
 	require_once DIR_PROJ_CONFIGS . 'user.php';

@@ -8,8 +8,12 @@
 	require_once DIR_BASE_DB . 'Response.php';
 
 	require_once DIR_BASE_DB . 'request/Select.php';
+	require_once DIR_BASE_DB . 'request/Insert.php';
+	require_once DIR_BASE_DB . 'request/Update.php';
 
 	use Base\DB\Request\Select;
+	use Base\DB\Request\Insert;
+	use Base\DB\Request\Update;
 
 	/**
 	 * Для работы с базой данных (базовый абстрактный класс)
@@ -65,6 +69,24 @@
 		 * @return Select
 		 */
 		abstract protected function select(): Select;
+
+		/**
+		 * Добавление данных
+		 * @return Insert
+		 */
+		abstract protected function insert(): Insert;
+
+		/**
+		 * Обновление данных
+		 * @return Update
+		 */
+		abstract protected function update(): Update;
+
+		/**
+		 * Возвращает идентификатор добавленной записи
+		 * @return int
+		 */
+		abstract protected function insertId(): int;
 
 		/**
 		 * Инициализация структуры

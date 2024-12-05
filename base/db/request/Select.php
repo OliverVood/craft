@@ -3,7 +3,7 @@
 	namespace Base\DB\Request;
 
 	use Base\DB\DB;
-	use Base\DB\Driver\MySQLi\Response;
+	use Base\DB\Response;
 
 	/**
 	 * Для запросов SELECT (базовый абстрактный класс)
@@ -15,14 +15,27 @@
 //		private array $calc				= [];
 		protected string $table			= '';
 //		private string $join			= '';
-		protected array $conditions			= [];
+		protected array $conditions		= [];
+		protected array $order			= [];
 //		private array $group			= [];
-//		private array $order			= [];
-//		private array $limit			= [null, null];
+		protected array $limit			= [null, null];
 
 		public function __construct(DB & $db) {
 			$this->db = & $db;
 		}
+
+		/**
+		 * Задаёт перечень полей
+		 * @param ...$fields - Перечень полей
+		 * @return $this
+		 */
+		public function fields(...$fields): self {
+			foreach ($fields as $field) $this->fields[] = $field;
+
+			return $this;
+		}
+
+//		public function calc(...$strings): self;
 
 		/**
 		 * Задаёт таблицу
@@ -38,19 +51,6 @@
 //		public function join(string $join, string $table, string $as = '', string $on = ''): self;
 
 		/**
-		 * Задаёт перечень полей
-		 * @param ...$fields - Перечень полей
-		 * @return $this
-		 */
-		public function fields(...$fields): self {
-			foreach ($fields as $field) $this->fields[] = $field;
-			return $this;
-		}
-
-
-//		public function calc(...$strings): self;
-
-		/**
 		 * Задаёт условие с полем и значением
 		 * @param string $field - Поле
 		 * @param string $value - Значение
@@ -59,6 +59,7 @@
 		 */
 		public function where(string $field, string $value, string $operator = '='): self {
 			$this->addConditions('where', 'AND', ['field' => $field, 'value' => $value, 'operator' => $operator]);
+
 			return $this;
 		}
 
@@ -71,11 +72,12 @@
 		 */
 		public function compare(string $field1, string $field2, string $operator = '='): self {
 			$this->addConditions('compare', 'AND', ['field1' => $field1, 'field2' => $field2, 'operator' => $operator]);
+
 			return $this;
 		}
 
 		/**
-		 * Добавление условий
+		 * Добавляет условия
 		 * @param string $type - Тип условия
 		 * @param string $connection - Соединение условий
 		 * @param array $data - Данные
@@ -85,11 +87,31 @@
 			$this->conditions[] = ['type' => $type, 'connection' => $connection, 'data' => $data];
 		}
 
+		/**
+		 * Задаёт сортировку
+		 * @param string $field - Поле
+		 * @param string $direction - Направление
+		 * @return $this
+		 */
+		public function order(string $field, string $direction = 'ASC'): self {
+			$this->order[] = [$field, $direction];
+
+			return $this;
+		}
+
 //		public function group(...$fields): self;
 
-//		public function order(string $field, string $direction = 'ASC', $escape = true): self;
+		/**
+		 * Задаёт ограничения
+		 * @param int $count - Количество записей
+		 * @param int|null $skip - Сдвиг
+		 * @return $this
+		 */
+		public function limit(int $count, int $skip = null): self {
+			$this->limit = [$count, $skip];
 
-//		public function limit(int $value_1, int $value_2 = null): self;
+			return $this;
+		}
 
 		/**
 		 * Возвращает текст запроса

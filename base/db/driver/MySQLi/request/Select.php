@@ -3,13 +3,7 @@
 	namespace Base\DB\Driver\MySQLi\Request;
 
 	class Select extends \Base\DB\Request\Select {
-//		public function join(string $join, string $table, string $as = '', string $on = ''): self;
-
-//		public function calc(...$strings): self;
-
-//		public function group(...$fields): self;
-//		public function order(string $field, string $direction = 'ASC', $escape = true): self;
-//		public function limit(int $value_1, int $value_2 = null): self;
+		use Render;
 
 		/**
 		 * Возвращает текст запроса
@@ -19,30 +13,12 @@
 			$fields = $this->renderFields();
 			$table = $this->renderTable();
 			$where = $this->renderConditions();
-
-//			$limit = '';
-//			if (!is_null($this->limit[0])) $limit .= " LIMIT {$this->limit[0]}";
-//			if (!is_null($this->limit[1])) $limit .= ", {$this->limit[1]}";
-//
-//			$order = '';
-//			if ($this->order) {
-//				$order = []; foreach ($this->order as [$field, $direction, $escape]) $order[] = $escape ? "`{$field}` {$direction}" : "{$field} {$direction}";
-//				$order = ' ORDER BY ' . implode(', ', $order);
-//			}
-//
+			$order = $this->renderOrder();
 //			$group = $this->group ? ' GROUP BY `' . implode('`, `', $this->group) . '`' : '';
-//
-//			return "SELECT {$fields} FROM `{$this->table}`{$this->as}{$this->join}{$where}{$order}{$group}{$limit}";
-			return "SELECT {$fields} FROM {$table}{$where}";
-//			return 'SELECT 1 as `f1`, 2 as `f2`';
-		}
+			$limit = $this->renderLimit();
 
-		/**
-		 * Возвращает таблицу
-		 * @return string
-		 */
-		private function renderTable(): string {
-			return $this->shield($this->table);
+//			return "SELECT {$fields} FROM `{$this->table}`{$this->as}{$this->join}{$where}{$order}{$group}{$limit}";
+			return "SELECT {$fields} FROM {$table}{$where}{$order}{$limit}";
 		}
 
 		/**
@@ -53,6 +29,7 @@
 			$fields = [];
 			foreach ($this->fields as $field) $fields[] = $field == '*' ? $field : $this->shield($field);
 //			foreach ($this->calc as $string) $fields[] = $string;
+
 			return implode(', ', $fields);
 		}
 
@@ -63,41 +40,30 @@
 //		}
 
 		/**
-		 * Возвращает условия
+		 * Возвращает сортировку
 		 * @return string
 		 */
-		private function renderConditions(): string {
-			$list = [];
-			$first = true;
+		private function renderOrder(): string {
+			if (!$this->order) return '';
 
-			foreach ($this->conditions as $condition) {
-				$connection = $first ? '' : " {$condition['connection']} ";
-				$data = $condition['data'];
-				switch ($condition['type']) {
-					case 'where': $list[] = "{$connection}{$this->shield($data['field'])} {$data['operator']} '{$data['value']}'"; break;
-					case 'compare': $list[] = "{$connection}{$this->shield($data['field1'])} {$data['operator']} {$this->shield($data['field2'])}"; break;
-				}
-				$first = false;
+			$order = [];
+			foreach ($this->order as [$field, $direction]) {
+				$order[] = "{$this->shield($field)} {$direction}";
 			}
 
-			return $list ? ' WHERE ' . implode('', $list) : '';
+			return ' ORDER BY ' . implode(', ', $order);
 		}
 
 		/**
-		 * Возвращает экранированные названий: баз данных, таблиц, полей
-		 * @param string $str - Строка для экранирования
+		 * Возвращает ограничения
 		 * @return string
 		 */
-		private function shield(string $str): string {
-			$matchs = [];
-			preg_match('/ *([^ ]*)( +(as +)?([^ ]*))? */', $str, $matchs);
-			$name = $matchs[1];
-			$as = $matchs[4] ?? null;
+		private function renderLimit(): string {
+			$limit = '';
+			if (!is_null($this->limit[0])) $limit .= " LIMIT {$this->limit[0]}";
+			if (!is_null($this->limit[1])) $limit .= ", {$this->limit[1]}";
 
-			$out = '`' . implode('`.`', explode('.', $name)) . '`';
-			if ($as) $out .= " AS `{$as}`";
-
-			return $out;
+			return $limit;
 		}
 
 	}

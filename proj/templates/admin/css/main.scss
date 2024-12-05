@@ -8,10 +8,11 @@ h3 { margin: 0; text-align: center; }
 ul { margin: 0; padding: 0; }
 li { list-style-type: none; }
 a { text-decoration: none; color: $color-link; }
-//input {
-//	outline: none; font-family: AjarSans, sans-serif; font-size: 1rem;
-//	&[type="submit"] { @include MixBtn; cursor: pointer; }
-//}
+input {
+	outline: none; font-family: $font; font-size: 1rem;
+	&[type="submit"] { @include MixBtn; cursor: pointer; }
+	&[type="text"], &[type="password"]  { @include SampleText; }
+}
 //.hide { display: none; }
 body {
 	margin: 0; height: 100%; display: flex; flex-direction: column;
@@ -49,37 +50,40 @@ menu {
 
 main {
 	padding: 0.2rem;
-//	.navigate { padding: 1rem; }
+	.navigate {
+		padding: 1rem;
+		> a:not(:last-child) { margin-right: 0.6rem; }
+	}
 	h1 { padding: 1rem 0; font-size: 1.4rem; text-align: center; }
-//	table {
-//		&.select {
-//			> thead > tr {
-//				background-color: $color-secondary; color: $color-text-primary;
-//				> th { padding: 0.6rem; font-weight: 400; }
-//			}
-//			> tbody > tr {
-//				&:nth-child(even) { background-color: $color-primary-super-light; }
-//				&:hover { background-color: $color-tertiary-light; }
-//				> td { padding: 0.6rem; }
-//			}
-//		}
-//		&.create, &.update, &.browse {
-//			> tbody > tr {
-//				> th { padding: 0.6rem; text-align: left; font-weight: 700; }
-//			}
-//		}
-//	}
+	table {
+		&.select {
+			> thead > tr {
+				background-color: $color-secondary; color: $color-text-primary;
+				> th { padding: 0.6rem; font-weight: 400; }
+			}
+			> tbody > tr {
+				&:nth-child(even) { background-color: $color-primary-super-light; }
+				&:hover { background-color: $color-tertiary-light; }
+				> td { padding: 0.6rem; }
+			}
+		}
+		&.create, &.update, &.browse {
+			> tbody > tr {
+				> th { padding: 0.6rem; text-align: left; font-weight: 700; }
+			}
+		}
+	}
 }
 
-//.pagination {
-//	margin: 0.5rem 0; font-size: 1.2rem;
-//	> a {
-//		display: inline-block; padding: 0.5rem;
-//		&:not(.current):hover { background-color: $color-neutral-light; }
-//		&.current { color: $color-text; }
-//	}
-//}
-//
+.pagination {
+	margin: 0.5rem 0; font-size: 1.2rem; text-align: center;
+	> a {
+		display: inline-block; padding: 0.5rem;
+		&:not(.current):hover { background-color: $color-neutral-light; }
+		&.current { color: $color-text; }
+	}
+}
+
 //@import "units/general";
 //
 //$debug_color_head: #dd5e00;
@@ -258,4 +262,5 @@ main {
 div.view {
 	@import "views/out";
 	@import "views/db";
+	@import "views/notices";
 }

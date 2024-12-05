@@ -7,9 +7,14 @@
 
 	require_once DIR_BASE_DB . 'driver/MySQLi/Response.php';
 
+	require_once DIR_BASE_DB . 'driver/MySQLi/request/Render.php';
 	require_once DIR_BASE_DB . 'driver/MySQLi/request/Select.php';
+	require_once DIR_BASE_DB . 'driver/MySQLi/request/Insert.php';
+	require_once DIR_BASE_DB . 'driver/MySQLi/request/Update.php';
 
 	use Base\DB\Driver\MySQLi\Request\Select;
+	use Base\DB\Driver\MySQLi\Request\Insert;
+	use Base\DB\Driver\MySQLi\Request\Update;
 	use mysqli;
 
 	/**
@@ -92,6 +97,30 @@
 		 */
 		public function select(): Select {
 			return new Select($this);
+		}
+
+		/**
+		 * Добавление данных
+		 * @return Insert
+		 */
+		public function insert(): Insert {
+			return new Insert($this);
+		}
+
+		/**
+		 * Обновление данных
+		 * @return Update
+		 */
+		public function update(): Update {
+			return new Update($this);
+		}
+
+		/**
+		 * Возвращает идентификатор добавленной записи
+		 * @return int
+		 */
+		public function insertId(): int {
+			return $this->db->insert_id;
 		}
 
 		/**

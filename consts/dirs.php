@@ -8,7 +8,11 @@
 	const DIR_PROJ_CONFIGS = DIR_PROJ . 'configs/';
 	const DIR_PROJ_PARAMS = DIR_PROJ . 'params/';
 	const DIR_PROJ_CONTROLLERS = DIR_PROJ . 'controllers/';
+	const DIR_PROJ_EDITORS = DIR_PROJ . 'editors/';
+	const DIR_PROJ_EDITORS_CONTROLLERS = DIR_PROJ_EDITORS . 'controllers/';
+	const DIR_PROJ_EDITORS_MODELS = DIR_PROJ_EDITORS . 'models/';
 	const DIR_PROJ_COLLECTIONS = DIR_PROJ . 'collections/';
+	const DIR_PROJ_ACCESS = DIR_PROJ . 'access/';
 	const DIR_PROJ_CONSTS = DIR_PROJ . 'consts/';
 	const DIR_PROJ_DB = DIR_PROJ . 'db/';
 	const DIR_PROJ_LINKS = DIR_PROJ . 'links/';

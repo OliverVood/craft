@@ -11,6 +11,8 @@ $palette-secondary				: #006E95;
 $palette-secondary-light		: #007fAD;
 $palette-secondary-dark			: #00506C;
 
+$palette-tertiary-light			: #68909F;
+
 $palette-neutral				: $palette-primary-super-light;
 $palette-neutral-light			: #d9d9d9;
 
@@ -30,9 +32,9 @@ $color-primary-dark				: $palette-primary-dark;
 $color-secondary				: $palette-secondary;
 $color-secondary-dark			: $palette-secondary-dark;
 $color-secondary-light			: $palette-secondary-light;
-//
-//$color-tertiary-light			: #68909F;
-//
+
+$color-tertiary-light			: $palette-tertiary-light;
+
 $color-negative					: $palette-negative;
 ////$color-negative-light			: #AD675B;
 //

@@ -2,6 +2,8 @@
 
 	namespace Base\Data\Set;
 
+	use Proj\Controllers\Admin\Out;
+
 	require_once 'Data.php';
 	require_once 'Get.php';
 	require_once 'Post.php';
@@ -9,6 +11,7 @@
 	require_once 'Defined.php';
 	require_once 'Assoc.php';
 	require_once 'Content.php';
+	require_once 'Old.php';
 
 	/**
 	 * Агрегатор пользовательских данных
@@ -20,6 +23,7 @@
 		private Defined $defined;
 		private Assoc $assoc;
 		private Content $content;
+		private Old $old;
 
 		public function __construct() {
 			$this->get = new Get();
@@ -28,6 +32,9 @@
 			$this->defined = new Defined();
 			$this->assoc = new Assoc();
 			$this->content = new Content();
+			$this->old = new Old();
+
+			$this->saveOld();
 		}
 
 		/**
@@ -62,11 +69,11 @@
 
 		/**
 		 * Возвращает данные по ключу из суперглобального массива $_POST, если не нашёл, то из суперглобального массива $_GET (порядок определён и не зависит от настроек сервера)
-		 * @param string $key - Ключ
+		 * @param string|null $key - Ключ
 		 * @return Defined
 		 */
-		public function defined(string $key): Defined {
-			$this->defined->key($key);
+		public function defined(?string $key = null): Defined {
+			if (isset($key)) $this->defined->key($key);
 			return $this->defined;
 		}
 
@@ -86,6 +93,23 @@
 		 */
 		public function content(): Content {
 			return $this->content;
+		}
+
+		/**
+		 * Возвращает данные от предыдущего запроса
+		 * @param string|null $key - Ключ
+		 * @return Old
+		 */
+		public function old(?string $key = null): Old {
+			if (isset($key)) $this->old->key($key);
+			return $this->old;
+		}
+
+		/**
+		 * Сохраняет данные от предыдущего запроса
+		 */
+		public function saveOld(): void {
+			$_SESSION['__old'] = $this->defined->all();
 		}
 
 	}

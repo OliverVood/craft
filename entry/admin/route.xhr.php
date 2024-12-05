@@ -9,3 +9,6 @@
 	Base\Route::set('db::check', 'admin.db::check');
 	Base\Route::set('db::make', 'admin.db::make');
 	Base\Route::set('user::exit', 'admin.user::exit');
+
+	Base\Route::set('statistic_ip::*', 'statistic.ip', Base\Route::SOURCE_EDITORS);
+	Base\Route::set('statistic_action::*', 'statistic.action', Base\Route::SOURCE_EDITORS);

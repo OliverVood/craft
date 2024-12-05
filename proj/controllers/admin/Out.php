@@ -9,11 +9,13 @@
 	use Base\Model;
 	use Base\Template\Buffer;
 	use Base\View;
+	use Proj\Access\Admin as Rights;
 	use Proj\Collections;
+	use Proj\Editors;
+	use Proj\Links\Admin as Links;
 	use proj\models\User;
 	use Proj\Params\Site;
 	use Proj\Templates\Admin\Template;
-	use Proj\Links\Admin as Links;
 
 	/**
 	 * Работа с шаблоном
@@ -54,21 +56,31 @@
 		 */
 		public function setMenu(): void {
 			Template::$layout->menu->push(
-				$this->item(Links\Page::$site->link(Links\Page::$site->address(), 'Открыть сайт', [], ['target' => '_blank'])),
+				$this->item(Links\Page::$site->link(Links\Page::$site->address(), __('Открыть сайт'), [], ['target' => '_blank'])),
 				$this->separator(),
 
-				$this->item(Links\Page::$home->linkHref('Главная'))
+				$this->item(Links\Page::$home->linkHref(__('Главная')))
 			);
 
 			$menuDevelopment = [];
-			if (Access::allow(Collections\DB::STRUCTURE, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$structure->linkHref('Структура');
-			if (Access::allow(Collections\DB::CHECK, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$check->linkHref('Проверить');
+
+			if (Access::allow(Rights\DB::ACCESS_DB_STRUCTURE, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$structure->linkHref(__('Структура'));
+			if (Access::allow(Rights\DB::ACCESS_DB_CHECK, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$check->linkHref(__('Проверить'));
+
+			// Композиция
+
+			/** @var \Proj\Editors\Controllers\Statistic\IP $editorIP */ $editorIP = controllerEditor('statistic.ip');
+			if ($editorIP->select->allow()) $menuDevelopment['statistic'][] = $editorIP->select->linkHref(__('Запросы к серверу'), ['page' => 1]);
+			/** @var \Proj\Editors\Controllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
+			if ($editorAction->select->allow()) $menuDevelopment['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
 
 			if ($menuDevelopment) {
 				Template::$layout->menu->push($this->separator());
-				Template::$layout->menu->push($this->head('Разработка'));
+				Template::$layout->menu->push($this->head(__('Разработка')));
 
-				if (isset($menuDevelopment['db'])) Template::$layout->menu->push(self::group('База данных', $menuDevelopment['db']));
+				if (isset($menuDevelopment['db'])) Template::$layout->menu->push(self::group(__('База данных'), $menuDevelopment['db']));
+				// Композиция
+				if (isset($menuDevelopment['statistic'])) Template::$layout->menu->push(self::group(__('Статистика'), $menuDevelopment['statistic']));
 			}
 			//TODO Заполнить левое меню
 		}
