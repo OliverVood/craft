@@ -3,10 +3,11 @@
 	namespace Proj\Collections;
 
 	use Base\Collection;
+	use Proj\Consts\Collections;
 
 	interface Statistic extends Collection {
-		const ID						= COLLECTION_STATISTIC_ID;
-		const NAME						= 'statistic';
+		const ID						= Collections\STATISTIC['id'];
+		const NAME						= Collections\STATISTIC['name'];
 		const TITLE						= 'Статистика';
 
 		const TABLES					= [

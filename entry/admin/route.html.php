@@ -1,7 +1,9 @@
 <?php
 
-	Base\Route::set('*::*', 'admin.authorization::isAuthHTML');
+	declare(strict_types=1);
 
-	Base\Route::set('*::*', 'admin.out::setHead');
-	Base\Route::set('*::*', 'admin.out::setMenu');
-	Base\Route::set('*::*', 'admin.out::setFooter');
+	route()->registration('*::*', 'admin.authorization::isAuthHTML');
+
+	route()->registration('*::*', 'admin.out::setHead');
+	route()->registration('*::*', 'admin.out::setMenu');
+	route()->registration('*::*', 'admin.out::setFooter');

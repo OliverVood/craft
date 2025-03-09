@@ -15,8 +15,8 @@
 		<footer class = "section footer"><?php \Proj\Templates\Admin\Template::$layout->footer->browse(); ?></footer>
 		<script>
 			$(function() {
-				Base.GlobalParams.set('request', '<?= REQUEST; ?>');
-				Base.GlobalParams.set('xhr', '<?= XHR; ?>');
+				Base.GlobalParams.set('request', '<?= request()->html(); ?>');
+				Base.GlobalParams.set('xhr', '<?= request()->xhr(); ?>');
 				getContent('admin');
 				Base.History.Initialization();
 			});

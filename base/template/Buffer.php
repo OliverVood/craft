@@ -1,11 +1,13 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Template;
 
 	/**
 	 * Буферизация вывода
 	 */
-	trait Buffer {
+	class Buffer {
 
 		/**
 		 * Создает новый буфер в стеке

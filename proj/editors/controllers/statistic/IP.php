@@ -5,12 +5,13 @@
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
 	use Base\Route as BaseRoute;
+	use Proj\Editors\Consts\Collections;
 
 	class IP extends Controller {
-		protected string $titleSelect = 'Статистика запросов к серверу';
-
 		public function __construct() {
-			parent::__construct(EDITOR_STATISTIC_IP_ID, 'statistic_ip', 'Статистика запросов');
+			parent::__construct(Collections\STATISTIC_IP['id'], Collections\STATISTIC_IP['name'], __('Статистика запросов'), 'statistic.ip', 'statistic.ip');
+
+			$this->titleSelect = __('Статистика запросов к серверу');
 		}
 
 		/**
@@ -20,7 +21,7 @@
 		protected function regRoutes(): void {
 			if (POINTER != 'xhr') return;
 
-			BaseRoute::set("{$this->name}::select", "{$this->nameController}::select", BaseRoute::SOURCE_EDITORS);
+			BaseRoute::set("{$this->name}::select", "{$this->pathController}::select", BaseRoute::SOURCE_EDITORS);
 		}
 
 		/**

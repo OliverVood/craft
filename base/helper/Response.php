@@ -9,6 +9,16 @@
 	 * Ответы от сервера
 	 */
 	class Response {
+		const TYPE_SECTION = 'section';
+		const TYPE_HISTORY = 'history';
+		const TYPE_NOTICE = 'notice';
+		const TYPE_DATA = 'data';
+		const TYPE_ERRORS = 'errors';
+
+		const TYPE_NOTICE_OK = 'ok';
+		const TYPE_NOTICE_INFO = 'info';
+		const TYPE_NOTICE_ERROR = 'error';
+
 		private static array $stack = [];
 
 		/**
@@ -19,7 +29,7 @@
 		 * @return void
 		 */
 		public static function pushSection(string $section, string $html, bool $empty = true): void {
-			self::push('section', ['section' => $section, 'html' => $html, 'empty' => $empty]);
+			self::push(self::TYPE_SECTION, ['section' => $section, 'html' => $html, 'empty' => $empty]);
 		}
 
 		/**
@@ -31,7 +41,7 @@
 		 */
 		public static function pushHistory(Link $action, array $data = [], string $handler = null): void {
 			if (input('no_history')) return;
-			self::Push('history', ['address' => $action->href($data), 'xhr' => $action->xhr($data), 'handler' => $handler]);
+			self::push(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->xhr($data), 'handler' => $handler]);
 		}
 
 		/**
@@ -40,7 +50,7 @@
 		 * @return void
 		 */
 		public static function pushNoticeOk(string $notice): void {
-			self::PushNotice('ok', $notice);
+			self::pushNotice(self::TYPE_NOTICE_OK, $notice);
 		}
 
 //		public static function PushNoticeInfo(string $notice): void {
@@ -53,7 +63,7 @@
 		 * @return void
 		 */
 		public static function pushNoticeError(string $notice): void {
-			self::pushNotice('error', $notice);
+			self::pushNotice(self::TYPE_NOTICE_ERROR, $notice);
 		}
 
 		/**
@@ -63,7 +73,16 @@
 		 * @return void
 		 */
 		private static function pushNotice(string $type, string $notice): void {
-			self::push('notice', ['type' => $type, 'notice' => $notice]);
+			self::push(self::TYPE_NOTICE, ['type' => $type, 'notice' => $notice]);
+		}
+
+		/**
+		 * Добавляет ошибки в стек ответов
+		 * @param array $errors
+		 * @return void
+		 */
+		public static function pushErrors(array $errors): void {
+			self::push(self::TYPE_ERRORS, $errors);
 		}
 
 		/**
@@ -72,7 +91,7 @@
 		 * @return void
 		 */
 		public static function pushData($data): void {
-			self::Push('data', $data);
+			self::push(self::TYPE_DATA, $data);
 		}
 
 		/**

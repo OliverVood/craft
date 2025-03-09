@@ -12,13 +12,14 @@
 		public function get(): string {
 			$fields = $this->renderFields();
 			$table = $this->renderTable();
+			$joins = $this->renderJoins();
 			$where = $this->renderConditions();
 			$order = $this->renderOrder();
 //			$group = $this->group ? ' GROUP BY `' . implode('`, `', $this->group) . '`' : '';
 			$limit = $this->renderLimit();
 
 //			return "SELECT {$fields} FROM `{$this->table}`{$this->as}{$this->join}{$where}{$order}{$group}{$limit}";
-			return "SELECT {$fields} FROM {$table}{$where}{$order}{$limit}";
+			return "SELECT {$fields} FROM {$table}{$joins}{$where}{$order}{$limit}";
 		}
 
 		/**
@@ -33,11 +34,22 @@
 			return implode(', ', $fields);
 		}
 
-//		public function join(string $table, string $join = 'LEFT JOIN', string $as = '', string $on = ''): self {
-//			$as = " `{$as}`";
-//			$this->join = " {$join} `{$table}` `{$as}` ON ({$on})";
-//			return $this;
-//		}
+		/**
+		 * Возвращает объединение таблиц
+		 * @return string
+		 */
+		public function renderJoins(): string {
+			$joins = [];
+			foreach ($this->joins as ['type' => $type, 'table' => $table, 'on' => $on]) {
+
+				$on = explode('=', $on);
+				$on = "{$this->shield($on[0])} = {$this->shield($on[1])}";
+
+				$joins[] = " {$type} JOIN {$this->shield($table)} ON ({$on})";
+			}
+
+			return $joins ? implode('', $joins) : '';
+		}
 
 		/**
 		 * Возвращает сортировку

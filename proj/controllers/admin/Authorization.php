@@ -9,18 +9,17 @@
 	use Base\Template\Template as BaseTemplate;
 	use Base\View;
 	use JetBrains\PhpStorm\NoReturn;
-	use Proj\Collections;
-	use proj\Models\User;
+	use proj\Models\Users;
 	use Proj\Templates\Auth\Template as AuthTemplate;
 
 	/**
 	 * Работа с Авторизацией
 	 * @controller
-	 * @property User $user
+	 * @property Users $user
 	 */
-	#[AllowDynamicProperties] class Authorization extends Controller implements Collections\Authorization {
+	#[AllowDynamicProperties] class Authorization extends Controller {
 		public function __construct() {
-			parent::__construct(self::ID);
+			parent::__construct(app()->features('authentication')->id());
 		}
 
 		/**
@@ -28,8 +27,8 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function isAuthHTML(): void {
-			$this->user = Model::get('user');
+		#[NoReturn] public function isAuthHTML(): void {return;
+			$this->user = model('users');
 
 			if ($this->user->isAuth()) return;
 

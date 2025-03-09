@@ -2,74 +2,113 @@
 
 	namespace Base\Data\Set;
 
+	require_once 'Base.php';
+
+	require_once 'Get.php';
+	require_once 'Post.php';
+	require_once 'Request.php';
+	require_once 'Defined.php';
+	require_once 'Assoc.php';
+	require_once 'Content.php';
+	require_once 'Old.php';
+
 	/**
-	 * Получение пользовательских данных по ключу
+	 * Агрегатор пользовательских данных
 	 */
-	abstract class Data {
-		private array $data;
-		private string $key;
+	class Data {
+		private Get $get;
+		private Post $post;
+		private Request $request;
+		private Defined $defined;
+		private Assoc $assoc;
+		private Content $content;
+		private Old $old;
 
-		protected function __construct(array $data) {
-			$this->data = $data;
+		public function __construct() {
+			$this->get = new Get();
+			$this->post = new Post();
+			$this->request = new Request();
+			$this->defined = new Defined();
+			$this->assoc = new Assoc();
+			$this->content = new Content();
+			$this->old = new Old();
+
+			$this->saveOld();
 		}
 
 		/**
-		 * Задаёт ключ для дальнейшей работы
+		 * Возвращает данные по ключу из суперглобального массива $_GET
 		 * @param string $key - Ключ
-		 * @return void
+		 * @return Get
 		 */
-		public function key(string $key): void {
-			$this->key = $key;
+		public function get(string $key): Get {
+			$this->get->key($key);
+			return $this->get;
 		}
 
 		/**
-		 * Если значение существует, то вернёт его преобразовав в логический тип, иначе вернёт значение по умолчанию
-		 * @param mixed|null $default - Значение по умолчанию
-		 * @return mixed
+		 * Возвращает данные по ключу из суперглобального массива $_POST
+		 * @param string $key - Ключ
+		 * @return Post
 		 */
-		public function bool(mixed $default = null): mixed {
-			return isset($this->data[$this->key]) ? (bool)$this->data[$this->key] : $default;
+		public function post(string $key): Post {
+			$this->post->key($key);
+			return $this->post;
 		}
 
 		/**
-		 * Если значение существует, то вернёт его преобразовав в целое число, иначе вернёт значение по умолчанию
-		 * @param mixed|null $default - Значение по умолчанию
-		 * @return mixed
+		 * Возвращает данные по ключу из суперглобального массива $_REQUEST
+		 * @param string $key - Ключ
+		 * @return Request
 		 */
-		public function int(mixed $default = null): mixed {
-			return isset($this->data[$this->key]) ? (int)$this->data[$this->key] : $default;
+		public function request(string $key): Request {
+			$this->request->key($key);
+			return $this->request;
 		}
 
 		/**
-		 * Если значение существует, то вернёт его преобразовав в строку, иначе вернёт значение по умолчанию
-		 * @param mixed|null $default - Значение по умолчанию
-		 * @return mixed
+		 * Возвращает данные по ключу из суперглобального массива $_POST, если не нашёл, то из суперглобального массива $_GET (порядок определён и не зависит от настроек сервера)
+		 * @param string|null $key - Ключ
+		 * @return Defined
 		 */
-		public function string(mixed $default = null): mixed {
-			return isset($this->data[$this->key]) ? (string)$this->data[$this->key] : $default;
+		public function defined(?string $key = null): Defined {
+			if (isset($key)) $this->defined->key($key);
+			return $this->defined;
 		}
 
 		/**
-		 * Если значение существует, то вернёт его, иначе вернёт значение по умолчанию
-		 * @param mixed|null $default - Значение по умолчанию
-		 * @return mixed
+		 * Возвращает данные по ключу из контента в виде ассоциативного массива
+		 * @param string $key - Ключ
+		 * @return Assoc
 		 */
-		public function data(mixed $default = null): mixed {
-			return $this->data[$this->key] ?? $default;
+		public function assoc(string $key): Assoc {
+			$this->assoc->key($key);
+			return $this->assoc;
 		}
 
 		/**
-		 * Возвращает все данные
-		 * @param bool $requestData - Возвращает ли данные запроса
-		 * @return array
+		 * Возвращает данные из контента
+		 * @return Content
 		 */
-		public function all(bool $requestData = false): array {
-			if ($requestData) return $this->data;
+		public function content(): Content {
+			return $this->content;
+		}
 
-			$data = $this->data;
-			if (isset($data['__url'])) unset($data['__url']);
+		/**
+		 * Возвращает данные от предыдущего запроса
+		 * @param string|null $key - Ключ
+		 * @return Old
+		 */
+		public function old(?string $key = null): Old {
+			if (isset($key)) $this->old->key($key);
+			return $this->old;
+		}
 
-			return $data;
+		/**
+		 * Сохраняет данные от предыдущего запроса
+		 */
+		public function saveOld(): void {
+			$_SESSION['__old'] = $this->defined->all();
 		}
 
 	}

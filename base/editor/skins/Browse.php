@@ -6,10 +6,7 @@
 	use Base\Editor\Skins\Browse\Date;
 	use Base\Editor\Skins\Browse\Int2IP;
 	use Base\Editor\Skins\Browse\Text;
-
-	require DIR_BASE . 'editor/skins/browse/Text.php';
-	require DIR_BASE . 'editor/skins/browse/Date.php';
-	require DIR_BASE . 'editor/skins/browse/Int2IP.php';
+	use Base\Editor\Skins\Browse\ValueFromArray;
 
 	class Browse {
 		protected Fields $skin;
@@ -48,4 +45,20 @@
 			$this->skin->push($name, new Int2IP($name, $title));
 		}
 
+		/**
+		 * Вывод значения из массива по ключу
+		 * @param string $name - Наименование
+		 * @param string $title - Заголовок
+		 * @param array $array - Массив
+		 * @return void
+		 */
+		public function fromArray(string $name, string $title = '', array $array = []): void {
+			$this->skin->push($name, new ValueFromArray($name, $title, $array));
+		}
+
 	}
+
+	require DIR_BASE . 'editor/skins/browse/Text.php';
+	require DIR_BASE . 'editor/skins/browse/Date.php';
+	require DIR_BASE . 'editor/skins/browse/Int2IP.php';
+	require DIR_BASE . 'editor/skins/browse/ValueFromArray.php';

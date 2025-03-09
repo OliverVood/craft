@@ -13,7 +13,7 @@
 	/**
 	 * Работа с пользователями
 	 * @controller
-	 * @property \Proj\Models\User $user
+	 * @property \Proj\Models\Users $user
 	 */
 	#[AllowDynamicProperties] class User extends Controller implements Collections\User {
 		public function __construct() {

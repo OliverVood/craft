@@ -46,7 +46,13 @@
 			$name = $matchs[1];
 			$as = $matchs[4] ?? null;
 
-			$out = '`' . implode('`.`', explode('.', $name)) . '`';
+			$pieces = explode('.', $name);
+			foreach ($pieces as & $piece) {
+				if ($piece == '*') continue;
+				$piece = "`{$piece}`";
+			}
+			$out = implode('.', $pieces);
+
 			if ($as) $out .= " AS `{$as}`";
 
 			return $out;

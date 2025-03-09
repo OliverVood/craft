@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base;
 
 	/**
@@ -9,14 +11,13 @@
 		private static ?self $instance = null;
 
 		/**
-		 * Возвращает синглтон
+		 * Возвращает экземпляр класса
+		 * @param mixed ...$params - Параметры инициализации
 		 */
-		public static function instance(): ?self { return self::$instance; }
+		public static function instance(mixed ...$params): self {
+			if (!self::$instance) self::$instance = new self(...$params);
 
-		/**
-		 * Инициализация синглтона
-		 * @param mixed ...$params - Параметры
-		 * @return void
-		 */
-		public static function init(mixed ...$params): void { if (!self::$instance) self::$instance = new self(...$params); }
+			return self::$instance;
+		}
+
 	}

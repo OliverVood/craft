@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Link;
 
 	/**
@@ -24,13 +26,13 @@
 			if ($this->action !== '*' && $this->action !== '') $this->path .= "/{$this->action}";
 
 			if ($href == 'default') {
-				$this->href 	= REQUEST . $this->path;
-				$this->xhr 		= XHR . $this->path;
-				$this->address 	= ADDRESS . REQUEST . $this->path;
+				$this->href 	= request()->html() . $this->path;
+				$this->xhr 		= request()->xhr() . $this->path;
+				$this->address 	= request()->address() . request()->html() . $this->path;
 			} else {
-				$this->href 	= REQUEST . $href;
-				$this->xhr		= XHR . $href;
-				$this->address	= ADDRESS . REQUEST . $href;
+				$this->href 	= request()->html() . $href;
+				$this->xhr		= request()->xhr() . $href;
+				$this->address	= request()->address() . request()->html() . $href;
 			}
 		}
 

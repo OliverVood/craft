@@ -14,7 +14,7 @@
 		protected array $fields			= [];
 //		private array $calc				= [];
 		protected string $table			= '';
-//		private string $join			= '';
+		protected array $joins			= [];
 		protected array $conditions		= [];
 		protected array $order			= [];
 //		private array $group			= [];
@@ -48,7 +48,11 @@
 			return $this;
 		}
 
-//		public function join(string $join, string $table, string $as = '', string $on = ''): self;
+		public function join(string $table, string $on = '', string $type = 'LEFT'): self {
+			$this->joins[] = ['table' => $table, 'on' => $on, 'type' => $type];
+
+			return $this;
+		}
 
 		/**
 		 * Задаёт условие с полем и значением

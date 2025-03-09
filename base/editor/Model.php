@@ -3,6 +3,7 @@
 	namespace Base\Editor;
 
 	use Base\DB\DB;
+	use Base\DB\Response;
 	use Exception;
 	use Base\DB\Request\{Select, Insert, Update};
 	use Proj\DB\Craft;
@@ -27,6 +28,16 @@
 
 			$this->db = Craft::instance();
 			$this->table = $table;
+		}
+
+		public function index(string ...$fields): Response {
+			return $this->db
+				->select()
+				->fields(...$fields)
+				->table($this->table)
+				->where('state', self::STATE_DELETE, '!=')
+				->where('state', self::STATE_ERROR, '!=')
+				->query();
 		}
 
 		/**
@@ -128,17 +139,6 @@
 		}
 
 		/**
-		 * Возвращает состояние
-		 * @param int $id - Идентификатор
-		 * @return int
-		 */
-		protected function getState(int $id): int {
-			$query = $this->getQueryState($id);
-			$response = $this->db->query($query->get());
-			return $response->getOneField('state');
-		}
-
-		/**
 		 * Обновляет состояние
 		 * @param int $id - Идентификатор
 		 * @param int $state - Состояние
@@ -159,6 +159,17 @@
 			}
 
 			return true;
+		}
+
+		/**
+		 * Возвращает состояние
+		 * @param int $id - Идентификатор
+		 * @return int
+		 */
+		protected function getState(int $id): int {
+			$query = $this->getQueryState($id);
+			$response = $this->db->query($query->get());
+			return $response->getOneField('state');
 		}
 
 		/**
@@ -203,7 +214,8 @@
 				->fields(...$fields)
 				->table($this->table)
 				->where('state', self::STATE_DELETE, '!=')
-				->where('state', self::STATE_ERROR, '!=');
+				->where('state', self::STATE_ERROR, '!=')
+				->order('id');
 		}
 
 		/**
@@ -217,7 +229,9 @@
 				->select()
 				->fields(...$fields)
 				->table($this->table)
-				->where('id', $id);
+				->where('id', $id)
+				->where('state', self::STATE_DELETE, '!=')
+				->where('state', self::STATE_ERROR, '!=');
 		}
 
 		/**

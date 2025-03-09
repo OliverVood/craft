@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\DB\Driver\MySQLi;
 
 	require_once DIR_BASE_DB . 'driver/MySQLi/Table.php';

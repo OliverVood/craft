@@ -26,13 +26,17 @@
 
 		protected int $id;
 		protected string $name;
-		protected string $nameController;
 		protected string $title;
+
+		protected string $pathController;
+		protected string $pathModel;
 
 		protected string $tplSelect = 'admin.editor.select';
 		protected string $tplBrowse = 'admin.editor.browse';
 		protected string $tplCreate = 'admin.editor.create';
 		protected string $tplUpdate = 'admin.editor.update';
+
+		protected array $names = [];
 
 		protected Fields $fieldsSelect;
 		protected Fields $fieldsBrowse;
@@ -41,14 +45,20 @@
 
 		protected int $page_entries = 10;
 
-		public function __construct(int $id, string $name, string $title) {
+		protected array $validateDataCreate = [];
+		protected array $validateDataUpdate = [];
+
+		public function __construct(int $id, string $name, string $title, ?string $pathController = null, ?string $pathModel = null) {
 			parent::__construct($id);
 
 			$this->id = $id;
 			$this->name = $name;
-			$this->nameController = implode('.', explode('_', $name));
 			$this->title = $title;
 
+			$this->pathController = $pathController ?? $name;
+			$this->pathModel = $pathModel ?? $name;
+
+			$this->regTexts();
 			$this->regActions();
 			$this->regLinks();
 			$this->regRoutes();
@@ -67,18 +77,17 @@
 		 * @return void
 		 */
 		public function select(Input $input, int $redirectPage = 0): void {
-			if (!$this->allowSelect()) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowSelect()) Response::SendNoticeError($this->textResponseErrorAccess);
 
 			$page = $redirectPage ?: $input->defined('page')->int(1);
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			[$items, $ext] = $model->select(['*'], $page, $this->page_entries);
+			[$items, $ext] = $this->getModel()->select(['*'], $page, $this->page_entries);
 
-			$this->prepareSelect($items);
+			$this->prepareViewSelect($items);
 
 			$this->setFieldsSelect();
 
-			$title = __($this->titleSelect);
+			$title = $this->titleSelect;
 			$fields = $this->fieldsSelect;
 			$pagination = $this->page_entries ? new Pagination($this->select, $ext['page']['current'], $ext['page']['count']) : null;
 			$editor = $this;
@@ -98,20 +107,19 @@
 		public function browse(Input $input, int $redirectID = 0): void {
 			$id = $redirectID ?: $input->defined('id')->int(0);
 
-			if ($id < 1) Response::SendNoticeError(__($this->textResponseErrorNotFound));
+			if ($id < 1) Response::SendNoticeError($this->textResponseErrorNotFound);
 
-			if (!$this->allowBrowse($id)) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowBrowse($id)) Response::SendNoticeError($this->textResponseErrorAccess);
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			$item = $model->browse($id, ['*']);
+			$item = $this->getModel()->browse($id, ['*']);
 
-			$this->prepareBrowse($id, $item);
+			$this->prepareViewBrowse($id, $item);
 
 			$this->setFieldsBrowse();
 
-			if (!$item) Response::SendNoticeError(__($this->textResponseErrorNotFound));
+			if (!$item) Response::SendNoticeError($this->textResponseErrorNotFound);
 
-			$title = __($this->titleBrowse) . " #{$id}";
+			$title = "{$this->titleBrowse} #{$id}";
 			$fields = $this->fieldsBrowse;
 			$editor = $this;
 
@@ -126,16 +134,16 @@
 		 * @return void
 		 */
 		public function create(): void {
-			if (!$this->allowCreate()) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowCreate()) Response::SendNoticeError($this->textResponseErrorAccess);
 
-			$this->prepareCreate();
+			$this->prepareViewCreate();
 
 			$this->setFieldsCreate();
 
-			$title = __($this->titleCreate);
+			$title = $this->titleCreate;
 			$fields = $this->fieldsCreate;
 			$action = $this->do_create;
-			$textBtn = __($this->textBtnCreate);
+			$textBtn = $this->textBtnCreate;
 			$editor = $this;
 
 			Response::pushHistory($this->create);
@@ -152,21 +160,20 @@
 		public function update(Input $input): void {
 			$id = $input->defined('id')->int(0);
 
-			if ($id < 1) Response::SendNoticeError(__($this->textResponseErrorNotFound));
+			if ($id < 1) Response::SendNoticeError($this->textResponseErrorNotFound);
 
-			if (!$this->allowUpdate($id)) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowUpdate($id)) Response::SendNoticeError($this->textResponseErrorAccess);
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			$item = $model->browse($id, ['*']);
+			$item = $this->getModel()->browse($id, ['*']);
 
-			$this->prepareUpdate($id, $item);
+			$this->prepareViewUpdate($id, $item);
 
 			$this->setFieldsUpdate();
 
-			$title = __($this->titleUpdate) . " #{$id}";
+			$title = "{$this->titleUpdate} #{$id}";
 			$fields = $this->fieldsUpdate;
 			$action = $this->do_update;
-			$textBtn = __($this->textBtnUpdate);
+			$textBtn = $this->textBtnUpdate;
 			$editor = $this;
 
 			Response::pushHistory($this->update, ['id' => $id]);
@@ -175,49 +182,29 @@
 		}
 
 		/**
-		 * Подготовка данных для блока выборки
-		 * @param \Base\DB\Response $items
-		 * @return void
-		 */
-		protected function prepareSelect(\Base\DB\Response & $items): void {  }
-
-		/**
-		 * Подготовка данных для блока просмотра
-		 * @param int $id - Идентификатор
-		 * @param array $item - Данные
-		 * @return void
-		 */
-		protected function prepareBrowse(int $id, array & $item): void {  }
-
-		/**
-		 * Подготовка данных для блока создания
-		 * @return void
-		 */
-		protected function prepareCreate(): void {  }
-
-		/**
-		 * Подготовка данных для блока обновления
-		 * @param int $id - Идентификатор
-		 * @param array $item - Данные
-		 * @return void
-		 */
-		protected function prepareUpdate(int $id, array & $item): void {  }
-
-		/**
 		 * Создание
 		 * @controllerMethod
 		 * @param Input $input - Входные данные
 		 * @return void
 		 */
 		public function doCreate(Input $input): void {
-			if (!$this->allowCreate()) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowCreate()) Response::SendNoticeError($this->textResponseErrorAccess);
 
 			$data = $input->defined()->all();
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			if (!$id = $model->create($data)) Response::sendNoticeError(__($this->textResponseErrorCreate));
+			$this->prepareCreate($data);
+			$errors = [];
+			$validated = $this->validationDataCreate($data, $errors);
 
-			Response::pushNoticeOk(__($this->textResponseOkCreate));
+			if ($validated === null) {
+				Response::pushNoticeError($this->textResponseErrorValidate);
+				Response::pushErrors($errors);
+				Response::sendJSON();
+			}
+
+			if (!$id = $this->getModel()->create($validated)) Response::sendNoticeError($this->textResponseErrorCreate);
+
+			Response::pushNoticeOk($this->textResponseOkCreate);
 			$this->browse($input, $id);
 		}
 
@@ -230,16 +217,25 @@
 		public function doUpdate(Input $input): void {
 			$id = $input->defined('id')->int(0);
 
-			if ($id < 1) Response::SendNoticeError(__($this->textResponseErrorNotFound));
+			if ($id < 1) Response::SendNoticeError($this->textResponseErrorNotFound);
 
-			if (!$this->allowUpdate($id)) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowUpdate($id)) Response::SendNoticeError($this->textResponseErrorAccess);
 
 			$data = $input->defined()->all();
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			if (!$model->update($data, $id)) Response::sendNoticeError(__($this->textResponseErrorUpdate));
+			$this->prepareUpdate($data, $id);
+			$errors = [];
+			$validated = $this->validationDataUpdate($data, $errors);
 
-			Response::pushNoticeOk(__($this->textResponseOkUpdate));
+			if ($validated === null) {
+				Response::pushNoticeError($this->textResponseErrorValidate);
+				Response::pushErrors($errors);
+				Response::sendJSON();
+			}
+
+			if (!$this->getModel()->update($validated, $id)) Response::sendNoticeError($this->textResponseErrorUpdate);
+
+			Response::pushNoticeOk($this->textResponseOkUpdate);
 			$this->browse($input, $id);
 		}
 
@@ -252,14 +248,15 @@
 		public function doDelete(Input $input): void {
 			$id = $input->defined('id')->int(0);
 
-			if ($id < 1) Response::SendNoticeError(__($this->textResponseErrorNotFound));
+			if ($id < 1) Response::SendNoticeError($this->textResponseErrorNotFound);
 
-			if (!$this->allowDelete($id)) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowDelete($id)) Response::SendNoticeError($this->textResponseErrorAccess);
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			if (!$model->delete($id)) Response::sendNoticeError(__($this->textResponseErrorDelete));
+			$this->prepareDelete($id);
 
-			Response::pushNoticeOk(__($this->textResponseOkDelete));
+			if (!$this->getModel()->delete($id)) Response::sendNoticeError($this->textResponseErrorDelete);
+
+			Response::pushNoticeOk($this->textResponseOkDelete);
 			$this->select($input, $input->old('page')->int(1));
 		}
 
@@ -273,16 +270,96 @@
 			$id = $input->defined('id')->int(0);
 			$state = $input->defined('state')->int(0);
 
-			if ($id < 1) Response::SendNoticeError(__($this->textResponseErrorNotFound));
-			if ($state < 1) Response::SendNoticeError(__($this->textResponseErrorState));
+			if ($id < 1) Response::SendNoticeError($this->textResponseErrorNotFound);
+			if ($state < 1) Response::SendNoticeError($this->textResponseErrorState);
 
-			if (!$this->allowState($id)) Response::SendNoticeError(__($this->textResponseErrorAccess));
+			if (!$this->allowState($id)) Response::SendNoticeError($this->textResponseErrorAccess);
 
-			/** @var Model $model */ $model = modelEditor($this->nameController);
-			if (!$model->setState($id, $state)) Response::sendNoticeError(__($this->textResponseErrorState));
+			$this->prepareSetState($id, $state);
 
-			Response::pushNoticeOk(__($this->textResponseOkSetState));
+			if (!$this->getModel()->setState($id, $state)) Response::sendNoticeError($this->textResponseErrorState);
+
+			Response::pushNoticeOk($this->textResponseOkSetState);
 			$this->select($input, $input->old('page')->int(1));
+		}
+
+		/**
+		 * Подготовка данных для блока выборки
+		 * @param \Base\DB\Response $items
+		 * @return void
+		 */
+		protected function prepareViewSelect(\Base\DB\Response & $items): void {  }
+
+		/**
+		 * Подготовка данных для блока просмотра
+		 * @param int $id - Идентификатор
+		 * @param array $item - Данные
+		 * @return void
+		 */
+		protected function prepareViewBrowse(int $id, array & $item): void {  }
+
+		/**
+		 * Подготовка данных для блока создания
+		 * @return void
+		 */
+		protected function prepareViewCreate(): void {  }
+
+		/**
+		 * Подготовка данных для блока обновления
+		 * @param int $id - Идентификатор
+		 * @param array $item - Данные
+		 * @return void
+		 */
+		protected function prepareViewUpdate(int $id, array & $item): void {  }
+
+		/**
+		 * Подготовка данных перед созданием
+		 * @param array $data - Данные
+		 * @return void
+		 */
+		protected function prepareCreate(array & $data): void {  }
+
+		/**
+		 * Подготовка данных перед изменением
+		 * @param array $data - Данные
+		 * @param int $id - Идентификатор
+		 * @return void
+		 */
+		protected function prepareUpdate(array & $data, int $id): void {  }
+
+		/**
+		 * Подготовка данных перед удалением
+		 * @param int $id - Идентификатор
+		 * @return void
+		 */
+		protected function prepareDelete(int $id): void {  }
+
+		/**
+		 * Подготовка данных перед изменением состояния
+		 * @param int $id - Идентификатор
+		 * @param int $state - Состояние
+		 * @return void
+		 */
+		protected function prepareSetState(int $id, int $state): void {  }
+
+		/**
+		 * Проверяет данные для создания
+		 * @param array $data - Данные
+		 * @param array $errors - Ошибки
+		 * @return array|null
+		 */
+		protected function validationDataCreate(array $data, array & $errors): ?array {
+			return validation($data, $this->validateDataCreate, $this->names, $errors);
+		}
+
+		/**
+		 * Проверяет данные для изменения
+		 * @param array $data - Данные
+		 * @param array $errors - Ошибки
+		 * @return array|null
+		 */
+		protected function validationDataUpdate(array $data, array & $errors): ?array {
+			return validation($data, $this->validateDataUpdate, $this->names, $errors);
 		}
 
 		/**
@@ -325,7 +402,7 @@
 		public function getLinksNavigateBrowse(array $item): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref('<< ' . __($this->titleSelect), ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -337,7 +414,7 @@
 		public function getLinksNavigateCreate(): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref('<< ' . __($this->titleSelect), ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -350,7 +427,7 @@
 		public function getLinksNavigateUpdate(array $item): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref('<< ' . __($this->titleSelect), ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -363,11 +440,19 @@
 		public function getLinksManage(array $item): Accumulator {
 			$links = new Accumulator();
 
-			$links->push($this->browse->linkHrefID($item['id'] ?? 0, __($this->textDoBrowse), $item));
-			$links->push($this->update->linkHrefID($item['id'] ?? 0, __($this->textDoUpdate), $item));
-			$links->push($this->do_delete->linkHrefID($item['id'] ?? 0, __($this->textDoDelete), $item));
+			$links->push($this->browse->linkHrefID($item['id'] ?? 0, $this->textDoBrowse, $item));
+			$links->push($this->update->linkHrefID($item['id'] ?? 0, $this->textDoUpdate, $item));
+			$links->push($this->do_delete->linkHrefID($item['id'] ?? 0, $this->textDoDelete, $item));
 
 			return $links;
+		}
+
+		/**
+		 * Возвращает модель редактора
+		 * @return Model
+		 */
+		protected function getModel(): Model {
+			return modelEditor($this->pathModel);
 		}
 
 	}

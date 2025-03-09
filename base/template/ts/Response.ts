@@ -45,6 +45,7 @@ namespace Base {
 				case 'section': Response.section(data); break;
 				case 'notice': Response.notice(data); break;
 				case 'data': Response.handler(handler, data); break;
+				case 'errors': Response.errors(data); break;
 				// case 'debugger': Debugger.append(data); break;
 			}
 		}
@@ -84,6 +85,15 @@ namespace Base {
 		 */
 		private static handler(handler: Function | undefined, data: any): void {
 			if (handler) handler(data);
+		}
+
+		/**
+		 *
+		 * @param data - Данные по ошибкам
+		 * @private
+		 */
+		private static errors(data: Record<string, string[]>): void {
+			Base.Errors.execute(data);
 		}
 
 	}

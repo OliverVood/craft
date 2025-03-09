@@ -12,3 +12,5 @@
 
 	Base\Route::set('statistic_ip::*', 'statistic.ip', Base\Route::SOURCE_EDITORS);
 	Base\Route::set('statistic_action::*', 'statistic.action', Base\Route::SOURCE_EDITORS);
+	Base\Route::set('group::*', 'user.group', Base\Route::SOURCE_EDITORS);
+	Base\Route::set('user::*', 'user.user', Base\Route::SOURCE_EDITORS);

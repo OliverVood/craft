@@ -1,15 +1,16 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Proj\Models;
 
 	use Base\Access;
 	use Base\Model;
-	use Proj\DB;
 
 	/**
 	 * Модель пользователей
 	 */
-	class User extends Model {
+	class Users extends Model {
 		const TABLE_USER = 'users';
 		const TABLE_ACCESS_GROUPS = 'access_groups';
 		const TABLE_ACCESS_USERS = 'access_users';
@@ -22,7 +23,7 @@
 		private static string | null $alias = null;
 
 		public function __construct() {
-			$this->db = DB\Craft::instance();
+			$this->db = app()->db('craft');
 
 			$this->updateDataFromSession();
 			if ($this->isAuth()) $this->updateAccess();
@@ -159,7 +160,7 @@
 		 * @return string
 		 */
 		private function getPasswordHash($pass): string {
-			return md5($pass);
+			return encryption($pass);
 		}
 
 		/**

@@ -1,0 +1,55 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace Base\Access;
+
+	/**
+	 * Базовый класс признаков
+	 */
+	class Feature {
+		protected int $id;
+		protected string $name;
+		protected string $title;
+
+		protected Rights $rights;
+
+		/**
+		 * @param int $id - Идентификатор признака
+		 * @param string $name - Наименование признака
+		 * @param $title - Заголовок признака
+		 */
+		public function __construct(int $id, string $name, string $title = '') {
+			$this->id = $id;
+			$this->name = $name;
+			$this->title = $title ?: $name;
+
+			$this->rights = new Rights();
+		}
+
+		/**
+		 * Возвращает идентификатор признака
+		 * @return int
+		 */
+		public function id(): int {
+			return $this->id;
+		}
+
+		/**
+		 * Возвращает наименование признака
+		 * @return string
+		 */
+		public function name(): string {
+			return $this->name;
+		}
+
+		/**
+		 * Возвращает право
+		 * @param string $name - Наименование права
+		 * @return Right
+		 */
+		public function rights(string $name): Right {
+			return $this->rights->get($name);
+		}
+
+	}

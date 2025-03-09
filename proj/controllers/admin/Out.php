@@ -1,32 +1,32 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Proj\Controllers\Admin;
 
 	use AllowDynamicProperties;
 	use Base\Access;
 	use Base\Controller;
 	use Base\Helper\Response;
-	use Base\Model;
-	use Base\Template\Buffer;
 	use Base\View;
 	use Proj\Access\Admin as Rights;
 	use Proj\Collections;
 	use Proj\Editors;
 	use Proj\Links\Admin as Links;
-	use proj\models\User;
+	use proj\models\Users;
 	use Proj\Params\Site;
 	use Proj\Templates\Admin\Template;
+	use Proj\Editors\Controllers as EditorsControllers;
 
 	/**
 	 * Работа с шаблоном
 	 * @controller
-	 * @property User $user
+	 * @property Users $users
 	 */
-	#[AllowDynamicProperties] class Out extends Controller implements Collections\Out {
-		use Buffer;
+	#[AllowDynamicProperties] class Out extends Controller {
 
 		public function __construct() {
-			parent::__construct(self::ID);
+			parent::__construct(app()->features('out')->id());
 		}
 
 		/**
@@ -35,13 +35,13 @@
 		 * @return void
 		 */
 		public function setHead(): void {
-			$this->user = Model::get('user');
+			$this->users = model('users');
 
 			$data = [
-				'user' => $this->user->getAlias(),
+				'user' => $this->users->getAlias(),
 				'links' => [
-					'logout' => Links\User::$exit->linkXHR('', [], ['class' => 'ico logout'])
-				]
+					'logout' => linkInternal('users_exit')->linkXHR('', [], ['class' => 'ico logout']),
+				],
 			];
 
 			Template::$layout->header->push(
@@ -55,34 +55,93 @@
 		 * @return void
 		 */
 		public function setMenu(): void {
+			$this->setMainToMenu();
+			$this->setDevelopmentToMenu();
+			$this->setAccessToMenu();
+		}
+
+		/**
+		 * Построение меню главного раздела
+		 * @return void
+		 */
+		private function setMainToMenu(): void {
 			Template::$layout->menu->push(
 				$this->item(Links\Page::$site->link(Links\Page::$site->address(), __('Открыть сайт'), [], ['target' => '_blank'])),
 				$this->separator(),
 
 				$this->item(Links\Page::$home->linkHref(__('Главная')))
 			);
+		}
 
-			$menuDevelopment = [];
+		/**
+		 * Построение меню раздела разработчика
+		 * @return void
+		 */
+		private function setDevelopmentToMenu(): void {
+			$menu = [];
 
-			if (Access::allow(Rights\DB::ACCESS_DB_STRUCTURE, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$structure->linkHref(__('Структура'));
-			if (Access::allow(Rights\DB::ACCESS_DB_CHECK, Collections\DB::ID)) $menuDevelopment['db'][] = Links\DB::$check->linkHref(__('Проверить'));
+			/* Раздел работы с базой данных */
+			if (Access::allow(Rights\DB::ACCESS_DB_STRUCTURE, Collections\DB::ID)) $menu['db'][] = Links\DB::$structure->linkHref(__('Структура'));
+			if (Access::allow(Rights\DB::ACCESS_DB_CHECK, Collections\DB::ID)) $menu['db'][] = Links\DB::$check->linkHref(__('Проверить'));
 
+			/* Раздел интерфейса Craft */
+//			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
+
+			/* Раздел статистики */
+			/** @var EditorsControllers\Statistic\IP $editorIP */ $editorIP = controllerEditor('statistic.ip');
+			if ($editorIP->select->allow()) $menu['statistic'][] = $editorIP->select->linkHref(__('Запросы к серверу'), ['page' => 1]);
+			/** @var EditorsControllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
+			if ($editorAction->select->allow()) $menu['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
+
+			if (!$menu) return;
+
+			/* Построение меню */
+			Template::$layout->menu->push($this->separator());
+			Template::$layout->menu->push($this->head(__('Разработка')));
+
+			if (isset($menu['db'])) Template::$layout->menu->push(self::group(__('База данных'), $menu['db']));
 			// Композиция
+			if (isset($menu['statistic'])) Template::$layout->menu->push(self::group(__('Статистика'), $menu['statistic']));
+		}
 
-			/** @var \Proj\Editors\Controllers\Statistic\IP $editorIP */ $editorIP = controllerEditor('statistic.ip');
-			if ($editorIP->select->allow()) $menuDevelopment['statistic'][] = $editorIP->select->linkHref(__('Запросы к серверу'), ['page' => 1]);
-			/** @var \Proj\Editors\Controllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
-			if ($editorAction->select->allow()) $menuDevelopment['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
+		/**
+		 * Построение меню раздела безопасности
+		 * @return void
+		 */
+		private function setAccessToMenu(): void {
+			$menu = [];
 
-			if ($menuDevelopment) {
-				Template::$layout->menu->push($this->separator());
-				Template::$layout->menu->push($this->head(__('Разработка')));
+			/* Раздел пользовательских групп */
+			/** @var EditorsControllers\User\Group $editorGroup */ $editorGroup = controllerEditor('user.group');
+			if ($editorGroup->select->allow()) $menu['groups'][] = $editorGroup->select->linkHref(__('Список групп'), ['page' => 1]);
+			if ($editorGroup->create->allow()) $menu['groups'][] = $editorGroup->create->linkHref(__('Добавить группу'));
 
-				if (isset($menuDevelopment['db'])) Template::$layout->menu->push(self::group(__('База данных'), $menuDevelopment['db']));
-				// Композиция
-				if (isset($menuDevelopment['statistic'])) Template::$layout->menu->push(self::group(__('Статистика'), $menuDevelopment['statistic']));
-			}
-			//TODO Заполнить левое меню
+			/* Раздел пользователей */
+			/** @var EditorsControllers\User\User $editorUser */ $editorUser = controllerEditor('user.user');
+			if ($editorUser->select->allow()) $menu['users'][] = $editorUser->select->linkHref(__('Список пользователей'), ['page' => 1]);
+			if ($editorUser->create->allow()) $menu['users'][] = $editorUser->create->linkHref(__('Добавить пользователя'));
+
+			if (!$menu) return;
+
+			/* Построение меню */
+			Template::$layout->menu->push($this->separator());
+			Template::$layout->menu->push($this->head(__('Безопасность')));
+
+			if (isset($menu['groups'])) Template::$layout->menu->push(self::group(__('Группы'), $menu['groups']));
+			if (isset($menu['users'])) Template::$layout->menu->push(self::group(__('Пользователи'), $menu['users']));
+		}
+
+		private function setSiteToMenu(): void {//TODO Заполнить левое меню
+//			$menuNews = News::instance()->GetMenu();
+//			$menuChanges = Changes::instance()->GetMenu();
+//			$menuFeedback = Feedback::instance()->GetMenu();
+//			if ($menuNews || $menuChanges) {
+//				Layout::instance()->menu->Push($this->OutMenuSeparator());
+//				Layout::instance()->menu->Push($this->OutMenuHead('Сайт'));
+//				if ($menuNews) Layout::instance()->menu->Push(TPL\Group::ToVar('Новости', $menuNews));
+//				if ($menuChanges) Layout::instance()->menu->Push(TPL\Group::ToVar('Актуальное', $menuChanges));
+//				if ($menuFeedback) Layout::instance()->menu->Push(TPL\Group::ToVar('Обратная связь', $menuFeedback));
+//			}
 		}
 
 		/**
