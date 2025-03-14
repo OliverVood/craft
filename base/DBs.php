@@ -58,7 +58,7 @@
 		 * @param string $alias - Псевдоним базы данных
 		 * @return DB
 		 */
-		public function initAndGet(string $alias): DB {
+		public function registrationAndGet(string $alias): DB {
 			if (!isset($this->models[$alias])) $this->registration($alias);
 
 			return $this->get($alias);

@@ -8,15 +8,14 @@
 	use Base\Access;
 	use Base\Controller;
 	use Base\Helper\Response;
-	use Base\View;
+	use Base\UI\View;
+	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Access\Admin as Rights;
 	use Proj\Collections;
 	use Proj\Editors;
-	use Proj\Links\Admin as Links;
-	use proj\models\Users;
-	use Proj\Params\Site;
-	use Proj\Templates\Admin\Template;
 	use Proj\Editors\Controllers as EditorsControllers;
+	use proj\models\Users;
+	use proj\ui\templates\admin\Template;
 
 	/**
 	 * Работа с шаблоном
@@ -40,12 +39,14 @@
 			$data = [
 				'user' => $this->users->getAlias(),
 				'links' => [
-					'logout' => linkInternal('users_exit')->linkXHR('', [], ['class' => 'ico logout']),
+					'logout' => linkInternal('users_exit'),
 				],
 			];
 
-			Template::$layout->header->push(
-				View::get('admin.out.head', $data)
+			/** @var Template $template */ $template = template();
+
+			$template->layout->header->push(
+				view('admin.out.head', $data)
 			);
 		}
 
@@ -56,8 +57,8 @@
 		 */
 		public function setMenu(): void {
 			$this->setMainToMenu();
-			$this->setDevelopmentToMenu();
-			$this->setAccessToMenu();
+//			$this->setDevelopmentToMenu();
+//			$this->setAccessToMenu();
 		}
 
 		/**
@@ -65,11 +66,12 @@
 		 * @return void
 		 */
 		private function setMainToMenu(): void {
-			Template::$layout->menu->push(
-				$this->item(Links\Page::$site->link(Links\Page::$site->address(), __('Открыть сайт'), [], ['target' => '_blank'])),
-				$this->separator(),
+			/** @var Template $template */$template = template();
 
-				$this->item(Links\Page::$home->linkHref(__('Главная')))
+			$template->layout->menu->push(
+				app()->links->getExternal('site')->hyperlink(__('Открыть сайт'), [], ['target' => '_blank']),
+				$this->separator(),
+				app()->links->getInternal('home')->hyperlink(__('Главная'))
 			);
 		}
 
@@ -150,9 +152,11 @@
 		 * @return void
 		 */
 		public function setFooter(): void {
-			$data = ['siteName' => Site::$siteName];
+			/** @var Template $template */$template = template();
 
-			Template::$layout->footer->push(View::get('admin.out.footer', $data));
+			$data = ['siteName' => app()->params->name];
+
+			$template->layout->footer->push(View::get('admin.out.footer', $data));
 		}
 
 		/**
@@ -160,10 +164,10 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		public function home(): void {
-			Response::pushHistory(Links\Page::$home);
-			Response::pushSection('content', View::get('admin.out.home'));
-			Response::SendJSON();
+		#[NoReturn] public function home(): void {
+			response()->history(linkInternal('home'));
+			response()->section('content', view('admin.out.home'));
+			response()->ok([], true);
 		}
 
 		/**

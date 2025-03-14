@@ -8,27 +8,35 @@
 	use Base\Access\Feature;
 	use Base\Access\Links;
 	use Base\DB\DB;
+	use Base\Helper\Response;
 	use Base\Link\External;
+	use stdClass;
 
 	/**
 	 * Класс приложения
 	 */
 	class App {
-		use Instance;
+		use Singleton;
 
 		const ASSEMBLY_PRODUCTION = 1;
 		const ASSEMBLY_DEVELOPMENT = 2;
 
 		private Request $request;
+		private Response $response;
 
 		public Controllers $controllers;
 		public Models $models;
-		public DBs $dbs;
+
+		public Access $access;
 		public Features $features;
+
+		public DBs $dbs;
 		public Links $links;
 
 		private string $version;
 		private int $assembly;
+
+		public stdClass $params;
 
 		/**
 		 * @param string $version - Версия
@@ -38,14 +46,21 @@
 		 */
 		private function __construct(string $version, int $assembly, string $html, string $xhr) {
 			$this->request = new Request($html, $xhr);
+			$this->response = new Response();
+
 			$this->controllers = new Controllers();
 			$this->models = new Models();
-			$this->dbs = new DBs();
+
+			$this->access = Access::instance();
 			$this->features = new Features();
+
+			$this->dbs = new DBs();
 			$this->links = new Links();
 
 			$this->version = $version;
 			$this->assembly = $assembly;
+
+			$this->params = new stdClass();
 
 			session_start();
 		}
@@ -59,12 +74,20 @@
 		}
 
 		/**
+		 * Возвращает объект ответов
+		 * @return Response
+		 */
+		public function response(): Response {
+			return $this->response;
+		}
+
+		/**
 		 * Возвращает контроллер по имени
 		 * @param string $name - Наименование контроллера
 		 * @return Controller
 		 */
 		public function controllers(string $name): Controller {
-			return $this->controllers->regAndGet($name, Controllers::SOURCE_CONTROLLERS);
+			return $this->controllers->registrationAndGet($name, Controllers::SOURCE_CONTROLLERS);
 		}
 
 		/**
@@ -73,7 +96,15 @@
 		 * @return Model
 		 */
 		public function models(string $name): Model {
-			return $this->models->regAndGet($name, Models::SOURCE_MODEL);
+			return $this->models->registrationAndGet($name, Models::SOURCE_MODEL);
+		}
+
+		/**
+		 * Возвращает права пользователя
+		 * @return Access
+		 */
+		public function access(): Access {
+			return $this->access;
 		}
 
 		/**
@@ -82,7 +113,7 @@
 		 * @return DB
 		 */
 		public function db(string $alias): DB {
-			return $this->dbs->initAndGet($alias);
+			return $this->dbs->registrationAndGet($alias);
 		}
 
 		/**
@@ -92,6 +123,14 @@
 		 */
 		public function features(string $name): Feature {
 			return $this->features->get($name);
+		}
+
+		/**
+		 * Возвращает версию
+		 * @return string
+		 */
+		public function version(): string {
+			return $this->version;
 		}
 
 	}

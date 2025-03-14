@@ -3,7 +3,7 @@
 	namespace Proj\Controllers;
 
 	use Base\Controller;
-	use Proj\Templates\Site\Template;
+	use proj\ui\templates\site\Template;
 
 	/**
 	 * Базовый контроллер

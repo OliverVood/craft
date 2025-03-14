@@ -6,8 +6,8 @@
 	use Base\Controller;
 	use Base\Data\Set\Input;
 	use Base\Model;
-	use Base\View;
-	use Proj\Templates\Site\Template;
+	use Base\UI\View;
+	use proj\ui\templates\site\Template;
 
 	/**
 	 * Тесты

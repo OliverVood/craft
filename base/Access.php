@@ -1,16 +1,20 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base;
 
 	/**
-	 * Базовый класс работы с правами
+	 * Базовый класс работы с правами пользователя
 	 */
 	class Access {
+		use Singleton;
+
 		const PERMISSION_UNDEFINED		= 'undefined';
 		const PERMISSION_YES			= 'yes';
 		const PERMISSION_NO				= 'no';
 
-		public static string | null $userId = null;
+		public static int | null $userId = null;
 		public static int | null $userGroup = null;
 
 		private static array $superUsers = [];
@@ -25,7 +29,7 @@
 		 * @param int|null $userGroupID - Идентификатор группы
 		 * @return void
 		 */
-		public static function setUserData(?int $userId, ?int $userGroupID): void {
+		public function setUserData(?int $userId, ?int $userGroupID): void {
 			self::$userId = $userId;
 			self::$userGroup = $userGroupID;
 		}
@@ -35,7 +39,7 @@
 		 * @param array $users - Перечень идентификаторов суперпользователей
 		 * @return void
 		 */
-		public static function regSuperUsers(array $users): void {
+		public function regSuperUsers(array $users): void {
 			self::$superUsers = $users;
 		}
 
@@ -46,7 +50,7 @@
 		 * @param string $title - Заголовок
 		 * @return void
 		 */
-		public static function addCollection(int $id, string $name, string $title = ''): void {
+		public function addCollection(int $id, string $name, string $title = ''): void {
 			self::$accesses[$id] = ['name' => $name, 'title' => $title, 'rights' => []];
 		}
 
@@ -58,7 +62,7 @@
 		 * @param $title - Заголовок
 		 * @return void
 		 */
-		public static function addRight(int $collection, int $id, string $name, $title = ''): void {
+		public function addRight(int $collection, int $id, string $name, $title = ''): void {
 			self::$accesses[$collection]['rights'][] = ['id' => $id, 'name' => $name, 'title' => $title];
 		}
 
@@ -71,7 +75,7 @@
 		 * @param array $rights - Права
 		 * @return void
 		 */
-		public static function setGroupsRights(array $rights): void {
+		public function setGroupsRights(array $rights): void {
 			self::$groupsRights = $rights;
 		}
 
@@ -80,7 +84,7 @@
 		 * @param array $rights - Права
 		 * @return void
 		 */
-		public static function setUsersRights(array $rights): void {
+		public function setUsersRights(array $rights): void {
 			self::$usersRights = $rights;
 		}
 
@@ -98,7 +102,7 @@
 		 * @param int $instance - Экземпляр
 		 * @return bool
 		 */
-		public static function allow(int $right, int $collection, int $instance = 0): bool {
+		public function allow(int $right, int $collection, int $instance = 0): bool {
 			if (!isset(self::$userId) || !isset(self::$userGroup)) return false;
 			if (in_array(self::$userId, self::$superUsers)) return true;
 			switch (self::allowUser($right, self::$userId, $collection, $instance)) {
@@ -117,7 +121,7 @@
 		 * @param int $instance - Экземпляр
 		 * @return string
 		 */
-		private static function allowGroup(int $right, int $group, int $collection, int $instance): string {
+		private function allowGroup(int $right, int $group, int $collection, int $instance): string {
 			if ($instance && isset(self::$groupsRights[$group][$collection][$instance][$right])) return self::$groupsRights[$group][$collection][$instance][$right];
 			if (!isset(self::$groupsRights[$group][$collection][0][$right])) return self::PERMISSION_UNDEFINED;
 			return self::$groupsRights[$group][$collection][0][$right];
@@ -131,7 +135,7 @@
 		 * @param int $instance - Экземпляр
 		 * @return string
 		 */
-		private static function allowUser(int $right, int $user, int $collection, int $instance): string {
+		private function allowUser(int $right, int $user, int $collection, int $instance): string {
 			if ($instance && isset(self::$usersRights[$user][$collection][$instance][$right])) return self::$usersRights[$user][$collection][$instance][$right];
 			if (!isset(self::$usersRights[$user][$collection][0][$right])) return self::PERMISSION_UNDEFINED;
 			return self::$usersRights[$user][$collection][0][$right];

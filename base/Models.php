@@ -70,7 +70,7 @@
 		 * @param int $source - Источник
 		 * @return Model
 		 */
-		public function regAndGet(string $name, int $source): Model {
+		public function registrationAndGet(string $name, int $source): Model {
 			if (!isset($this->models[$name])) $this->registration($name, $source);
 
 			return $this->get($name);

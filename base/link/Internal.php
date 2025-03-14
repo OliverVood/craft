@@ -5,43 +5,30 @@
 	namespace Base\Link;
 
 	/**
-	 * Работа с внутренними ссылками
+	 * Класс внутренних ссылок
 	 */
-	class Internal extends External {
-		private string $entity;
-		private string $action;
-
+	class Internal extends Fundamental {
 		private string $path;
+
 		private string $href;
 		private string $xhr;
 
-		public function __construct(string $entity = '*', string $action = '*', string $href = '', string $click = '') {
-			parent::__construct('', $click);
-			$this->entity = $entity;
-			$this->action = $action;
+		public function __construct(string $path = '', string $click = '') {
+			$this->path = $path;
 
-			$this->path = '';
+			$this->href 	= request()->html() . $path;
+			$this->xhr		= request()->xhr() . $path;
 
-			if ($this->entity !== '*' && $this->entity !== '') $this->path .= "/{$this->entity}";
-			if ($this->action !== '*' && $this->action !== '') $this->path .= "/{$this->action}";
-
-			if ($href == 'default') {
-				$this->href 	= request()->html() . $this->path;
-				$this->xhr 		= request()->xhr() . $this->path;
-				$this->address 	= request()->address() . request()->html() . $this->path;
-			} else {
-				$this->href 	= request()->html() . $href;
-				$this->xhr		= request()->xhr() . $href;
-				$this->address	= request()->address() . request()->html() . $href;
-			}
+			parent::__construct(request()->address() . request()->html() . $path, $click);
 		}
 
 		/**
 		 * Возвращает путь
+		 * @param array $data - Данные для замены
 		 * @return string
 		 */
-		public function path(): string {
-			return $this->path;
+		public function path(array $data = []): string {
+			return $this->prepare($this->path/* ?: '/'*/, $data);
 		}
 
 		/**
@@ -50,18 +37,7 @@
 		 * @return string
 		 */
 		public function href(array $data = []): string {
-			return $this->ParseTarget($this->href ?: '/', $data);
-		}
-
-		/**
-		 * Возвращает ссылку anchor
-		 * @param string $content - Контент
-		 * @param array $data - Данные для замены
-		 * @param array $params - Параметры
-		 * @return string
-		 */
-		public function linkHref(string $content, array $data = [], array $params = []): string {
-			return $this->link($this->href($data), $content, $data, $params);
+			return $this->prepare($this->href, $data);
 		}
 
 		/**
@@ -70,18 +46,31 @@
 		 * @return string
 		 */
 		public function xhr(array $data = []): string {
-			return $this->ParseTarget($this->xhr, $data);
+			return $this->prepare($this->xhr, $data);
 		}
 
 		/**
-		 * Возвращает ссылку anchor xhr
-		 * @param string $content - Контент
+		 * Возвращает гиперссылку href
+		 * @param string $content - Содержимое
 		 * @param array $data - Данные для замены
 		 * @param array $params - Параметры
 		 * @return string
 		 */
-		public function linkXHR(string $content, array $data = [], array $params = []): string {
-			return $this->link($this->xhr($data), $content, $data, $params);
+		public function hyperlinkHref(string $content, array $data = [], array $params = []): string {
+			$params['href'] = $this->href;
+			return $this->hyperlink($content, $data, $params);
+		}
+
+		/**
+		 * Возвращает гиперссылку xhr
+		 * @param string $content - Содержимое
+		 * @param array $data - Данные для замены
+		 * @param array $params - Параметры
+		 * @return string
+		 */
+		public function hyperlinkXHR(string $content, array $data = [], array $params = []): string {
+			$params['href'] = $this->xhr;
+			return $this->hyperlink($content, $data, $params);
 		}
 
 	}

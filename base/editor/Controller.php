@@ -6,7 +6,7 @@
 	use Base\Helper\Accumulator;
 	use Base\Helper\Pagination;
 	use Base\Helper\Response;
-	use Base\View;
+	use Base\UI\View;
 
 	require DIR_BASE . 'editor/Access.php';
 	require DIR_BASE . 'editor/Link.php';

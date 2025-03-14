@@ -11,15 +11,15 @@
 	 * Модель пользователей
 	 */
 	class Users extends Model {
-		const TABLE_USER = 'users';
+		const TABLE_USERS = 'users';
 		const TABLE_ACCESS_GROUPS = 'access_groups';
 		const TABLE_ACCESS_USERS = 'access_users';
 
 		private \Base\DB\DB $db;
 		private static bool $auth = false;
 
-		private static string | null $id = null;
-		private static string | null $group = null;
+		private static int | null $id = null;
+		private static int | null $group = null;
 		private static string | null $alias = null;
 
 		public function __construct() {
@@ -37,14 +37,13 @@
 		 */
 		public function auth(string $login, string $password): bool {
 			$login = $this->db->escape($login);
-			$hash = $this->getpasswordHash($password);
 
 			$response = $this->db
 				->select()
-				->table(self::TABLE_USER)
+				->table(self::TABLE_USERS)
 				->fields('id', 'gid', 'login', 'password')
 				->where('login', $login)
-				->where('password', $hash)
+				->where('password', $password)
 				->query();
 
 			$data = $response->getOne();
@@ -72,8 +71,8 @@
 		private function login(array $data): void {
 			self::$auth = true;
 
-			self::$id = $data['id'];
-			self::$group = $data['gid'];
+			self::$id = (int)$data['id'];
+			self::$group = (int)$data['gid'];
 			self::$alias = $data['login'];
 
 			$this->updateSession();
@@ -115,9 +114,9 @@
 			if (isset($_SESSION['ADMIN']['USER'])) {
 				self::$auth = $_SESSION['ADMIN']['USER']['AUTH'] ?? false;
 
-				self::$id = $_SESSION['ADMIN']['USER']['ID'] ?? false;
-				self::$group = $_SESSION['ADMIN']['USER']['GROUP'] ?? false;
-				self::$alias = $_SESSION['ADMIN']['USER']['ALIAS'] ?? false;
+				self::$id = $_SESSION['ADMIN']['USER']['ID'] ?? null;
+				self::$group = $_SESSION['ADMIN']['USER']['GROUP'] ?? null;
+				self::$alias = $_SESSION['ADMIN']['USER']['ALIAS'] ?? null;
 			}
 		}
 
@@ -126,9 +125,7 @@
 		 * @return void
 		 */
 		private function updateAccess(): void {
-			Access::setUserData(self::$id, self::$group);
-
-			Access::regSuperUsers(SUPER_USERS);
+			access()->setUserData(self::$id, self::$group);
 
 			$response = $this->db
 				->select()
@@ -140,7 +137,7 @@
 			foreach ($response->each() as $row) {
 				$groupsRights[$row['gid']][$row['collection']][$row['instance']][$row['right']] = $row['permission'];
 			}
-			Access::setGroupsRights($groupsRights);
+			access()->setGroupsRights($groupsRights);
 
 			$response = $this->db
 				->select()
@@ -151,7 +148,7 @@
 			foreach ($response->each() as $row) {
 				$usersRights[$row['uid']][$row['collection']][$row['instance']][$row['right']] = $row['permission'];
 			}
-			Access::setUsersRights($usersRights);
+			access()->setUsersRights($usersRights);
 		}
 
 		/**

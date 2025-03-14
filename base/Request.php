@@ -4,7 +4,7 @@
 
 	namespace Base;
 
-	use Base\Data\Set\Data;
+	use Base\Data\Set;
 
 	/**
 	 * Класс для работы с запросом
@@ -16,7 +16,7 @@
 		private string $html;
 		private string $xhr;
 
-		private Data $data;
+		private Set $data;
 
 		public function __construct(string $html, string $xhr) {
 			$this->protocol = (isset($_SERVER['HTTPS'])) ? 'https' : 'http';
@@ -25,7 +25,7 @@
 			$this->html = $html;
 			$this->xhr = $xhr;
 
-			$this->data = new Data();
+			$this->data = new Set();
 		}
 
 		/**
@@ -70,9 +70,9 @@
 
 		/**
 		 * Возвращает объект с данными запроса
-		 * @return Data
+		 * @return Set
 		 */
-		public function data(): Data {
+		public function data(): Set {
 			return $this->data;
 		}
 

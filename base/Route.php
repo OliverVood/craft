@@ -5,14 +5,13 @@
 	namespace Base;
 
 	use base\data\set\Input;
-	use Base\Data\Set\Old;
 	use Exception;
 
 	/**
 	 * Маршрутизатор
 	 */
 	class Route {
-		use Instance;
+		use Singleton;
 
 		private string $entity = 'main';
 		private string $action = 'index';

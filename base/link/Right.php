@@ -7,7 +7,7 @@
 	use Base\Access;
 
 	/**
-	 * Работа со ссылками через права пользователя
+	 * Класс ссылок, работающих через права пользователя
 	 */
 	class Right extends Internal {
 		private int $collection;

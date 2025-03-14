@@ -5,10 +5,10 @@
 	use Base\ControllerAccess;
 	use Base\Data\Set\Input;
 	use Base\Helper\Response;
-	use Base\View;
+	use Base\UI\View;
+	use Proj\Access\Admin as Access;
 	use Proj\Collections;
 	use Proj\Links\Admin as Links;
-	use Proj\Access\Admin as Access;
 
 	/**
 	 * Работа с базой данных

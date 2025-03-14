@@ -70,7 +70,7 @@
 		 * @param int $source - Источник
 		 * @return Controller
 		 */
-		public function regAndGet(string $name, int $source): Controller {
+		public function registrationAndGet(string $name, int $source): Controller {
 			if (!isset($this->controllers[$name])) $this->registration($name, $source);
 
 			return $this->get($name);
@@ -83,7 +83,7 @@
 		 * @return void
 		 */
 		public function run(int $source, string $name, string $method): void {
-			call_user_func_array([$this->regAndGet($name, $source), $method], [request()->data()]);
+			call_user_func_array([$this->registrationAndGet($name, $source), $method], [request()->data()]);
 		}
 
 	}
