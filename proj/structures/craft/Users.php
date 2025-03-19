@@ -1,18 +1,13 @@
 <?php
 
-	namespace Proj\Structures;
+	namespace Proj\Structures\Craft;
 
-	use Base\DB\Structure;
 	use Base\DB\Table;
-	use Proj\Collections;
-	use Proj\DB;
 
 	/**
 	 * Структура таблиц сущности Пользователь
 	 */
-	class User {
-		private Structure $structure;
-
+	class Users {
 		private Table $table_clients;
 //		protected Table $table_groups;
 //		protected Table $table_users;
@@ -20,9 +15,9 @@
 //		protected Table $table_access_users;
 
 		public function __construct() {
-			$this->structure = DB\Craft::instance()->structure;
+			$structure = db('craft')->structure();
 
-			$this->table_clients = $this->structure->table(Collections\User::TABLES['clients'], 'Клиенты');
+			$this->table_clients = $structure->table('clients', 'Клиенты');
 			$this->table_clients->id('id', 'Идентификатор');
 			$this->table_clients->timestamp('datecr', false, 'Дата создания');
 			$this->table_clients->timestamp('datemd', true, 'Дата изменения');
@@ -65,4 +60,4 @@
 
 	}
 
-	new User();
+	new Users();

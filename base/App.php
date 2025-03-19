@@ -10,6 +10,8 @@
 	use Base\DB\DB;
 	use Base\Helper\Response;
 	use Base\Link\External;
+	use Exception;
+	use JetBrains\PhpStorm\NoReturn;
 	use stdClass;
 
 	/**
@@ -96,7 +98,7 @@
 		 * @return Model
 		 */
 		public function models(string $name): Model {
-			return $this->models->registrationAndGet($name, Models::SOURCE_MODEL);
+			return $this->models->registrationAndGet($name, Models::SOURCE_MODELS);
 		}
 
 		/**
@@ -131,6 +133,11 @@
 		 */
 		public function version(): string {
 			return $this->version;
+		}
+
+		#[NoReturn] public function error(Exception $e): void {
+			echo $e->getMessage();
+			exit;
 		}
 
 	}

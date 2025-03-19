@@ -4,6 +4,8 @@
 
 	namespace Base\Access;
 
+	use Exception;
+
 	/**
 	 * Базовый класс признаков
 	 * @property Feature[] $features
@@ -30,6 +32,12 @@
 		 * @return Feature
 		 */
 		public function get(string $name): Feature {
+			try {
+				if (!isset($this->features[$name])) throw new Exception("Feature '{$name}' not found");
+			}
+			catch (Exception $e) {
+				app()->error($e);
+			}
 			return $this->features[$name];
 		}
 

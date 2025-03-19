@@ -8,7 +8,6 @@
 	 * Работа со ссылками через права пользователя в редакторе
 	 */
 	trait Link {
-		public LinkAccess $select;
 		public LinkAccess $browse;
 		public LinkAccess $create;
 		public LinkAccess $update;
@@ -23,7 +22,6 @@
 		 * @return void
 		 */
 		protected function regLinks(): void {
-			$this->regLinkSelect();
 			$this->regLinkBrowse();
 			$this->regLinkCreate();
 			$this->regLinkUpdate();
@@ -34,7 +32,6 @@
 			$this->regLinkSetState();
 		}
 
-		protected function regLinkSelect(): void { $this->select = new LinkAccess($this->id, self::ACCESS_SELECT, $this->name, 'select', "/{$this->name}/select?page=%page%", /* @lang JavaScript */"Base.Query.send('/{$this->name}/select', {page: '%page%'}); return false;"); }
 		protected function regLinkBrowse(): void { $this->browse = new LinkAccess($this->id, self::ACCESS_BROWSE, $this->name, 'browse', "/{$this->name}/browse?id=%id%", /* @lang JavaScript */"Base.Query.send('/{$this->name}/browse', {id: '%id%'}); return false;"); }
 		protected function regLinkCreate(): void { $this->create = new LinkAccess($this->id, self::ACCESS_CREATE, $this->name, 'create', 'default', /* @lang JavaScript */"Base.Query.send('/{$this->name}/create'); return false;"); }
 		protected function regLinkUpdate(): void { $this->update = new LinkAccess($this->id, self::ACCESS_UPDATE, $this->name, 'update', "/{$this->name}/update?id=%id%", /* @lang JavaScript */"Base.Query.send('/{$this->name}/update', {id: '%id%'}); return false;"); }

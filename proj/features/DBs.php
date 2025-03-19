@@ -12,7 +12,7 @@
 	 * @param string $name - Наименование
 	 * @param string $title - Заголовок
 	 */
-	class DB extends Feature {
+	class DBs extends Feature {
 
 		public function __construct(int $id, string $name, string $title = '') {
 			parent::__construct($id, $name, $title);

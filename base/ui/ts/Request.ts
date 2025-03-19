@@ -1,4 +1,5 @@
 namespace Base {
+
 	/**
 	 * XHR запросы
 	 */
@@ -22,7 +23,35 @@ namespace Base {
 			});
 		}
 
-		public static getInit(data: BodyInit/*, options?: RequestOptions*/): RequestInit {
+		/**
+		 * Отправляет запрос по адресу
+		 * @param address - Адрес запроса
+		 */
+		public static address(address: string): Promise<Response> {
+			return Request.xhr(address, '');
+		}
+
+		/**
+		 * Отправляет запрос с объектом данных по адресу
+		 * @param address - Адрес запроса
+		 * @param data - Объект данных
+		 */
+		public static data(address: string, data: Object): Promise<Response> {
+			return Request.xhr(address, JSON.stringify(data));
+		}
+
+		public static form(form: HTMLFormElement, options?: any/*RequestOptions*/): Promise<Response> {
+			let url = form.getAttribute('action') as string;
+			let formData = new FormData(form);
+
+			return Request.xhr(url, formData/*, options*/);
+		}
+
+		public static submit(element: HTMLElement): Promise<Response> {
+			return Request.form(element.closest('form') as HTMLFormElement);
+		}
+
+		private static getInit(data: BodyInit/*, options?: RequestOptions*/): RequestInit {
 			let method			: string			= 'post';
 			/*let cache			: RequestOptionsCache			= 'no-cache';
 			let credentials		: RequestOptionsCredentials		= 'include';
@@ -42,17 +71,6 @@ namespace Base {
 			/*if (options?.method !== 'get')*/ init['body'] = data;
 
 			return init;
-		}
-
-		public static sendForm(form: HTMLFormElement, options?: any/*RequestOptions*/): Promise<Response> {
-			let url = form.getAttribute('action') as string;
-			let formData = new FormData(form);
-
-			return Request.xhr(url, formData/*, options*/);
-		}
-
-		public static submit(element: HTMLElement): Promise<Response> {
-			return Request.sendForm(element.closest('form') as HTMLFormElement);
 		}
 
 		// /**
@@ -83,14 +101,6 @@ namespace Base {
 		// 		case 'fetch': Query.xhrFetch(); break;1
 		// 	}
 		// }
-
-		/**
-		 * Отправляет запрос по адресу
-		 * @param address - Адрес запроса
-		 */
-		public static address(address: string): Promise<Response> {
-			return Request.xhr(address, '');
-		}
 
 		// /**
 		//  * Отправляет форму

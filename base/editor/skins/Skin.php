@@ -1,12 +1,10 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Editor\Skins;
 
-	use Base\Template\Buffer;
-
 	abstract class Skin {
-		use Buffer;
-
 		protected string $type;
 		protected string $name;
 		protected string $title;
@@ -57,14 +55,14 @@
 		 * @return string
 		 */
 		protected function cover(string $element): string {
-			$this->start();
+			buffer()->start();
 			?>
 				<div class = "field" data-name = "<?= $this->name; ?>">
 					<?= $element; ?>
 					<div class = "errors"></div>
 				</div>
 			<?php
-			return $this->read();
+			return buffer()->read();
 		}
 
 		/**

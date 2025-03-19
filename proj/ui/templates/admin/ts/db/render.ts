@@ -19,7 +19,7 @@ namespace Admin {
 				 * @param action - Ссылка формы
 				 */
 				public static init(data: TypeDataTables, action: string): void {
-					let $container = document.querySelector('.view.db.check') as HTMLDivElement;
+					let $container = document.querySelector('.view.dbs.check > div') as HTMLDivElement;
 
 					$container.innerHTML = '';
 
@@ -71,9 +71,9 @@ namespace Admin {
 					}
 
 					function onSubmit(): void {
-						Base.QueryWait.sendFormJSON($form).then((data) => {
-							console.log(data);
-							Check.init(data.data, data.action);
+						Base.Request.form($form.html() as HTMLFormElement).then((result: any) => {
+							Base.Response.notices(result.notices)
+							Check.init(result.data.data, result.data.action);
 						});
 					}
 				}

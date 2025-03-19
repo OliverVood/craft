@@ -15,7 +15,7 @@
 	 */
 	class Users extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('users')->id());
+			parent::__construct();
 		}
 
 		/**

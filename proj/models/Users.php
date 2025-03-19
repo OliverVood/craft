@@ -4,7 +4,7 @@
 
 	namespace Proj\Models;
 
-	use Base\Access;
+	use Base\DB\DB;
 	use Base\Model;
 
 	/**
@@ -15,7 +15,7 @@
 		const TABLE_ACCESS_GROUPS = 'access_groups';
 		const TABLE_ACCESS_USERS = 'access_users';
 
-		private \Base\DB\DB $db;
+		private DB $db;
 		private static bool $auth = false;
 
 		private static int | null $id = null;
@@ -149,15 +149,6 @@
 				$usersRights[$row['uid']][$row['collection']][$row['instance']][$row['right']] = $row['permission'];
 			}
 			access()->setUsersRights($usersRights);
-		}
-
-		/**
-		 * Возвращает хеш пароля
-		 * @param $pass - Пароль
-		 * @return string
-		 */
-		private function getPasswordHash($pass): string {
-			return encryption($pass);
 		}
 
 		/**

@@ -57,11 +57,11 @@
 		/**
 		 * Задаёт условие с полем и значением
 		 * @param string $field - Поле
-		 * @param string $value - Значение
+		 * @param string|int $value - Значение
 		 * @param string $operator - Оператор
 		 * @return $this
 		 */
-		public function where(string $field, string $value, string $operator = '='): self {
+		public function where(string $field, string|int $value, string $operator = '='): self {
 			$this->addConditions('where', 'AND', ['field' => $field, 'value' => $value, 'operator' => $operator]);
 
 			return $this;

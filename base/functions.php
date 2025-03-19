@@ -4,6 +4,7 @@
 
 	use Base\Access;
 	use Base\App;
+	use Base\Data\Defined;
 	use Base\DB\DB;
 	use Base\Helper\Cryptography;
 	use Base\Helper\Debugger;
@@ -62,10 +63,11 @@
 	/**
 	 * Возвращает модель
 	 * @param string $name - Наименование модели
+	 * @param int $source - Источник
 	 * @return Model
 	 */
-	function model(string $name): Model {
-		return app()->models->registrationAndGet($name, Models::SOURCE_MODEL);
+	function model(string $name, int $source = Models::SOURCE_MODELS): Model {
+		return app()->models->registrationAndGet($name, $source);
 	}
 
 	/**
@@ -79,6 +81,10 @@
 
 	function access(): Access {
 		return app()->access();
+	}
+
+	function allow(string $feature, string $right, int $id = 0): bool {
+		return app()->access->allow(app()->features($feature)->id(), app()->features($feature)->rights($right)->id(), $id);
 	}
 
 	/**
@@ -138,6 +144,25 @@
 	}
 
 	/**
+	 * Возвращает значение из $_POST или $_GET по ключу
+	 * @param string $key - Ключ
+	 * @param mixed|null $default - Значение по умолчанию
+	 * @return mixed
+	 */
+	function input(string $key, mixed $default = null): mixed {
+		return request()->data()->input()->data()->$key ?? $default;
+	}
+
+	/**
+	 * Возвращает значение из $_POST или $_GET по ключу
+	 * @param string|null $key - Ключ
+	 * @return mixed
+	 */
+	function definite(?string $key = null): Defined {
+		return request()->data()->defined($key);
+	}
+
+	/**
 	 * Печатает переменную
 	 * @param mixed $var - Переменная
 	 * @param string $title - Заголовок
@@ -167,16 +192,6 @@
 		return Translation::get($alias, $params);
 	}
 
-//	/**
-//	 * Возвращает значение из $_POST или $_GET по ключу
-//	 * @param string $key - Ключ
-//	 * @param mixed|null $default - Значение по умолчанию
-//	 * @return mixed
-//	 */
-//	function input(string $key, mixed $default = null): mixed {
-//		return $_POST[$key] ?? $_GET[$key] ?? $default;
-//	}
-//
 //	/**
 //	 * Возвращает данные от предыдущего запроса
 //	 * @param string|null $key - Ключ

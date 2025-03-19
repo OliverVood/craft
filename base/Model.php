@@ -7,4 +7,7 @@
 	/**
 	 * Базовый класс моделей
 	 */
-	abstract class Model {  }
+	abstract class Model {
+		protected function __construct() { }
+
+	}

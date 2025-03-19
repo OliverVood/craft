@@ -1,15 +1,15 @@
 <?php
 
-	namespace Proj\Editors\Controllers\Statistic;
+	declare(strict_types=1);
+
+	namespace Proj\Editors\Controllers\Statistics;
 
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
-	use Base\Route as BaseRoute;
-	use Proj\Editors\Consts\Collections;
 
-	class IP extends Controller {
+	class IPs extends Controller {
 		public function __construct() {
-			parent::__construct(Collections\STATISTIC_IP['id'], Collections\STATISTIC_IP['name'], __('Статистика запросов'), 'statistic.ip', 'statistic.ip');
+			parent::__construct(app()->features('statistics_ips'), 'statistics.ips'/*Collections\STATISTIC_IP['id'], Collections\STATISTIC_IP['name'], __('Статистика запросов'), 'statistic.ip'*/);
 
 			$this->titleSelect = __('Статистика запросов к серверу');
 		}
@@ -19,9 +19,9 @@
 		 * @return void
 		 */
 		protected function regRoutes(): void {
-			if (POINTER != 'xhr') return;
-
-			BaseRoute::set("{$this->name}::select", "{$this->pathController}::select", BaseRoute::SOURCE_EDITORS);
+//			if (POINTER != 'xhr') return;
+//
+//			BaseRoute::set("{$this->name}::select", "{$this->pathController}::select", BaseRoute::SOURCE_EDITORS);
 		}
 
 		/**
@@ -29,10 +29,10 @@
 		 * @return void
 		 */
 		protected function regActions(): void {
-			$this->addCollection();
-
-			$this->addRight(self::ACCESS_SETTING, 'setting', __('Назначение прав'));
-			$this->addRight(self::ACCESS_SELECT, 'select', __('Выборка'));
+//			$this->addCollection();
+//
+//			$this->addRight(self::ACCESS_SETTING, 'setting', __('Назначение прав'));
+//			$this->addRight(self::ACCESS_SELECT, 'select', __('Выборка'));
 		}
 
 		/**

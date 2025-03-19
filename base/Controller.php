@@ -8,14 +8,7 @@
 	 * Базовый класс контроллеров
 	 */
 	abstract class Controller {
-		protected int $id;
-
-		/**
-		 * @param int $id - Идентификатор признака
-		 */
-		public function __construct(int $id) {
-			$this->id = $id;
-		}
+		protected function __construct() {  }
 
 //		/**
 //		 * Возвращает модель

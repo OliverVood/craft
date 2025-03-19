@@ -6,6 +6,7 @@
 	const DIR_BASE_DB						= DIR_BASE . 'db/';
 	const DIR_BASE_UI						= DIR_BASE . 'ui/';
 	const DIR_BASE_HELPER					= DIR_BASE . 'helper/';
+	const DIR_BASE_EDITOR					= DIR_BASE . 'editor/';
 
 	const DIR_PROJ							= DIR_ROOT . 'proj/';
 	const DIR_PROJ_CONFIGS					= DIR_PROJ . 'configs/';

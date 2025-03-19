@@ -63,9 +63,11 @@
 		 * @return string
 		 */
 		protected function prepare(string $text, array $data): string {
-			foreach ($data as $key => $value) $text = str_replace(":[{$key}]", $value, $text);
+			if ($text === '' && !$data) return $text;
 
-			return  $text;
+			foreach ($data as $key => $value) $text = str_replace(":[{$key}]", (string)$value, $text);
+
+			return $text;
 		}
 
 	}

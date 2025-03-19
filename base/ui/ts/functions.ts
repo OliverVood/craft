@@ -8,7 +8,7 @@ function getContent(route: string = ''): void {
 	let pathname = url.pathname.slice(route.length + 1);
 	let params = url.search;
 
-	Base.Request.address(`${pathname}${params}`).then(result => Base.Response.run(result));
+	Base.Request.address(`${pathname}${params}`).then(result => Base.Response.execute(result));
 }
 
 /**

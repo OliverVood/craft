@@ -13,6 +13,10 @@
 		private string $href;
 		private string $xhr;
 
+		/**
+		 * @param string $path - Путь
+		 * @param string $click - Обработчик события
+		 */
 		public function __construct(string $path = '', string $click = '') {
 			$this->path = $path;
 

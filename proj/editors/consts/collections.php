@@ -2,11 +2,6 @@
 
 	namespace Proj\Editors\Consts\Collections;
 
-	const STATISTIC_IP = [
-		'id' => 1001,
-		'name' => 'statistic_ip',
-	];
-
 	const STATISTIC_ACTION = [//TODO Разобраться с правами и ссылками
 		'id' => 1002,
 		'name' => 'statistic_action',

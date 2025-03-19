@@ -15,7 +15,7 @@ namespace Base {
 			let $section = document.querySelector(`.section.${section}`);
 			if (!$section) return;
 
-			if (empty) $section.innerHTML = "";
+			if (empty) $section.innerHTML = '';
 			$section.innerHTML += html;
 
 			Section.eval(html);

@@ -20,7 +20,7 @@ namespace Admin {
 			constructor(data: DataDB) {
 				this.displayMode				= Structure.displayDescriptions;
 
-				this.$structure					= document.getElementById('structure') as HTMLDivElement;
+				this.$structure					= document.querySelector('.view.dbs.structure > div') as HTMLDivElement;
 				this.db 						= new DBInstance(data, this.$structure);
 
 				this.renderPanel(data.name);

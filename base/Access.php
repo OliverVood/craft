@@ -97,19 +97,19 @@
 
 		/**
 		 * Проверка права
-		 * @param int $right - Право
-		 * @param int $collection - Коллекция
+		 * @param int $feature - Идентификатор признака
+		 * @param int $right - Идентификатор права
 		 * @param int $instance - Экземпляр
 		 * @return bool
 		 */
-		public function allow(int $right, int $collection, int $instance = 0): bool {
+		public function allow(int $feature, int $right, int $instance = 0): bool {
 			if (!isset(self::$userId) || !isset(self::$userGroup)) return false;
 			if (in_array(self::$userId, self::$superUsers)) return true;
-			switch (self::allowUser($right, self::$userId, $collection, $instance)) {
+			switch (self::allowUser($right, self::$userId, $feature, $instance)) {
 				case self::PERMISSION_YES: return true;
 				case self::PERMISSION_NO: return false;
 			}
-			if (self::allowGroup($right, self::$userGroup, $collection, $instance) == self::PERMISSION_YES) return true;
+			if (self::allowGroup($right, self::$userGroup, $feature, $instance) == self::PERMISSION_YES) return true;
 			return false;
 		}
 

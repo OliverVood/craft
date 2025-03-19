@@ -7,7 +7,7 @@
 	 */
 	trait Texts {
 
-		protected string $titleSelect = 'UNDEFINED TEXT';
+		protected string $titleSelect = 'Выборка';
 		protected string $titleBrowse = 'UNDEFINED TEXT';
 		protected string $titleCreate = 'UNDEFINED TEXT';
 		protected string $titleUpdate = 'UNDEFINED TEXT';
@@ -28,7 +28,7 @@
 		public string $textBtnCreate = 'UNDEFINED TEXT';
 		public string $textBtnUpdate = 'UNDEFINED TEXT';
 
-		protected string $textResponseErrorAccess = 'UNDEFINED TEXT';
+		protected string $textResponseErrorAccess = 'Не достаточно прав';
 		protected string $textResponseErrorNotFound = 'UNDEFINED TEXT';
 		protected string $textResponseErrorCreate = 'UNDEFINED TEXT';
 		protected string $textResponseErrorUpdate = 'UNDEFINED TEXT';
@@ -41,7 +41,6 @@
 		 * @return void
 		 */
 			protected function regTexts(): void {
-			$this->titleSelect = __('Выборка');
 			$this->titleBrowse = __('Просмотр');
 			$this->titleCreate = __('Создание');
 			$this->titleUpdate = __('Редактирование');
@@ -62,7 +61,6 @@
 			$this->textBtnCreate = __('Создать');
 			$this->textBtnUpdate = __('Изменить');
 
-			$this->textResponseErrorAccess = __('Ошибка доступа. Недостаточно прав.');
 			$this->textResponseErrorNotFound = __('Элемент не найден');
 			$this->textResponseErrorCreate = __('Ошибка сохранения');
 			$this->textResponseErrorUpdate = __('Ошибка обновления');

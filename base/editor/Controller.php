@@ -2,23 +2,27 @@
 
 	namespace Base\Editor;
 
-	use Base\Data\Set\Input;
+	use Base\Access\Feature;
+	use Base\ControllerAccess;
+	use Base\Data\Set;
 	use Base\Helper\Accumulator;
 	use Base\Helper\Pagination;
 	use Base\Helper\Response;
+	use Base\Models;
 	use Base\UI\View;
+	use JetBrains\PhpStorm\NoReturn;
 
-	require DIR_BASE . 'editor/Access.php';
-	require DIR_BASE . 'editor/Link.php';
-	require DIR_BASE . 'editor/Route.php';
-	require DIR_BASE . 'editor/Texts.php';
-	require DIR_BASE . 'editor/Fields.php';
+	require DIR_BASE_EDITOR . 'Access.php';
+	require DIR_BASE_EDITOR . 'Link.php';
+	require DIR_BASE_EDITOR . 'Route.php';
+	require DIR_BASE_EDITOR . 'Texts.php';
+	require DIR_BASE_EDITOR . 'Fields.php';
 
 	/**
 	 * Базовый класс для работы с контроллерами-редакторами
 	 * @controller
 	 */
-	abstract class Controller extends \Base\Controller {
+	abstract class Controller extends ControllerAccess {
 		use Access;
 		use Link;
 		use Route;
@@ -29,7 +33,7 @@
 		protected string $title;
 
 		protected string $pathController;
-		protected string $pathModel;
+		protected string $modelName;
 
 		protected string $tplSelect = 'admin.editor.select';
 		protected string $tplBrowse = 'admin.editor.browse';
@@ -48,40 +52,42 @@
 		protected array $validateDataCreate = [];
 		protected array $validateDataUpdate = [];
 
-		public function __construct(int $id, string $name, string $title, ?string $pathController = null, ?string $pathModel = null) {
-			parent::__construct($id);
+		public function __construct(Feature $feature, string $modelName/*int $id, string $name, string $title, ?string $pathController = null, ?string $pathModel = null*/) {
+			parent::__construct($feature);
 
-			$this->id = $id;
-			$this->name = $name;
-			$this->title = $title;
+//			$this->id = $id;
+//			$this->name = $name;
+//			$this->title = $title;
 
-			$this->pathController = $pathController ?? $name;
-			$this->pathModel = $pathModel ?? $name;
-
-			$this->regTexts();
-			$this->regActions();
-			$this->regLinks();
-			$this->regRoutes();
+//			$this->pathController = $pathController ?? $name;
+			$this->modelName = $modelName;
+//
+//			$this->regTexts();
+//			$this->regActions();
+//			$this->regLinks();
+//			$this->regRoutes();
 
 			$this->fieldsSelect = new Fields();
-			$this->fieldsBrowse = new Fields();
-			$this->fieldsCreate = new Fields();
-			$this->fieldsUpdate = new Fields();
+//			$this->fieldsBrowse = new Fields();
+//			$this->fieldsCreate = new Fields();
+//			$this->fieldsUpdate = new Fields();
 		}
 
 		/**
 		 * Блок выборки данных
 		 * @controllerMethod
-		 * @param Input $input - Входные данные
+		 * @param Set $data - Пользовательские данные
 		 * @param int $redirectPage - Текущая страница для перенаправления
 		 * @return void
 		 */
-		public function select(Input $input, int $redirectPage = 0): void {
-			if (!$this->allowSelect()) Response::SendNoticeError($this->textResponseErrorAccess);
+		#[NoReturn] public function select(Set $data, int $redirectPage = 0): void {
+			if (!$this->allowSelect()) response()->forbidden(__($this->textResponseErrorAccess));
 
-			$page = $redirectPage ?: $input->defined('page')->int(1);
+			$page = $redirectPage ?: $data->defined('page')->int(1);
 
-			[$items, $ext] = $this->getModel()->select(['*'], $page, $this->page_entries);
+			/** @var Model $ips */ $ips = $this->model();
+
+			[$items, $ext] = $ips->select(['*'], $page, $this->page_entries);
 
 			$this->prepareViewSelect($items);
 
@@ -89,12 +95,12 @@
 
 			$title = $this->titleSelect;
 			$fields = $this->fieldsSelect;
-			$pagination = $this->page_entries ? new Pagination($this->select, $ext['page']['current'], $ext['page']['count']) : null;
-			$editor = $this;
-
-			Response::pushHistory($this->select, ['page' => $page]);
-			Response::pushSection('content', View::get($this->tplSelect, compact('title', 'fields', 'items' ,'pagination', 'editor')));
-			Response::SendJSON();
+			$pagination = $this->page_entries ? new Pagination($this->select, $ext['page']['current'], $ext['page']['count']) : null;die('1');
+//			$editor = $this;
+//
+////			response()->history();$this->select, ['page' => $page]
+//			response()->section('content', view($this->tplSelect, compact('title', 'fields', 'items' ,'pagination', 'editor'));
+//			response()->ok();
 		}
 
 		/**
@@ -449,10 +455,10 @@
 
 		/**
 		 * Возвращает модель редактора
-		 * @return Model
+		 * @return \Base\Model
 		 */
-		protected function getModel(): Model {
-			return modelEditor($this->pathModel);
+		protected function model(): \Base\Model {
+			return model($this->modelName, Models::SOURCE_EDITORS);
 		}
 
 	}

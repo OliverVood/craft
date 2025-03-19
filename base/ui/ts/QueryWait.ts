@@ -67,7 +67,7 @@ namespace Base {
 		private static async XHR(format: TypeRequestFormat, url: string, data: TypeRequestData, options?: TypeRequestOptions): Promise<any> {
 			let response = await fetch(url, QueryWait.prepareData(format, data, options));
 			let result = await response.json();
-			Response.run(result);
+			Response.execute(result);
 			for (const item of result) if (item.type == 'data') return item.data
 		}
 

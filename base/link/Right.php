@@ -13,8 +13,14 @@
 		private int $collection;
 		private int $right;
 
-		public function __construct(int $collection, int $right, string $entity = '*', string $action = '*', string $href = '', string $click = '') {
-			parent::__construct($entity, $action, $href, $click);
+		/**
+		 * @param int $collection - Идентификатор коллекции
+		 * @param int $right - Идентификатор права
+		 * @param string $path - Путь
+		 * @param string $click - Обработчик события
+		 */
+		public function __construct(int $collection, int $right, string $path = '', string $click = '') {
+			parent::__construct($path, $click);
 
 			$this->collection = $collection;
 			$this->right = $right;
@@ -26,7 +32,7 @@
 		 * @return bool
 		 */
 		public function allow(int $id = 0): bool {
-			return Access::allow($this->right, $this->collection, $id);
+			return Access::allow($this->collection, $this->right, $id);
 		}
 
 		/**

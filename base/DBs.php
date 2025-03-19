@@ -59,7 +59,7 @@
 		 * @return DB
 		 */
 		public function registrationAndGet(string $alias): DB {
-			if (!isset($this->models[$alias])) $this->registration($alias);
+			if (!isset($this->dbs[$alias])) $this->registration($alias);
 
 			return $this->get($alias);
 		}

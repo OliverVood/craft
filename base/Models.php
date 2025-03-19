@@ -9,7 +9,7 @@
 	 * @property Model[] $models
 	 */
 	class Models {
-		const SOURCE_MODEL = 1;
+		const SOURCE_MODELS = 1;
 		const SOURCE_EDITORS = 2;
 
 		private array $models = [];
@@ -34,7 +34,7 @@
 		public function load(string $name, int $source): void {
 			$path = str_replace('.', '/', $name);
 			switch ($source) {
-				case self::SOURCE_MODEL: require_once DIR_PROJ_MODELS . $path . '.php'; break;
+				case self::SOURCE_MODELS: require_once DIR_PROJ_MODELS . $path . '.php'; break;
 				case self::SOURCE_EDITORS: require_once DIR_PROJ_EDITORS_MODELS . $path . '.php'; break;
 			}
 		}
@@ -48,7 +48,7 @@
 		private function init(string $name, int $source): void {
 			$path = str_replace('.', '\\', $name);
 			$class = match ($source) {
-				self::SOURCE_MODEL => "\\Proj\\Models\\{$path}",
+				self::SOURCE_MODELS => "\\Proj\\Models\\{$path}",
 				self::SOURCE_EDITORS => "\\Proj\\Editors\\Models\\{$path}",
 				default => die('Unexpected match value')
 			};

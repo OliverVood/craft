@@ -19,7 +19,7 @@
 	 * Для работы с базой данных (базовый абстрактный класс)
 	 */
 	abstract class DB {
-		public Structure $structure;
+		protected Structure $structure;
 
 		protected array $history = [];
 
@@ -34,6 +34,12 @@
 		 * @return bool
 		 */
 		public function isConnect() :bool { return $this->state; }
+
+		/**
+		 * Возвращает структуру базы данных
+		 * @return Structure
+		 */
+		public function structure(): Structure { return $this->structure; }
 
 		/**
 		 * Добавляет текст запроса в историю

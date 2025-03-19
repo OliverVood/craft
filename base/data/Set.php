@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Data;
 
 	require_once 'Base.php';
@@ -7,9 +9,9 @@
 	require_once 'Get.php';
 	require_once 'Post.php';
 	require_once 'Request.php';
+	require_once 'Input.php';
+	require_once 'InputArray.php';
 	require_once 'Defined.php';
-	require_once 'Assoc.php';
-	require_once 'Content.php';
 	require_once 'Old.php';
 
 	/**
@@ -19,18 +21,18 @@
 		private Get $get;
 		private Post $post;
 		private Request $request;
+		private Input $input;
+		private InputArray $inputArray;
 		private Defined $defined;
-		private Assoc $assoc;
-		private Content $content;
 		private Old $old;
 
 		public function __construct() {
 			$this->get = new Get();
 			$this->post = new Post();
 			$this->request = new Request();
+			$this->input = new Input();
+			$this->inputArray = new InputArray();
 			$this->defined = new Defined();
-			$this->assoc = new Assoc();
-			$this->content = new Content();
 			$this->old = new Old();
 
 			$this->saveOld();
@@ -67,6 +69,24 @@
 		}
 
 		/**
+		 * Возвращает данные из контента
+		 * @return Input
+		 */
+		public function input(): Input {
+			return $this->input;
+		}
+
+		/**
+		 * Возвращает данные по ключу из контента в виде ассоциативного массива
+		 * @param string $key - Ключ
+		 * @return InputArray
+		 */
+		public function inputArray(string $key): InputArray {
+			$this->inputArray->key($key);
+			return $this->inputArray;
+		}
+
+		/**
 		 * Возвращает данные по ключу из суперглобального массива $_POST, если не нашёл, то из суперглобального массива $_GET (порядок определён и не зависит от настроек сервера)
 		 * @param string|null $key - Ключ
 		 * @return Defined
@@ -74,24 +94,6 @@
 		public function defined(?string $key = null): Defined {
 			if (isset($key)) $this->defined->key($key);
 			return $this->defined;
-		}
-
-		/**
-		 * Возвращает данные по ключу из контента в виде ассоциативного массива
-		 * @param string $key - Ключ
-		 * @return Assoc
-		 */
-		public function assoc(string $key): Assoc {
-			$this->assoc->key($key);
-			return $this->assoc;
-		}
-
-		/**
-		 * Возвращает данные из контента
-		 * @return Content
-		 */
-		public function content(): Content {
-			return $this->content;
 		}
 
 		/**

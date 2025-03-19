@@ -17,6 +17,7 @@
 	require DIR_BASE . 'Route.php';
 	require DIR_BASE . 'Controllers.php';
 	require DIR_BASE . 'Controller.php';
+	require DIR_BASE . 'ControllerAccess.php';
 	require DIR_BASE . 'Models.php';
 	require DIR_BASE . 'Model.php';
 	require DIR_BASE . 'DBs.php';
@@ -25,9 +26,8 @@
 
 	require DIR_BASE_DB . 'DB.php';
 
-//	require DIR_BASE . 'ControllerAccess.php';
-//	require DIR_BASE . 'editor/Controller.php';
-//	require DIR_BASE . 'editor/Model.php';
+	require DIR_BASE_EDITOR . 'Controller.php';
+	require DIR_BASE_EDITOR . 'Model.php';
 
 	require DIR_BASE . 'link/Fundamental.php';
 	require DIR_BASE . 'link/External.php';

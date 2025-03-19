@@ -1,6 +1,8 @@
 <?php
 
-	namespace Proj\Editors\Models\Statistic;
+	declare(strict_types=1);
+
+	namespace Proj\Editors\Models\Statistics;
 
 	use Base\DB\Driver\MySQLi\Request\Select;
 	use Base\Editor\Model;
@@ -8,9 +10,9 @@
 	/**
 	 * Модель статистики посещаемости
 	 */
-	class IP extends Model {
+	class IPs extends Model {
 		public function __construct() {
-			parent::__construct('statistics_ip');
+			parent::__construct('craft', 'statistics_ip');
 		}
 
 		/**

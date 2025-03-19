@@ -8,6 +8,7 @@
 	use Base\Link\Fundamental;
 	use Base\Link\Internal;
 	use Base\Link\Right;
+	use Exception;
 
 	/**
 	 * Для работы со ссылками
@@ -38,18 +39,18 @@
 			$this->registration($alias, new Internal($address, $click));
 		}
 
-//		/**
-//		 * Регистрирует внутреннюю ссылку
-//		 * @param string $alias - Псевдоним ссылки
-//		 * @param string $feature - Наименование признака
-//		 * @param string $right - Наименование права
-//		 * @param string $address - Адрес
-//		 * @param string $click - Обработчик
-//		 * @return void
-//		 */
-//		public function right(string $alias, string $feature, string $right, string $address = '', string $click = ''): void {
-//			$this->registration($alias, new Right(app()->features($feature)->id(), app()->features($feature)->rights($right)->id(), '*', '*', $address, $click));
-//		}
+		/**
+		 * Регистрирует внутреннюю ссылку
+		 * @param string $alias - Псевдоним ссылки
+		 * @param string $feature - Наименование признака
+		 * @param string $right - Наименование права
+		 * @param string $address - Адрес
+		 * @param string $click - Обработчик
+		 * @return void
+		 */
+		public function right(string $alias, string $feature, string $right, string $address = '', string $click = ''): void {
+			$this->registration($alias, new Right(app()->features($feature)->id(), app()->features($feature)->rights($right)->id(), $address, $click));
+		}
 
 		/**
 		 * Регистрирует ссылку
@@ -85,6 +86,11 @@
 		 * @return Right
 		 */
 		public function getRight(string $alias): Right {
+			try {
+				if (!isset($this->links[$alias])) throw new Exception("Link '{$alias}' not found");
+			} catch (Exception $e) {
+				app()->error($e);
+			}
 			return $this->links[$alias];
 		}
 

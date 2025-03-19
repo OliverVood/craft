@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Editor;
 
 	use Base\DB\DB;
@@ -23,10 +25,10 @@
 		protected string $table;
 		protected array $states = [];
 
-		public function __construct(string $table) {
+		public function __construct(string $db, string $table) {
 			parent::__construct();
 
-			$this->db = Craft::instance();
+			$this->db = db($db);
 			$this->table = $table;
 		}
 

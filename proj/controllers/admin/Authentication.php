@@ -4,20 +4,17 @@
 
 	namespace Proj\Controllers\Admin;
 
-	use AllowDynamicProperties;
 	use Base\Controller;
-	use Base\Helper;
-	use JetBrains\PhpStorm\NoReturn;
-	use Proj\Models\Users;
+	use Proj\Models;
 	use Proj\UI\Templates\Auth\Template as Template;
 
 	/**
 	 * Работа с Авторизацией
 	 * @controller
 	 */
-	#[AllowDynamicProperties] class Authentication extends Controller {
+	class Authentication extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('authentication')->id());
+			parent::__construct();
 		}
 
 		/**
@@ -25,8 +22,8 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function isAuthHTML(): void {
-			/** @var Users $users */ $users = model('users');
+		public function isAuthHTML(): void {
+			/** @var Models\Users $users */ $users = model('users');
 
 			if ($users->isAuth()) return;
 
@@ -45,11 +42,11 @@
 		 * @return void
 		 */
 		public function isAuthXHR(): void {
-			/** @var Users $users */ $users = model('users');
+			/** @var Models\Users $users */ $users = model('users');
 
 			if ($users->isAuth()) return;
 
-			Helper\Response::sendNoticeError(__('Пожалуйста, авторизуйтесь'));
+			response()->unauthorized(__('Пожалуйста, авторизуйтесь'));
 		}
 
 	}

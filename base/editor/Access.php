@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Editor;
 
 	use Base\Access as BaseAccess;
@@ -9,7 +11,7 @@
 	 */
 	trait Access {
 		const ACCESS_SETTING		= 1;
-		const ACCESS_SELECT			= 2;
+		const ACCESS_SELECT			= 'select';
 		const ACCESS_BROWSE			= 3;
 		const ACCESS_CREATE			= 4;
 		const ACCESS_UPDATE			= 5;

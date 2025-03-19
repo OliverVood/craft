@@ -25,7 +25,7 @@
 	#[AllowDynamicProperties] class Out extends Controller {
 
 		public function __construct() {
-			parent::__construct(app()->features('out')->id());
+			parent::__construct();
 		}
 
 		/**
@@ -56,54 +56,55 @@
 		 * @return void
 		 */
 		public function setMenu(): void {
-			$this->setMainToMenu();
-//			$this->setDevelopmentToMenu();
+			/** @var Template $template */$template = template();
+
+			$this->setMainToMenu($template);
+			$this->setDevelopmentToMenu($template);
 //			$this->setAccessToMenu();
 		}
 
 		/**
 		 * Построение меню главного раздела
+		 * @param Template $template - Шаблон
 		 * @return void
 		 */
-		private function setMainToMenu(): void {
-			/** @var Template $template */$template = template();
-
+		private function setMainToMenu(Template $template): void {
 			$template->layout->menu->push(
-				app()->links->getExternal('site')->hyperlink(__('Открыть сайт'), [], ['target' => '_blank']),
+				linkExternal('site')->hyperlink(__('Открыть сайт'), [], ['target' => '_blank']),
 				$this->separator(),
-				app()->links->getInternal('home')->hyperlink(__('Главная'))
+				linkInternal('home')->hyperlink(__('Главная'))
 			);
 		}
 
 		/**
 		 * Построение меню раздела разработчика
+		 * @param Template $template - Шаблон
 		 * @return void
 		 */
-		private function setDevelopmentToMenu(): void {
+		private function setDevelopmentToMenu(Template $template): void {
 			$menu = [];
 
 			/* Раздел работы с базой данных */
-			if (Access::allow(Rights\DB::ACCESS_DB_STRUCTURE, Collections\DB::ID)) $menu['db'][] = Links\DB::$structure->linkHref(__('Структура'));
-			if (Access::allow(Rights\DB::ACCESS_DB_CHECK, Collections\DB::ID)) $menu['db'][] = Links\DB::$check->linkHref(__('Проверить'));
+			if (allow('dbs', 'check')) $menu['db'][] = linkRight('dbs_check')->hyperlink(__('Проверить'));
+			if (allow('dbs', 'structure')) $menu['db'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
 
-			/* Раздел интерфейса Craft */
-//			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
-
-			/* Раздел статистики */
-			/** @var EditorsControllers\Statistic\IP $editorIP */ $editorIP = controllerEditor('statistic.ip');
-			if ($editorIP->select->allow()) $menu['statistic'][] = $editorIP->select->linkHref(__('Запросы к серверу'), ['page' => 1]);
-			/** @var EditorsControllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
-			if ($editorAction->select->allow()) $menu['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
-
+//			/* Раздел интерфейса Craft */
+////			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
+//
+//			/* Раздел статистики */
+			if ((allow('statistics_ips', 'select'))) $menu['statistic'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
+//			/** @var EditorsControllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
+//			if ($editorAction->select->allow()) $menu['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
+//
 			if (!$menu) return;
 
 			/* Построение меню */
-			Template::$layout->menu->push($this->separator());
-			Template::$layout->menu->push($this->head(__('Разработка')));
+			$template->layout->menu->push($this->separator());
+			$template->layout->menu->push($this->head(__('Разработка')));
 
-			if (isset($menu['db'])) Template::$layout->menu->push(self::group(__('База данных'), $menu['db']));
-			// Композиция
-			if (isset($menu['statistic'])) Template::$layout->menu->push(self::group(__('Статистика'), $menu['statistic']));
+			if (isset($menu['db'])) $template->layout->menu->push($this->group(__('База данных'), $menu['db']));
+//			// Композиция
+			if (isset($menu['statistic'])) $template->layout->menu->push(self::group(__('Статистика'), $menu['statistic']));
 		}
 
 		/**
@@ -167,7 +168,7 @@
 		#[NoReturn] public function home(): void {
 			response()->history(linkInternal('home'));
 			response()->section('content', view('admin.out.home'));
-			response()->ok([], true);
+			response()->ok();
 		}
 
 		/**
@@ -186,18 +187,18 @@
 		 * @return string
 		 */
 		private function group(string $title, array $items): string {
-			self::start();
+			buffer()->start();
 		?>
 			<li>
 				<span>
 					<?= $title; ?>
 					<ul>
-						<?php foreach ($items as $item) { echo self::item($item); } ?>
+						<?php foreach ($items as $item) { echo $this->item($item); } ?>
 					</ul>
 				</span>
 			</li>
 		<?php
-			return self::read();
+			return buffer()->read();
 		}
 
 		/**

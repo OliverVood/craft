@@ -4,6 +4,8 @@
 
 	namespace Base\Access;
 
+	use Exception;
+
 	/**
 	 * Базовый класс прав
 	 */
@@ -27,6 +29,11 @@
 		 * @return Right
 		 */
 		public function get(string $name): Right {
+			try {
+				if (!isset($this->rights[$name])) throw new Exception("Right '{$name}' not found");
+			} catch (Exception $e) {
+				app()->error($e);
+			}
 			return $this->rights[$name];
 		}
 

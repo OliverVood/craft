@@ -12,16 +12,13 @@
 	 */
 	class Response {
 		const TYPE_DATA = 'data';
-		const TYPE_SECTION = 'sections';
+		const TYPE_SECTIONS = 'sections';
 		const TYPE_HISTORY = 'history';
-		const TYPE_NOTICE = 'notice';
-//		const TYPE_ERRORS = 'errors';
-//
-//		const TYPE_NOTICE_OK = 'ok';
-//		const TYPE_NOTICE_INFO = 'info';
-//		const TYPE_NOTICE_ERROR = 'error';
-//
-//		private static array $stack = [];
+		const TYPE_NOTICES = 'notices';
+		const TYPE_NOTICE_OK = 'ok';
+		const TYPE_NOTICE_INFO = 'info';
+		const TYPE_NOTICE_ERROR = 'error';
+
 		private array $response = [];
 
 		/**
@@ -61,7 +58,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function badRequest(string $notice = '', array $data = []): void {
-			if ($notice) $this->notice($notice);
+			if ($notice) $this->noticeError($notice);
 			if ($data) $this->data($data);
 			$this->send(400);
 		}
@@ -72,7 +69,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function unauthorized(string $notice = ''): void {
-			if ($notice) $this->notice($notice);
+			if ($notice) $this->noticeError($notice);
 			$this->send(401);
 		}
 
@@ -82,7 +79,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function forbidden(string $notice = ''): void {
-			if ($notice) $this->notice($notice);
+			if ($notice) $this->noticeError($notice);
 			$this->send(403);
 		}
 
@@ -92,7 +89,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function notFound(string $notice = ''): void {
-			if ($notice) $this->notice($notice);
+			if ($notice) $this->noticeError($notice);
 			$this->send(404);
 		}
 
@@ -103,7 +100,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function unprocessableEntity(string $notice = '', array $data = []): void {
-			if ($notice) $this->notice($notice);
+			if ($notice) $this->noticeError($notice);
 			if ($data) $this->data($data);
 			$this->send(422);
 		}
@@ -146,7 +143,7 @@
 		 * @return void
 		 */
 		public function section(string $section, string $html, bool $empty = true): void {
-			$this->push(self::TYPE_SECTION, ['name' => $section, 'html' => $html, 'empty' => $empty]);
+			$this->push(self::TYPE_SECTIONS, ['name' => $section, 'html' => $html, 'empty' => $empty]);
 		}
 
 		/**
@@ -157,17 +154,45 @@
 		 * @return void
 		 */
 		public function history(Internal $action, array $data = []/*, string $handler = null*/): void {
-//			if (input('no_history')) return;
-			$this->set(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->xhr($data)/*, 'handler' => $handler*/]);
+			if (input('no_history')) return;
+			$this->set(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->path($data)/*, 'handler' => $handler*/]);
+		}
+
+		/**
+		 * Добавляет оповещение об успехе
+		 * @param string $notice - Сообщение
+		 * @return void
+		 */
+		public function noticeOk(string $notice): void {
+			$this->notice(self::TYPE_NOTICE_OK, $notice);
+		}
+
+		/**
+		 * Добавляет информационное оповещение
+		 * @param string $notice - Сообщение
+		 * @return void
+		 */
+		public function noticeInfo(string $notice): void {
+			$this->notice(self::TYPE_NOTICE_INFO, $notice);
+		}
+
+		/**
+		 * Добавляет оповещение об ошибке
+		 * @param string $notice - Сообщение
+		 * @return void
+		 */
+		public function noticeError(string $notice): void {
+			$this->notice(self::TYPE_NOTICE_ERROR, $notice);
 		}
 
 		/**
 		 * Добавляет оповещение в ответ
-		 * @param string $notice - Данные
+		 * @param string $type - Тип
+		 * @param string $text - Текст
 		 * @return void
 		 */
-		public function notice(string $notice): void {
-			$this->set(self::TYPE_NOTICE, $notice);
+		private function notice(string $type, string $text): void {
+			$this->push(self::TYPE_NOTICES, ['type' => $type, 'text' => $text]);
 		}
 
 		/**

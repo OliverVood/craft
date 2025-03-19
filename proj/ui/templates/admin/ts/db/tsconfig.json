@@ -19,6 +19,6 @@
     "jsxFactory": "PragmaJSX.createElement"
 //    "jsxFragment": "createElement",
   },
-  "include": [ "**/*.ts", "../../../../../base/template/js/base.d.ts"],
+  "include": [ "**/*.ts", "../../../../../../base/ui/js/base.d.ts"],
   "exclude": ["node_module"]
 }

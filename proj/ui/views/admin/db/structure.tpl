@@ -1,7 +1,7 @@
 <?php /** @var array $structure */ ?>
-<div class = "view db structure">
+<div class = "view dbs structure">
 	<h1><?= __('Структура базы данных') ?></h1>
-	<div id = "structure"></div>
+	<div></div>
 	<script>
 		new Admin.DB.Structure(<?= json_encode($structure); ?>);
 	</script>

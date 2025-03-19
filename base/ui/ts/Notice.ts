@@ -1,6 +1,6 @@
 namespace Base {
 
-	type TypeNotice						= 'ok' | 'error' | 'info' | 'common';
+	export type TypeNotice						= 'ok' | 'error' | 'info';
 
 	/**
 	 * Пользовательские уведомления

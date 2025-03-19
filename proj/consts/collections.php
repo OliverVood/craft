@@ -6,8 +6,3 @@
 		'id' => 1,
 		'name' => 'general',
 	];
-
-	const STATISTIC = [
-		'id' => 3,
-		'name' => 'statistic',
-	];

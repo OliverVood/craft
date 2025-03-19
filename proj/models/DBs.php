@@ -1,17 +1,20 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Proj\Models;
 
+	use Base\DB\DB;
 	use Base\Model;
 
 	/**
 	 * Модель базы данных
 	 */
-	class DB extends Model {
-		private \Base\DB\DB $db;
+	class DBs extends Model {
+		private DB $db;
 
 		public function __construct() {
-			$this->db = \Proj\DB\Craft::instance();
+			$this->db = app()->db('craft');
 		}
 
 		/**
@@ -21,7 +24,7 @@
 		public function structure(): array {
 			require DIR_ENTRY_ADMIN . 'structures.php';
 
-			return $this->db->structure->get();
+			return $this->db->structure()->get();
 		}
 
 		/**
@@ -31,7 +34,7 @@
 		public function check(): array {
 			require DIR_ENTRY_ADMIN . 'structures.php';
 
-			return $this->db->structure->check();
+			return $this->db->structure()->check();
 		}
 
 		/**
@@ -42,7 +45,7 @@
 		public function make(array $data): bool {
 			require DIR_ENTRY_ADMIN . 'structures.php';
 
-			return $this->db->structure->make($data);
+			return $this->db->structure()->make($data);
 		}
 
 	}
