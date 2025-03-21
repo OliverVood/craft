@@ -24,7 +24,7 @@
 		 * @return string
 		 */
 		public function format(string $value): string {
-			$this->start();
+			buffer()->start();
 			?>
 				<select name = "<?= $this->name; ?>">
 					<?php if (isset($this->params['empty'])) { ?>
@@ -37,7 +37,7 @@
 					<?php } ?>
 				</select>
 			<?php
-			return $this->cover($this->read());
+			return $this->cover(buffer()->read());
 		}
 
 	}

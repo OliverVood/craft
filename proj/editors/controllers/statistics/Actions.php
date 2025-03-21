@@ -1,21 +1,18 @@
 <?php
 
-	declare(strict_types=1);
-
 	namespace Proj\Editors\Controllers\Statistics;
 
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
 
 	/**
-	 * Контроллер-редактор статистики посещаемости
-	 * @controller
+	 * Контроллер-редактор статистики действий
 	 */
-	class IPs extends Controller {
+	class Actions extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('statistics_ips'), 'statistics.ips');
+			parent::__construct(app()->features('statistics_actions'), 'statistics.actions');
 
-			$this->titleSelect = 'Статистика запросов к серверу';
+			$this->titleSelect = 'Статистика действий клиентов';
 		}
 
 		/**
@@ -25,8 +22,8 @@
 		protected function setFieldsSelect(): void {
 			$this->fieldsSelect->browse->date('datecr', 'Дата');
 			$this->fieldsSelect->browse->text('cid', 'ID Клиента');
-			$this->fieldsSelect->browse->int2IP('ip', 'IP адрес');
-			$this->fieldsSelect->browse->text('path', 'Путь');
+			$this->fieldsSelect->browse->text('object', 'Объект');
+			$this->fieldsSelect->browse->text('action', 'Действие');
 			$this->fieldsSelect->browse->text('params', 'Параметры');
 		}
 

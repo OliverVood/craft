@@ -15,5 +15,17 @@ body {
 	> footer { padding: 1rem 0.6rem; text-align: center; background-color: $color-primary-dark; color: $color-text-primary; }
 }
 
+[data-field].error {
+	input, select { border-color: $color-negative; }
+	> .errors {
+		display: flex; flex-direction: column;
+		&:not(:empty) { margin-top: 0.5rem; }
+		> span {
+			color: $color-negative;
+			&:not(:first-child) { margin-top: 0.4rem; }
+		}
+	}
+}
+
 @import "entities/base";
 @import "entities/user";

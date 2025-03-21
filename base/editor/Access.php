@@ -10,12 +10,12 @@
 	 * Базовый класс работы с правами редактора
 	 */
 	trait Access {
-		const ACCESS_SETTING		= 1;
+		const ACCESS_ACCESS			= 'access';
 		const ACCESS_SELECT			= 'select';
-		const ACCESS_BROWSE			= 3;
-		const ACCESS_CREATE			= 4;
-		const ACCESS_UPDATE			= 5;
-		const ACCESS_DELETE			= 6;
+		const ACCESS_BROWSE			= 'browse';
+		const ACCESS_CREATE			= 'create';
+		const ACCESS_UPDATE			= 'update';
+		const ACCESS_DELETE			= 'delete';
 		const ACCESS_STATE			= 7;
 
 		/**

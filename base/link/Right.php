@@ -4,25 +4,23 @@
 
 	namespace Base\Link;
 
-	use Base\Access;
-
 	/**
 	 * Класс ссылок, работающих через права пользователя
 	 */
 	class Right extends Internal {
-		private int $collection;
+		private int $feature;
 		private int $right;
 
 		/**
-		 * @param int $collection - Идентификатор коллекции
+		 * @param int $features - Идентификатор признака
 		 * @param int $right - Идентификатор права
 		 * @param string $path - Путь
 		 * @param string $click - Обработчик события
 		 */
-		public function __construct(int $collection, int $right, string $path = '', string $click = '') {
+		public function __construct(int $features, int $right, string $path = '', string $click = '') {
 			parent::__construct($path, $click);
 
-			$this->collection = $collection;
+			$this->feature = $features;
 			$this->right = $right;
 		}
 
@@ -32,18 +30,18 @@
 		 * @return bool
 		 */
 		public function allow(int $id = 0): bool {
-			return Access::allow($this->collection, $this->right, $id);
+			return access()->allow($this->feature, $this->right, $id);
 		}
 
 		/**
-		 * Возвращает ссылку anchor
+		 * Возвращает ссылку
 		 * @param string $content - Контент
 		 * @param array $data - Данные для замены
 		 * @param array $params - Параметры
 		 * @return string
 		 */
-		public function linkHref(string $content, array $data = [], array $params = []): string {
-			return $this->allow() ? parent::linkHref($content, $data, $params) : '';
+		public function hyperlink(string $content, array $data = [], array $params = []): string {
+			return $this->allow() ? parent::hyperlink($content, $data, $params) : '';
 		}
 
 		/**
@@ -55,7 +53,7 @@
 		 * @return string
 		 */
 		public function linkHrefID(int $id, string $content, array $data = [], array $params = []): string {
-			return $this->allow($id) ? parent::linkHref($content, $data, $params) : '';
+			return $this->allow($id) ? parent::hyperlink($content, $data, $params) : '';
 		}
 
 	}

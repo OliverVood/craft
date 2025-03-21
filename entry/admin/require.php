@@ -48,6 +48,6 @@
 	require DIR_BASE_HELPER . 'Response.php';
 	require DIR_BASE_HELPER . 'Validator.php';
 	require DIR_BASE_HELPER . 'Cryptography.php';
-//	require DIR_BASE_HELPER . 'Accumulator.php';
-//	require DIR_BASE_HELPER . 'Pagination.php';
+	require DIR_BASE_HELPER . 'Accumulator.php';
+	require DIR_BASE_HELPER . 'Pagination.php';
 	require DIR_BASE_HELPER . 'Debugger.php';

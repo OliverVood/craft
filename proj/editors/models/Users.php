@@ -1,6 +1,8 @@
 <?php
 
-	namespace Proj\Editors\Models\User;
+	declare(strict_types=1);
+
+	namespace Proj\Editors\Models;
 
 	use Base\DB\Request\Select;
 	use Base\Editor\Model;
@@ -8,11 +10,11 @@
 	/**
 	 * Модель пользователей
 	 */
-	class User extends Model {
+	class Users extends Model {
 		private array $statesView;
 
 		public function __construct() {
-			parent::__construct('users');
+			parent::__construct('craft', 'users');
 
 			$this->statesView = [
 				self::STATE_ERROR		=> __('Ошибка'),

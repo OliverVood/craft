@@ -1,5 +1,7 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Editor\Skins\Edit;
 
 	use Base\Editor\Skins\Skin;
@@ -18,11 +20,11 @@
 		 * @return string
 		 */
 		public function format(string $value): string {
-			$this->start();
+			buffer()->start();
 			?>
 				<input type = "<?= $this->type; ?>" name = "<?= $this->name; ?>" value = "<?= $value; ?>">
 			<?php
-			return $this->cover($this->read());
+			return $this->cover(buffer()->read());
 		}
 
 	}

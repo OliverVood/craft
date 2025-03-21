@@ -30,14 +30,14 @@
 			if ($users->isAuth()) response()->notFound(__('Вы уже вошли систему'));
 
 			$errors = [];
-			$data = validation($data->defined()->all(), [
+			$validated = validation($data->defined()->all(), [
 				'login' => ['string', 'required'],
 				'password' => ['string', 'required', 'encryption'],
 			], [], $errors);
 
-			if ($errors) response()->unprocessableEntity('Ошибка валидации', $errors);
+			if ($errors) response()->unprocessableEntity(__('Ошибка валидации'), $errors);
 
-			if (!$users->auth($data['login'], $data['password'])) response()->unauthorized(__('Не правильный логин или пароль'));
+			if (!$users->auth($validated['login'], $validated['password'])) response()->unauthorized(__('Не правильный логин или пароль'));
 
 			response()->ok();
 		}

@@ -1,16 +1,15 @@
 <?php
 
+	declare(strict_types=1);
+
 	namespace Base\Helper;
 
 	use Base\Link\Right as LinkAccess;
-	use Base\Template\Buffer;
 
 	/**
 	 * Пагинация
 	 */
 	class Pagination {
-		use Buffer;
-
 		private LinkAccess $act;
 
 		private int $current;
@@ -32,7 +31,7 @@
 		 * @return string
 		 */
 		public function __toString(): string {
-			$this->start();
+			buffer()->start();
 			if ($this->count > 1) {
 				echo '<div class = "pagination">';
 				if ($this->current > 1) {
@@ -46,7 +45,7 @@
 				}
 				echo '</div>';
 			}
-			return $this->read();
+			return buffer()->read();
 		}
 
 		/**
@@ -102,7 +101,7 @@
 		 * @return string
 		 */
 		private function link(int $number, string $content, string $class = ''): string {
-			return $this->act->linkHref($content, [$this->name => $number], ['class' => $class]);
+			return $this->act->hyperlink($content, [$this->name => $number], ['class' => $class]);
 		}
 
 	}

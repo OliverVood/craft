@@ -23,3 +23,5 @@
 	require_once DIR_ENTRY_ADMIN . 'links.php';
 
 	route()->run();
+
+	response()->notFound(__('Страница не найдена'));

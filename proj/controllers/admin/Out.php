@@ -5,17 +5,13 @@
 	namespace Proj\Controllers\Admin;
 
 	use AllowDynamicProperties;
-	use Base\Access;
 	use Base\Controller;
-	use Base\Helper\Response;
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
-	use Proj\Access\Admin as Rights;
-	use Proj\Collections;
 	use Proj\Editors;
 	use Proj\Editors\Controllers as EditorsControllers;
-	use proj\models\Users;
-	use proj\ui\templates\admin\Template;
+	use Proj\Models\Users;
+	use Proj\UI\Templates\Admin\Template;
 
 	/**
 	 * Работа с шаблоном
@@ -60,7 +56,7 @@
 
 			$this->setMainToMenu($template);
 			$this->setDevelopmentToMenu($template);
-//			$this->setAccessToMenu();
+			$this->setAccessToMenu($template);
 		}
 
 		/**
@@ -85,53 +81,52 @@
 			$menu = [];
 
 			/* Раздел работы с базой данных */
-			if (allow('dbs', 'check')) $menu['db'][] = linkRight('dbs_check')->hyperlink(__('Проверить'));
-			if (allow('dbs', 'structure')) $menu['db'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
+			if (linkRight('dbs_check')->allow()) $menu['dbs'][] = linkRight('dbs_check')->hyperlink(__('Проверить'));
+			if (linkRight('dbs_structure')->allow()) $menu['dbs'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
 
 //			/* Раздел интерфейса Craft */
 ////			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
 //
 //			/* Раздел статистики */
-			if ((allow('statistics_ips', 'select'))) $menu['statistic'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
-//			/** @var EditorsControllers\Statistic\Action $editorAction */ $editorAction = controllerEditor('statistic.action');
-//			if ($editorAction->select->allow()) $menu['statistic'][] = $editorAction->select->linkHref(__('Действия клиента'), ['page' => 1]);
-//
+			if (linkRight('statistics_ips_select')->allow()) $menu['statistics'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
+			if (linkRight('statistics_actions_select')->allow()) $menu['statistics'][] = linkRight('statistics_actions_select')->hyperlink(__('Действия клиента'), ['page' => 1]);
+
 			if (!$menu) return;
 
 			/* Построение меню */
 			$template->layout->menu->push($this->separator());
 			$template->layout->menu->push($this->head(__('Разработка')));
 
-			if (isset($menu['db'])) $template->layout->menu->push($this->group(__('База данных'), $menu['db']));
+			if (isset($menu['dbs'])) $template->layout->menu->push($this->group(__('База данных'), $menu['dbs']));
 //			// Композиция
-			if (isset($menu['statistic'])) $template->layout->menu->push(self::group(__('Статистика'), $menu['statistic']));
+			if (isset($menu['statistics'])) $template->layout->menu->push($this->group(__('Статистика'), $menu['statistics']));
 		}
 
 		/**
 		 * Построение меню раздела безопасности
+		 * @param Template $template - Шаблон
 		 * @return void
 		 */
-		private function setAccessToMenu(): void {
+		private function setAccessToMenu(Template $template): void {
 			$menu = [];
 
-			/* Раздел пользовательских групп */
-			/** @var EditorsControllers\User\Group $editorGroup */ $editorGroup = controllerEditor('user.group');
-			if ($editorGroup->select->allow()) $menu['groups'][] = $editorGroup->select->linkHref(__('Список групп'), ['page' => 1]);
-			if ($editorGroup->create->allow()) $menu['groups'][] = $editorGroup->create->linkHref(__('Добавить группу'));
-
-			/* Раздел пользователей */
-			/** @var EditorsControllers\User\User $editorUser */ $editorUser = controllerEditor('user.user');
-			if ($editorUser->select->allow()) $menu['users'][] = $editorUser->select->linkHref(__('Список пользователей'), ['page' => 1]);
-			if ($editorUser->create->allow()) $menu['users'][] = $editorUser->create->linkHref(__('Добавить пользователя'));
+//			/* Раздел пользовательских групп */
+			if (linkRight('groups_select')->allow()) $menu['groups'][] = linkRight('groups_select')->hyperlink(__('Список групп'), ['page' => 1]);
+			if (linkRight('groups_create')->allow()) $menu['groups'][] = linkRight('groups_create')->hyperlink(__('Добавить группу'));
+//
+//			/* Раздел пользователей */
+//			/** @var EditorsControllers\User\User $editorUser */ $editorUser = controllerEditor('user.user');
+//			if ($editorUser->select->allow()) $menu['users'][] = $editorUser->select->hyperlink(__('Список пользователей'), ['page' => 1]);
+//			if ($editorUser->create->allow()) $menu['users'][] = $editorUser->create->linkHref(__('Добавить пользователя'));
 
 			if (!$menu) return;
 
-			/* Построение меню */
-			Template::$layout->menu->push($this->separator());
-			Template::$layout->menu->push($this->head(__('Безопасность')));
-
-			if (isset($menu['groups'])) Template::$layout->menu->push(self::group(__('Группы'), $menu['groups']));
-			if (isset($menu['users'])) Template::$layout->menu->push(self::group(__('Пользователи'), $menu['users']));
+//			/* Построение меню */
+//			Template::$layout->menu->push($this->separator());
+//			Template::$layout->menu->push($this->head(__('Безопасность')));
+//
+			if (isset($menu['groups'])) $template->layout->menu->push($this->group(__('Группы'), $menu['groups']));
+//			if (isset($menu['users'])) Template::$layout->menu->push(self::group(__('Пользователи'), $menu['users']));
 		}
 
 		private function setSiteToMenu(): void {//TODO Заполнить левое меню

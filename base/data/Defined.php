@@ -9,7 +9,7 @@
 	 */
 	class Defined extends Base {
 		public function __construct() {
-			parent::__construct(array_merge($_GET, $_POST));
+			parent::__construct(array_merge($_GET, $_POST, json_decode(file_get_contents("php://input"), true) ?? []));
 		}
 
 	}

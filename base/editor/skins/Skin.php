@@ -57,7 +57,7 @@
 		protected function cover(string $element): string {
 			buffer()->start();
 			?>
-				<div class = "field" data-name = "<?= $this->name; ?>">
+				<div data-field = "<?= $this->name; ?>">
 					<?= $element; ?>
 					<div class = "errors"></div>
 				</div>

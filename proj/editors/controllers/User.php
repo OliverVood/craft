@@ -1,12 +1,14 @@
 <?php
 
-	namespace Proj\Editors\Controllers\User;
+	namespace proj\editors\controllers;
 
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
 	use Base\Route as BaseRoute;
 	use Proj\Editors\Consts\Collections;
-	use Proj\Editors\Models\User\User as Model;
+	use proj\editors\models\Users as Model;
+	use function Proj\Editors\Controllers\User\modelEditor;
+	use const Proj\Editors\Consts\Collections;
 
 	class User extends Controller {
 		public function __construct() {
@@ -145,7 +147,7 @@
 		 * @return void
 		 */
 		protected function setFieldsCreate(): void {
-			/** @var \Proj\Editors\Models\User\Group $groupsModel */ $groupsModel = modelEditor('user.group');
+			/** @var \proj\editors\models\Groups $groupsModel */ $groupsModel = modelEditor('user.group');
 
 			$response = $groupsModel->index('id', 'name');
 			$groups = [];
@@ -170,7 +172,7 @@
 		 */
 		protected function setFieldsUpdate(): void {
 			/** @var Model $model */ $model = $this->getModel();
-			/** @var \Proj\Editors\Models\User\Group $groupsModel */ $groupsModel = modelEditor('user.group');
+			/** @var \proj\editors\models\Groups $groupsModel */ $groupsModel = modelEditor('user.group');
 
 			$response = $groupsModel->index('id', 'name');
 			$groups = [];
@@ -214,7 +216,7 @@
 		 * @return array|null
 		 */
 		protected function validationDataCreate(array $data, array & $errors): ?array {
-			/** @var \Proj\Editors\Models\User\Group $groupsModel */ $groupsModel = modelEditor('user.group');
+			/** @var \proj\editors\models\Groups $groupsModel */ $groupsModel = modelEditor('user.group');
 
 			$validated = parent::validationDataCreate($data, $errors);
 
@@ -233,7 +235,7 @@
 		 * @return array|null
 		 */
 		protected function validationDataUpdate(array $data, array & $errors): ?array {
-			/** @var \Proj\Editors\Models\User\Group $groupsModel */ $groupsModel = modelEditor('user.group');
+			/** @var \proj\editors\models\Groups $groupsModel */ $groupsModel = modelEditor('user.group');
 
 			$validated = parent::validationDataUpdate($data, $errors);
 

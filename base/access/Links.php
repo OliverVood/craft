@@ -83,15 +83,16 @@
 		/**
 		 * Возвращает внутреннюю ссылку по псевдониму
 		 * @param string $alias - Псевдоним ссылки
-		 * @return Right
+		 * @param bool $exp - Вызывать ли исключение
+		 * @return Right|null
 		 */
-		public function getRight(string $alias): Right {
+		public function getRight(string $alias, bool $exp = true): ?Right {
 			try {
-				if (!isset($this->links[$alias])) throw new Exception("Link '{$alias}' not found");
+				if (!isset($this->links[$alias]) && $exp) throw new Exception("Link '{$alias}' not found");
 			} catch (Exception $e) {
 				app()->error($e);
 			}
-			return $this->links[$alias];
+			return $this->links[$alias] ?? null;
 		}
 
 	}

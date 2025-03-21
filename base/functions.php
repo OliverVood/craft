@@ -5,6 +5,7 @@
 	use Base\Access;
 	use Base\App;
 	use Base\Data\Defined;
+	use Base\Data\Old;
 	use Base\DB\DB;
 	use Base\Helper\Cryptography;
 	use Base\Helper\Debugger;
@@ -108,10 +109,11 @@
 	/**
 	 * Возвращает ссылку с правами по псевдониму
 	 * @param string $alias - Псевдоним
-	 * @return Right
+	 * @param bool $exp - Вызывать ли исключение
+	 * @return Right|null
 	 */
-	function linkRight(string $alias): Right {
-		return app()->links->getRight($alias);
+	function linkRight(string $alias, bool $exp = true): ?Right {
+		return app()->links->getRight($alias, $exp);
 	}
 
 	/**
@@ -163,6 +165,15 @@
 	}
 
 	/**
+	 * Возвращает данные от предыдущего запроса
+	 * @param string|null $key - Ключ
+	 * @return Old
+	 */
+	function old(?string $key = null): Old {
+		return request()->data()->old($key);
+	}
+
+	/**
 	 * Печатает переменную
 	 * @param mixed $var - Переменная
 	 * @param string $title - Заголовок
@@ -192,43 +203,6 @@
 		return Translation::get($alias, $params);
 	}
 
-//	/**
-//	 * Возвращает данные от предыдущего запроса
-//	 * @param string|null $key - Ключ
-//	 * @return Old
-//	 */
-//	function old(?string $key = null): Old {
-//		return Route::getOld($key);
-//	}
-//
-//	/**
-//	 * Возвращает контроллер
-//	 * @param string $name - Наименование контроллера
-//	 * @return Controller
-//	 * @throws Exception
-//	 */
-//	function controller(string $name): Controller {
-//		return Controller::get($name, Route::SOURCE_CONTROLLERS);
-//	}
-//
-//	/**
-//	 * Возвращает контроллер-редактор
-//	 * @param string $name - Наименование контроллера
-//	 * @return Controller
-//	 */
-//	function controllerEditor(string $name): Controller {
-//		return Controller::get($name, Route::SOURCE_EDITORS);
-//	}
-//	/**
-//	 * Возвращает модель-редактор
-//	 * @param string $name - Наименование модели
-//	 * @return EditorModel
-//	 */
-//	function modelEditor(string $name): EditorModel {
-//		/** @var EditorModel $model */ $model =  EditorModel::get($name, Model::SOURCE_EDITORS);
-//		return $model;
-//	}
-
 	/**
 	 * Валидация данных
 	 * @param $data - Данные
@@ -241,6 +215,11 @@
 		return Validator::execute($data, $rules, $names, $errors);
 	}
 
+	/**
+	 * Выполняет шифрование
+	 * @param string $string - Строка
+	 * @return string
+	 */
 	function encryption(string $string): string {
 		return Cryptography::encryption($string);
 	}

@@ -8,7 +8,7 @@
 	use Base\Editor\Model;
 
 	/**
-	 * Модель статистики посещаемости
+	 * Модель-редактор статистики посещаемости
 	 */
 	class IPs extends Model {
 		public function __construct() {

@@ -64,12 +64,12 @@
 //
 //			$this->regTexts();
 //			$this->regActions();
-//			$this->regLinks();
+			$this->links();
 //			$this->regRoutes();
 
 			$this->fieldsSelect = new Fields();
 //			$this->fieldsBrowse = new Fields();
-//			$this->fieldsCreate = new Fields();
+			$this->fieldsCreate = new Fields();
 //			$this->fieldsUpdate = new Fields();
 		}
 
@@ -95,12 +95,12 @@
 
 			$title = $this->titleSelect;
 			$fields = $this->fieldsSelect;
-			$pagination = $this->page_entries ? new Pagination($this->select, $ext['page']['current'], $ext['page']['count']) : null;die('1');
-//			$editor = $this;
-//
-////			response()->history();$this->select, ['page' => $page]
-//			response()->section('content', view($this->tplSelect, compact('title', 'fields', 'items' ,'pagination', 'editor'));
-//			response()->ok();
+			$pagination = $this->page_entries ? new Pagination($this->select, $ext['page']['current'], $ext['page']['count']) : null;
+			$editor = $this;
+
+			response()->history($this->select, ['page' => $page]);
+			response()->section('content', view($this->tplSelect, compact('title', 'fields', 'items' ,'pagination', 'editor')));
+			response()->ok();
 		}
 
 		/**
@@ -140,7 +140,7 @@
 		 * @return void
 		 */
 		public function create(): void {
-			if (!$this->allowCreate()) Response::SendNoticeError($this->textResponseErrorAccess);
+			if (!$this->allowCreate()) response()->forbidden($this->textResponseErrorAccess);
 
 			$this->prepareViewCreate();
 
@@ -152,9 +152,9 @@
 			$textBtn = $this->textBtnCreate;
 			$editor = $this;
 
-			Response::pushHistory($this->create);
-			Response::pushSection('content', View::get($this->tplCreate, compact('title', 'fields', 'action', 'textBtn', 'editor')));
-			Response::SendJSON();
+			response()->history($this->create);
+			response()->section('content', view($this->tplCreate, compact('title', 'fields', 'action', 'textBtn', 'editor')));
+			response()->ok();
 		}
 
 		/**
@@ -190,28 +190,23 @@
 		/**
 		 * Создание
 		 * @controllerMethod
-		 * @param Input $input - Входные данные
+		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		public function doCreate(Input $input): void {
-			if (!$this->allowCreate()) Response::SendNoticeError($this->textResponseErrorAccess);
+		public function doCreate(Set $data): void {
+			if (!$this->allowCreate()) response()->forbidden($this->textResponseErrorAccess);
 
-			$data = $input->defined()->all();
-
+			$data = $data->defined()->all();
 			$this->prepareCreate($data);
 			$errors = [];
-			$validated = $this->validationDataCreate($data, $errors);
+			$validated = validation($data, $this->validateDataCreate, $this->names, $errors);
 
-			if ($validated === null) {
-				Response::pushNoticeError($this->textResponseErrorValidate);
-				Response::pushErrors($errors);
-				Response::sendJSON();
-			}
-
-			if (!$id = $this->getModel()->create($validated)) Response::sendNoticeError($this->textResponseErrorCreate);
-
-			Response::pushNoticeOk($this->textResponseOkCreate);
-			$this->browse($input, $id);
+			if ($errors) response()->unprocessableEntity(__($this->textResponseErrorValidate), $errors);
+dd(134);
+//			if (!$id = $this->getModel()->create($validated)) Response::sendNoticeError($this->textResponseErrorCreate);
+//
+//			Response::pushNoticeOk($this->textResponseOkCreate);
+//			$this->browse($data, $id);
 		}
 
 		/**
@@ -349,16 +344,6 @@
 		protected function prepareSetState(int $id, int $state): void {  }
 
 		/**
-		 * Проверяет данные для создания
-		 * @param array $data - Данные
-		 * @param array $errors - Ошибки
-		 * @return array|null
-		 */
-		protected function validationDataCreate(array $data, array & $errors): ?array {
-			return validation($data, $this->validateDataCreate, $this->names, $errors);
-		}
-
-		/**
 		 * Проверяет данные для изменения
 		 * @param array $data - Данные
 		 * @param array $errors - Ошибки
@@ -408,7 +393,7 @@
 		public function getLinksNavigateBrowse(array $item): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->hyperlink("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -420,7 +405,7 @@
 		public function getLinksNavigateCreate(): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->hyperlink("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -433,7 +418,7 @@
 		public function getLinksNavigateUpdate(array $item): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->select->allow()) $links->push($this->select->linkHref("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
+			if ($this->select->allow()) $links->push($this->select->hyperlink("<< {$this->titleSelect}", ['page' => old('page')->int(1)]));
 
 			return $links;
 		}
@@ -446,9 +431,11 @@
 		public function getLinksManage(array $item): Accumulator {
 			$links = new Accumulator();
 
-			$links->push($this->browse->linkHrefID($item['id'] ?? 0, $this->textDoBrowse, $item));
-			$links->push($this->update->linkHrefID($item['id'] ?? 0, $this->textDoUpdate, $item));
-			$links->push($this->do_delete->linkHrefID($item['id'] ?? 0, $this->textDoDelete, $item));
+			$id = isset($item['id']) ? (int)$item['id'] : 0;
+
+			$links->push($this->browse->linkHrefID($id, $this->textDoBrowse, $item));
+			$links->push($this->update->linkHrefID($id, $this->textDoUpdate, $item));
+			$links->push($this->do_delete->linkHrefID($id, $this->textDoDelete, $item));
 
 			return $links;
 		}

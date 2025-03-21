@@ -14,8 +14,16 @@
 	route()->registration('dbs::check', 'admin.dbs::check');
 	route()->registration('dbs::make', 'admin.dbs::make');
 
-	route()->registration("statistics_ips::select", "statistics.ips::select", Controllers::SOURCE_EDITORS);
-//	Base\Route::set('statistic_ip::*', 'statistic.ip', Base\Route::SOURCE_EDITORS);
-//	Base\Route::set('statistic_action::*', 'statistic.action', Base\Route::SOURCE_EDITORS);
-//	Base\Route::set('group::*', 'user.group', Base\Route::SOURCE_EDITORS);
+	route()->registration('statistics_ips::select', 'statistics.ips::select', Controllers::SOURCE_EDITORS);
+	route()->registration('statistics_actions::select', 'statistics.actions::select', Controllers::SOURCE_EDITORS);
+
+	route()->registration('groups::select', 'groups::select', Controllers::SOURCE_EDITORS);
+//	BaseRoute::set("{$this->name}::browse", "{$this->pathController}::browse", Controllers::SOURCE_EDITORS);
+	route()->registration('groups::create', 'groups::create', Controllers::SOURCE_EDITORS);
+//	BaseRoute::set("{$this->name}::update", "{$this->pathController}::update", Controllers::SOURCE_EDITORS);
+//	BaseRoute::set("{$this->name}::delete", "{$this->pathController}::delete", Controllers::SOURCE_EDITORS);
+	route()->registration('groups::do_create', 'groups::doCreate', Controllers::SOURCE_EDITORS);
+//	BaseRoute::set("{$this->name}::do_update", "{$this->pathController}::doUpdate", Controllers::SOURCE_EDITORS);
+//	BaseRoute::set("{$this->name}::do_delete", "{$this->pathController}::doDelete", Controllers::SOURCE_EDITORS);
+
 //	Base\Route::set('user::*', 'user.user', Base\Route::SOURCE_EDITORS);
