@@ -5,6 +5,7 @@
 	namespace Base\Access;
 
 	use Exception;
+	use Generator;
 
 	/**
 	 * Базовый класс прав
@@ -35,6 +36,16 @@
 				app()->error($e);
 			}
 			return $this->rights[$name];
+		}
+
+		/**
+		 * Перебирает права
+		 * @return Generator
+		 */
+		public function each(): Generator {
+			foreach ($this->rights as $right) yield $right->name() => $right;
+
+			return null;
 		}
 
 	}

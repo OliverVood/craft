@@ -4,6 +4,8 @@
 
 	namespace Base\Access;
 
+	use Generator;
+
 	/**
 	 * Базовый класс признаков
 	 */
@@ -44,12 +46,24 @@
 		}
 
 		/**
+		 * Возвращает заголовок признака
+		 * @return string
+		 */
+		public function title(): string {
+			return $this->title;
+		}
+
+		/**
 		 * Возвращает право
 		 * @param string $name - Наименование права
 		 * @return Right
 		 */
 		public function rights(string $name): Right {
 			return $this->rights->get($name);
+		}
+
+		public function rightsEach(): Generator {
+			return $this->rights->each();
 		}
 
 	}

@@ -1,19 +1,20 @@
 <?php
 
-	namespace Base\DB\Request;
+	declare(strict_types=1);
 
+	namespace Base\DB\Request;
 
 	use Base\DB\DB;
 	use Base\DB\Response;
 
 	/**
-	 * Для запросов INSERT (базовый абстрактный класс)
+	 * Для запросов UPDATE (базовый абстрактный класс)
 	 */
 	abstract class Update {
 		protected ?DB $db;
 
 		protected string $table			= '';
-		protected array	 $data			= [];
+		protected array $data			= [];
 		protected array $conditions		= [];
 
 		public function __construct(DB & $db) {
@@ -45,11 +46,11 @@
 		/**
 		 * Задаёт условие с полем и значением
 		 * @param string $field - Поле
-		 * @param string $value - Значение
+		 * @param string|int $value - Значение
 		 * @param string $operator - Оператор
 		 * @return $this
 		 */
-		public function where(string $field, string $value, string $operator = '='): self {
+		public function where(string $field, string|int $value, string $operator = '='): self {
 			$this->addConditions('where', 'AND', ['field' => $field, 'value' => $value, 'operator' => $operator]);
 
 			return $this;

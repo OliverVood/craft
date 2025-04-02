@@ -8,7 +8,6 @@
 	use Base\DB\Response;
 	use Exception;
 	use Base\DB\Request\{Select, Insert, Update};
-	use Proj\DB\Craft;
 
 	/**
 	 * Базовый класс для работы с моделями-редакторами
@@ -30,6 +29,22 @@
 
 			$this->db = db($db);
 			$this->table = $table;
+		}
+
+		/**
+		 * Возвращает права
+		 * @param int $id - Идентификатор группы
+		 * @param array $fields - Перечень полей
+		 * @return Response
+		 */
+		public function access(int $id, array $fields = []): Response {
+			return $this->db
+				->select()
+				->fields(...$fields)
+				->table($this->table)
+				->where('parent', $id)
+				->where('instance', 0)
+				->query();
 		}
 
 		public function index(string ...$fields): Response {
@@ -88,16 +103,16 @@
 		/**
 		 * Создание записи
 		 * @param array $data - Данные
-		 * @return int
+		 * @return int|null
 		 */
-		public function create(array $data): int {
+		public function create(array $data): ?int {
 			$this->prepareCreate($data);
 
 			$query = $this->getQueryCreate($data);
 			try {
 				$this->db->query($query->get());
 			} catch (Exception) {
-				return false;
+				return null;
 			}
 
 			return $this->db->insertId();
@@ -138,6 +153,36 @@
 			}
 
 			return true;
+		}
+
+		/**
+		 * Устанавливает права
+		 * @param int $id - Идентификатор группы
+		 * @param array $items - Права
+		 * @return void
+		 */
+		public function setAccess(int $id, array $items): void {
+			$this->db
+				->delete()
+				->table($this->table)
+				->where('parent', $id)
+				->query();
+
+			$values = [];
+			foreach ($items as $feature => $rights) {
+				foreach ($rights as $right => $permission) {
+					$values[] = [$id, $feature, $right, $permission];
+				}
+			}
+
+			if (!$values) return;
+
+			$this->db
+				->insert()
+				->table($this->table)
+				->fields('parent', 'feature', 'right', 'permission')
+				->values($values)
+				->query();
 		}
 
 		/**

@@ -5,6 +5,7 @@
 	namespace Base\Access;
 
 	use Exception;
+	use Generator;
 
 	/**
 	 * Базовый класс признаков
@@ -39,6 +40,16 @@
 				app()->error($e);
 			}
 			return $this->features[$name];
+		}
+
+		/**
+		 * Перебирает признаки
+		 * @return Generator
+		 */
+		public function each(): Generator {
+			foreach ($this->features as $feature) yield $feature->name() => $feature;
+
+			return null;
 		}
 
 	}

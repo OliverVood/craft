@@ -14,6 +14,8 @@
 		private DB $db;
 
 		public function __construct() {
+			parent::__construct();
+
 			$this->db = app()->db('craft');
 		}
 

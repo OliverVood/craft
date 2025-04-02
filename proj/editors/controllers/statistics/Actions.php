@@ -2,6 +2,7 @@
 
 	namespace Proj\Editors\Controllers\Statistics;
 
+	use Base\Editor\Actions\Select;
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
 
@@ -12,19 +13,13 @@
 		public function __construct() {
 			parent::__construct(app()->features('statistics_actions'), 'statistics.actions');
 
-			$this->titleSelect = 'Статистика действий клиентов';
-		}
-
-		/**
-		 * Задаёт поля для выборки
-		 * @return void
-		 */
-		protected function setFieldsSelect(): void {
-			$this->fieldsSelect->browse->date('datecr', 'Дата');
-			$this->fieldsSelect->browse->text('cid', 'ID Клиента');
-			$this->fieldsSelect->browse->text('object', 'Объект');
-			$this->fieldsSelect->browse->text('action', 'Действие');
-			$this->fieldsSelect->browse->text('params', 'Параметры');
+			$this->actionSelect = new Select($this);
+			$this->actionSelect->fields()->browse->date('datecr', 'Дата');
+			$this->actionSelect->fields()->browse->text('cid', 'ID Клиента');
+			$this->actionSelect->fields()->browse->text('object', 'Объект');
+			$this->actionSelect->fields()->browse->text('action', 'Действие');
+			$this->actionSelect->fields()->browse->text('params', 'Параметры');
+			$this->actionSelect->text('title', 'Статистика действий клиентов');
 		}
 
 		/**

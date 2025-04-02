@@ -71,9 +71,7 @@
 			$data = $dbs->check();
 			$action = linkInternal('dbs_make')->path();
 
-			response()->noticeOk(__('База данных успешно обновлена'));
-			response()->data(compact('data', 'action'));
-			response()->ok();
+			response()->ok(compact('data', 'action'), __('База данных успешно обновлена'));
 		}
 
 	}

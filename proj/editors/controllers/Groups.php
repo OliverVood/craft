@@ -4,9 +4,14 @@
 
 	namespace Proj\Editors\Controllers;
 
+	use Base\Editor\Actions\Browse;
+	use Base\Editor\Actions\Create;
+	use Base\Editor\Actions\Delete;
+	use Base\Editor\Actions\Select;
+	use Base\Editor\Actions\Update;
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
-	use proj\editors\models\Groups as Model;
+	use Proj\Editors\Models\Groups as Model;
 
 	/**
 	 * Контроллер-редактор групп
@@ -16,84 +21,50 @@
 		public function __construct() {
 			parent::__construct(app()->features('groups'), 'groups');
 
-			$this->titleSelect = 'Список групп';
-			$this->titleBrowse = 'Просмотр группы';
-			$this->titleCreate = 'Добавление группы';
-			$this->titleUpdate = 'Изменение группы';
+			/** @var Model $model */ $model = $this->model();
 
-			$this->textDeleteConfirm = 'Удалить группу?';
-
-			$this->textResponseOkCreate = 'Группа добавлена';
-			$this->textResponseOkUpdate = 'Группа изменена';
-			$this->textResponseOkDelete = 'Группа удалена';
-
-			$this->textBtnCreate = 'Добавить';
-			$this->textBtnUpdate = 'Изменить';
-
-			/** @var Model $groups */ $groups = $this->model();
-
-//			$this->names = [
-//				'name' => __('Наименование'),
-//				'state' => __('Состояние'),
-//			];
-
-			$this->validateDataCreate = [
-				'name' => ['required', 'trim', 'string'],
+			$this->names = [
+				'name' => __('Наименование'),
+				'state' => __('Состояние'),
 			];
 
-//			$this->validateDataUpdate = [
-//				'name' => ['required', 'trim', 'string'],
-//				'state' => ['required', 'int', 'in:' . implode(',', [$groups::STATE_ACTIVE, $groups::STATE_INACTIVE])],
-//			];
-		}
+			$this->actionSelect = new Select($this);
+			$this->actionSelect->fields()->browse->text('id', '#');
+			$this->actionSelect->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
+			$this->actionSelect->fields()->browse->text('name', __('Наименование'));
+			$this->actionSelect->text('title', 'Список групп');
 
-		/**
-		 * Задаёт поля для выборки
-		 * @return void
-		 */
-		protected function setFieldsSelect(): void {
-			/** @var Model $groups */ $groups = $this->model();
+			$this->actionBrowse = new Browse($this);
+			$this->actionBrowse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
+			$this->actionBrowse->fields()->browse->text('name', __('Наименование'));
+			$this->actionBrowse->text('title', 'Просмотр группы');
 
-			$this->fieldsSelect->browse->text('id', '#');
-			$this->fieldsSelect->browse->fromArray('state', __('Состояние'), $groups->getStates());
-			$this->fieldsSelect->browse->text('name', __('Наименование'));
-		}
+			$this->actionCreate = new Create($this);
+			$this->actionCreate->fields()->edit->text('name', __('Наименование'));
+			$this->actionCreate->validate([
+				'name' => ['required', 'trim', 'string'],
+			]);
+			$this->actionCreate->text('title', 'Добавление группы');
+			$this->actionCreate->text('btn', 'Добавить');
+			$this->actionCreate->text('responseOk', 'Группа добавлена');
 
-		/**
-		 * Задаёт поля для просмотра
-		 * @return void
-		 */
-		protected function setFieldsBrowse(): void {
-			/** @var Model $model */ $model = $this->getModel();
-
-			$this->fieldsBrowse->browse->fromArray('state', __('Состояние'), $model->getStates());
-
-			$this->fieldsBrowse->browse->text('name', __('Наименование'));
-		}
-
-		/**
-		 * Задаёт поля для создания
-		 * @return void
-		 */
-		protected function setFieldsCreate(): void {
-			$this->fieldsCreate->edit->text('name', __('Наименование'));
-		}
-
-		/**
-		 * Задаёт поля для редактирования
-		 * @return void
-		 */
-		protected function setFieldsUpdate(): void {
-			/** @var Model $model */ $model = $this->getModel();
-
-			$this->fieldsUpdate->edit->hidden('id');
-
-			$this->fieldsUpdate->edit->text('name', __('Наименование'));
-
-			$this->fieldsUpdate->edit->select('state', __('Состояние'), [
+			$this->actionUpdate = new Update($this);
+			$this->actionUpdate->fields()->edit->hidden('id');
+			$this->actionUpdate->fields()->edit->text('name', __('Наименование'));
+			$this->actionUpdate->fields()->edit->select('state', __('Состояние'), [
 				$model::STATE_ACTIVE => __('Активная'),
 				$model::STATE_INACTIVE => __('Не активная'),
 			]);
+			$this->actionUpdate->validate([
+				'name' => ['required', 'trim', 'string'],
+				'state' => ['required', 'int', 'in:' . implode(',', [$model::STATE_ACTIVE, $model::STATE_INACTIVE])],
+			]);
+			$this->actionUpdate->text('title', 'Изменение группы');
+			$this->actionUpdate->text('responseOk', 'Группа изменена');
+
+			$this->actionDelete = new Delete($this);
+			$this->actionDelete->text('confirm', 'Удалить группу?');
+			$this->actionDelete->text('responseOk', 'Группа удалена');
 		}
 
 		/**
@@ -106,9 +77,9 @@
 
 			$id = isset($item['id']) ? (int)$item['id'] : 0;
 
-			$links->push($this->update->linkHrefID($id, $this->textDoUpdate, $item));
-			//function (array $item) { return Units\Users::instance()->editor_access_users->update->GetLinkHrefAllow(Units\Users::instance()->editor_access_users::ACCESS_UPDATE, 'Установить права', array_merge(['uid' => $item['id']], $this->params)); },
-			$links->push($this->do_delete->linkHrefID($id, $this->textDoDelete, $item));
+			$links->push($this->update->linkHrefID($id, __($this->textDoUpdate), $item));
+			$links->push($this->access->linkHrefID($id, __($this->textDoAccess), ['id' => $id]));
+			$links->push($this->do_delete->linkHrefID($id, __($this->textDoDelete), $item));
 
 			return $links;
 		}

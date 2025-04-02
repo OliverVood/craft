@@ -11,10 +11,11 @@
 		 */
 		public function get(): string {
 			$table = $this->renderTable();
-			$fields = $this->renderFields();
-			$values = $this->renderValues();
 
-			return "INSERT INTO {$table} ({$fields}) VALUES ({$values})";
+			$fields = $this->renderFields();
+			$values = $this->renderValuesArray();
+
+			return "INSERT INTO {$table} ({$fields}) VALUES {$values}";
 		}
 
 		/**
@@ -23,22 +24,36 @@
 		 */
 		private function renderFields(): string {
 			$fields = [];
-			foreach ($this->data as $field => $value) $fields[] = $this->shield($field);
+			foreach ($this->fields as $field) $fields[] = $this->shield($field);
 
 			return implode(', ', $fields);
 		}
 
 		/**
 		 * Возвращает значения
+		 * @param array $data - Данные
 		 * @return string
 		 */
-		public function renderValues(): string {
+		private function renderValues(array $data): string {
 			$values = [];
-			foreach ($this->data as $value) {
+			foreach ($data as $value) {
 				$values[] = match ($value) {
 					null => "NULL",
 					default => "'{$this->db->escape($value)}'",
 				};
+			}
+
+			return '(' . implode(', ', $values) . ')';
+		}
+
+		/**
+		 * Возвращает перечень значений
+		 * @return string
+		 */
+		private function renderValuesArray(): string {
+			$values = [];
+			foreach ($this->data as $data) {
+				$values[] = $this->renderValues($data);
 			}
 
 			return implode(', ', $values);

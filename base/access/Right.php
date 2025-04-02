@@ -31,4 +31,20 @@
 			return $this->id;
 		}
 
+		/**
+		 * Возвращает наименование права
+		 * @return string
+		 */
+		public function name(): string {
+			return $this->name;
+		}
+
+		/**
+		 * Возвращает заголовок права
+		 * @return string
+		 */
+		public function title(): string {
+			return $this->title;
+		}
+
 	}

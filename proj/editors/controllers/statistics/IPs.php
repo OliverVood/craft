@@ -4,6 +4,7 @@
 
 	namespace Proj\Editors\Controllers\Statistics;
 
+	use Base\Editor\Actions\Select;
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
 
@@ -15,19 +16,13 @@
 		public function __construct() {
 			parent::__construct(app()->features('statistics_ips'), 'statistics.ips');
 
-			$this->titleSelect = 'Статистика запросов к серверу';
-		}
-
-		/**
-		 * Задаёт поля для выборки
-		 * @return void
-		 */
-		protected function setFieldsSelect(): void {
-			$this->fieldsSelect->browse->date('datecr', 'Дата');
-			$this->fieldsSelect->browse->text('cid', 'ID Клиента');
-			$this->fieldsSelect->browse->int2IP('ip', 'IP адрес');
-			$this->fieldsSelect->browse->text('path', 'Путь');
-			$this->fieldsSelect->browse->text('params', 'Параметры');
+			$this->actionSelect = new Select($this);
+			$this->actionSelect->fields()->browse->date('datecr', 'Дата');
+			$this->actionSelect->fields()->browse->text('cid', 'ID Клиента');
+			$this->actionSelect->fields()->browse->int2IP('ip', 'IP адрес');
+			$this->actionSelect->fields()->browse->text('path', 'Путь');
+			$this->actionSelect->fields()->browse->text('params', 'Параметры');
+			$this->actionSelect->text('title', 'Статистика запросов к серверу');
 		}
 
 		/**

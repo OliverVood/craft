@@ -13,7 +13,9 @@
 	require_once DIR_BASE_DB . 'driver/MySQLi/request/Select.php';
 	require_once DIR_BASE_DB . 'driver/MySQLi/request/Insert.php';
 	require_once DIR_BASE_DB . 'driver/MySQLi/request/Update.php';
+	require_once DIR_BASE_DB . 'driver/MySQLi/request/Delete.php';
 
+	use Base\DB\Driver\MySQLi\Request\Delete;
 	use Base\DB\Driver\MySQLi\Request\Select;
 	use Base\DB\Driver\MySQLi\Request\Insert;
 	use Base\DB\Driver\MySQLi\Request\Update;
@@ -115,6 +117,14 @@
 		 */
 		public function update(): Update {
 			return new Update($this);
+		}
+
+		/**
+		 * Удаление данных
+		 * @return Delete
+		 */
+		public function delete(): Delete {
+			return new Delete($this);
 		}
 
 		/**

@@ -16,10 +16,10 @@
 
 		/**
 		 * Возвращает скрытое текстовое поле
-		 * @param string $value
+		 * @param int|string $value
 		 * @return string
 		 */
-		public function format(string $value): string {
+		public function format(int|string $value): string {
 			buffer()->start();
 			?>
 				<input type = "hidden" name = "<?= $this->name; ?>" value = "<?= $value; ?>">

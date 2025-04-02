@@ -71,7 +71,7 @@
 		 * @return Model
 		 */
 		public function registrationAndGet(string $name, int $source): Model {
-			if (!isset($this->models[$name])) $this->registration($name, $source);
+			if (!isset($this->models["{$name}.{$source}"])) $this->registration($name, $source);
 
 			return $this->get($name);
 		}

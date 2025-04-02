@@ -40,8 +40,8 @@
 						case 'string':case 'text': $value = self::string($key, $value, $name, $errors); break;
 						case 'in': $value = self::in($key, $value, $name, $arguments, $errors); break;
 						case 'same': $value = self::same($key, $value, $name, $data[$arguments[0]] ?? null, $names[$arguments[0]] ?? $arguments[0], $errors); break;
-						case 'min': if (in_array('required', $rules) || $value) $value = self::min($key, $value, $name, $arguments[0], $errors); break;
-						case 'max': if (in_array('required', $rules) || $value) $value = self::max($key, $value, $name, $arguments[0], $errors); break;
+						case 'min': if (in_array('required', $rules) || $value) $value = self::min($key, $value, $name, (int)$arguments[0], $errors); break;
+						case 'max': if (in_array('required', $rules) || $value) $value = self::max($key, $value, $name, (int)$arguments[0], $errors); break;
 						case 'contains': if (in_array('required', $rules) || $value) $value = self::contains($key, $value, $name, $arguments, $errors); break;
 						case 'trim': $value = self::trim($value); break;
 						case 'encryption': $encryption[] = $key; break;

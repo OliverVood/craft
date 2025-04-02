@@ -13,7 +13,7 @@
 		 * @return string
 		 */
 		public static function get(string $alias, array $params = []): string {
-			return $params ? self::prepare($alias, $params) : $alias;
+			return $params ? self::prepare("_{$alias}", $params) : "_{$alias}";
 		}
 
 		/**

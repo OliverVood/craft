@@ -10,7 +10,9 @@
 	require_once DIR_BASE_DB . 'request/Select.php';
 	require_once DIR_BASE_DB . 'request/Insert.php';
 	require_once DIR_BASE_DB . 'request/Update.php';
+	require_once DIR_BASE_DB . 'request/Delete.php';
 
+	use Base\DB\Request\Delete;
 	use Base\DB\Request\Select;
 	use Base\DB\Request\Insert;
 	use Base\DB\Request\Update;
@@ -87,6 +89,12 @@
 		 * @return Update
 		 */
 		abstract protected function update(): Update;
+
+		/**
+		 * Удаление данных
+		 * @return Delete
+		 */
+		abstract protected function delete(): Delete;
 
 		/**
 		 * Возвращает идентификатор добавленной записи

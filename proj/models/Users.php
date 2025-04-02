@@ -23,6 +23,8 @@
 		private static string | null $alias = null;
 
 		public function __construct() {
+			parent::__construct();
+
 			$this->db = app()->db('craft');
 
 			$this->updateDataFromSession();
@@ -135,7 +137,7 @@
 
 			$groupsRights = [];
 			foreach ($response->each() as $row) {
-				$groupsRights[$row['gid']][$row['collection']][$row['instance']][$row['right']] = $row['permission'];
+				$groupsRights[$row['parent']][$row['feature']][$row['instance']][$row['right']] = $row['permission'];
 			}
 			access()->setGroupsRights($groupsRights);
 
@@ -146,7 +148,7 @@
 				->query();
 			$usersRights = [];
 			foreach ($response->each() as $row) {
-				$usersRights[$row['uid']][$row['collection']][$row['instance']][$row['right']] = $row['permission'];
+				$usersRights[$row['parent']][$row['feature']][$row['instance']][$row['right']] = $row['permission'];
 			}
 			access()->setUsersRights($usersRights);
 		}

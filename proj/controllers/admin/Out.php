@@ -110,23 +110,21 @@
 		private function setAccessToMenu(Template $template): void {
 			$menu = [];
 
-//			/* Раздел пользовательских групп */
+			/* Раздел пользовательских групп */
 			if (linkRight('groups_select')->allow()) $menu['groups'][] = linkRight('groups_select')->hyperlink(__('Список групп'), ['page' => 1]);
 			if (linkRight('groups_create')->allow()) $menu['groups'][] = linkRight('groups_create')->hyperlink(__('Добавить группу'));
-//
-//			/* Раздел пользователей */
-//			/** @var EditorsControllers\User\User $editorUser */ $editorUser = controllerEditor('user.user');
-//			if ($editorUser->select->allow()) $menu['users'][] = $editorUser->select->hyperlink(__('Список пользователей'), ['page' => 1]);
-//			if ($editorUser->create->allow()) $menu['users'][] = $editorUser->create->linkHref(__('Добавить пользователя'));
+
+			/* Раздел пользователей */
+			if (linkRight('users_select')->allow()) $menu['users'][] = linkRight('users_select')->hyperlink(__('Список пользователей'), ['page' => 1]);
+			if (linkRight('users_create')->allow()) $menu['users'][] = linkRight('users_create')->hyperlink(__('Добавить пользователя'));
 
 			if (!$menu) return;
 
-//			/* Построение меню */
-//			Template::$layout->menu->push($this->separator());
-//			Template::$layout->menu->push($this->head(__('Безопасность')));
-//
+			/* Построение меню */
+			$template->layout->menu->push($this->separator());
+			$template->layout->menu->push($this->head(__('Безопасность')));
 			if (isset($menu['groups'])) $template->layout->menu->push($this->group(__('Группы'), $menu['groups']));
-//			if (isset($menu['users'])) Template::$layout->menu->push(self::group(__('Пользователи'), $menu['users']));
+			if (isset($menu['users'])) $template->layout->menu->push(self::group(__('Пользователи'), $menu['users']));
 		}
 
 		private function setSiteToMenu(): void {//TODO Заполнить левое меню

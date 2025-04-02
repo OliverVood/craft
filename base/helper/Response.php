@@ -23,21 +23,25 @@
 
 		/**
 		 * Код 200. Успех.
-		 * @param array $data - Данные
+		 * @param array|null $data - Данные
+		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function ok(array $data = []): void {
-			if ($data) $this->data($data);
+		#[NoReturn] public function ok(?array $data = null, string $notice = ''): void {
+			if (!is_null($data)) $this->data($data);
+			if ($notice) $this->noticeOk($notice);
 			$this->send(200);
 		}
 
 		/**
 		 * Код 201. Создано.
-		 * @param array $data - Данные
+		 * @param array|null $data - Данные
+		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function created(array $data = []): void {
-			if ($data) $this->data($data);
+		#[NoReturn] public function created(?array $data = [], string $notice = ''): void {
+			if (!is_null($data)) $this->data($data);
+			if ($notice) $this->noticeOk($notice);
 			$this->send(201);
 		}
 

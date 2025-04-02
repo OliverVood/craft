@@ -13,7 +13,8 @@
 		protected ?DB $db;
 
 		protected string $table			= '';
-		protected array	 $data			= [];
+		protected array $fields			= [];
+		protected array $data			= [];
 
 		public function __construct(DB & $db) {
 			$this->db = & $db;
@@ -31,12 +32,29 @@
 		}
 
 		/**
+		 * Задаёт перечень полей
+		 * @param ...$fields - Перечень полей
+		 * @return $this
+		 */
+		public function fields(...$fields): self {
+			$this->fields = [];
+			foreach ($fields as $field) $this->fields[] = $field;
+
+			return $this;
+		}
+
+		/**
 		 * Задаёт данные
 		 * @param array $data - Данные
 		 * @return $this
 		 */
 		public function values(array $data): self {
-			$this->data = $data;
+			if (isset($data[0]) && is_array($data[0])) {
+				$this->data = $data;
+			} else {
+				$this->data = [$data];
+				$this->fields(...array_keys($data));
+			}
 
 			return $this;
 		}
