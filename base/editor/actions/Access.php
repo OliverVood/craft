@@ -9,13 +9,20 @@
 	use base\editor\actions\traits\Texts;
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
+	use Base\Helper\Accumulator;
+	use Closure;
 	use JetBrains\PhpStorm\NoReturn;
 
+	/**
+	 * Контроллер-редактор прав
+	 */
 	class Access {
 		use Entree;
 		use Texts;
 
 		private Controller $controller;
+
+		public Closure $fnGetLinksNavigate;
 
 		private string $tpl = 'admin.editor.access';
 
@@ -27,7 +34,10 @@
 
 			$this->access = 'access';
 
+			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
+
 			$this->text('title', 'Права доступа');
+			$this->text('do', 'Установить права доступа');
 			$this->text('btn', 'Изменить');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
 			$this->text('responseOkSet', 'Права доступа установлены');
@@ -51,11 +61,11 @@
 			foreach ($model->access($id, ['feature', 'right', 'permission'])->each() as $item) {
 				$items[$item['feature']][$item['right']] = $item['permission'];
 			}
-			$action = $this->controller->do_access;
+			$action = $this->controller->linkDoAccess;
 			$textBtn = $this->__('btn');
 			$editor = $this->controller;
 
-			response()->history($this->controller->access, ['id' => $id]);
+			response()->history($this->controller->linkAccess, ['id' => $id]);
 			response()->section('content', view($this->tpl, compact('id', 'title', 'features', 'items', 'action', 'textBtn', 'editor')));
 			response()->ok();
 		}
@@ -75,6 +85,18 @@
 			$model->setAccess($id, $rights);
 
 			response()->ok(null, $this->__('responseOkSet'));
+		}
+
+		/**
+		 * Возвращает ссылки навигации
+		 * @return Accumulator
+		 */
+		public function getLinksNavigate(): Accumulator {
+			$links = new Accumulator();
+
+			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . $this->controller->select->__('title'), ['page' => old('page')->int(1)]));
+
+			return $links;
 		}
 
 	}

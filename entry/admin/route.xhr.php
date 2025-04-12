@@ -36,3 +36,27 @@
 	route()->registration('users::do_create', 'users::doCreate', Controllers::SOURCE_EDITORS);
 	route()->registration('users::do_update', 'users::doUpdate', Controllers::SOURCE_EDITORS);
 	route()->registration('users::do_delete', 'users::doDelete', Controllers::SOURCE_EDITORS);
+
+	route()->registration('news::select', 'site.news::select', Controllers::SOURCE_EDITORS);
+	route()->registration('news::browse', 'site.news::browse', Controllers::SOURCE_EDITORS);
+	route()->registration('news::create', 'site.news::create', Controllers::SOURCE_EDITORS);
+	route()->registration('news::update', 'site.news::update', Controllers::SOURCE_EDITORS);
+	route()->registration('news::do_create', 'site.news::doCreate', Controllers::SOURCE_EDITORS);
+	route()->registration('news::do_update', 'site.news::doUpdate', Controllers::SOURCE_EDITORS);
+	route()->registration('news::do_delete', 'site.news::doDelete', Controllers::SOURCE_EDITORS);
+
+	route()->registration('changes::select', 'site.changes::select', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::browse', 'site.changes::browse', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::create', 'site.changes::create', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::update', 'site.changes::update', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::do_create', 'site.changes::doCreate', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::do_update', 'site.changes::doUpdate', Controllers::SOURCE_EDITORS);
+	route()->registration('changes::do_delete', 'site.changes::doDelete', Controllers::SOURCE_EDITORS);
+
+	route()->registration('change::select', 'site.change::select', Controllers::SOURCE_EDITORS);
+	route()->registration('change::browse', 'site.change::browse', Controllers::SOURCE_EDITORS);
+	route()->registration('change::create', 'site.change::create', Controllers::SOURCE_EDITORS);
+	route()->registration('change::update', 'site.change::update', Controllers::SOURCE_EDITORS);
+	route()->registration('change::do_create', 'site.change::doCreate', Controllers::SOURCE_EDITORS);
+	route()->registration('change::do_update', 'site.change::doUpdate', Controllers::SOURCE_EDITORS);
+	route()->registration('change::do_delete', 'site.change::doDelete', Controllers::SOURCE_EDITORS);

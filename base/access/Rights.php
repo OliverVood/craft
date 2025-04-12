@@ -48,4 +48,13 @@
 			return null;
 		}
 
+		/**
+		 * Проверяет существование права
+		 * @param string $name - Наименование права
+		 * @return bool
+		 */
+		public function __isset(string $name): bool {
+			return isset($this->rights[$name]);
+		}
+
 	}

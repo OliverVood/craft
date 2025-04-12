@@ -6,7 +6,7 @@
 ?>
 <div class = "view editor browse">
 	<div class = "navigate">
-		<?php foreach ($editor->getLinksNavigateBrowse($item)->each() as $link) echo $link; ?>
+		<?php foreach ($editor->browse->getLinksNavigate($item)->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
 	<table class = "browse">

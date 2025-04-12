@@ -11,6 +11,8 @@
 	 * Модель прав пользователей
 	 */
 	class Users extends Model {
+		const PERMISSIONS = [];
+
 		public function __construct() {
 			parent::__construct('craft', 'access_users');
 		}

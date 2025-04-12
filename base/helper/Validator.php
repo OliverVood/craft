@@ -4,6 +4,11 @@
 
 	namespace Base\Helper;
 
+	use DateTime;
+	use DateTimeZone;
+	use ErrorException;
+	use Exception;
+
 	/**
 	 * Валидация данных
 	 */
@@ -47,7 +52,10 @@
 						case 'encryption': $encryption[] = $key; break;
 						case 'unset': $unset[] = $key; break;
 						case 'unset_if_empty': $unsetIfEmpty[] = $key; break;
-						default: $value = null;
+						case 'foreign': $value = self::foreign($key, $value, $name, $arguments, $errors); break;
+						case 'datetime': $value = self::datetime($key, $value, $name, $errors); break;
+						case 'utc': $value = self::datetimeUTC($key, $value, $name, $errors); break;
+						default: app()->error(new ErrorException("Validation rule '{$rule}' not found"));
 					}
 
 					if ($value === null) { $state = false; break; }
@@ -134,9 +142,9 @@
 		 * @param mixed $value - Значение
 		 * @param string $name - Имя
 		 * @param $errors - Ошибки
-		 * @return int|null
+		 * @return float|null
 		 */
-		private static function float(string $key, mixed $value, string $name, & $errors): ?int {
+		private static function float(string $key, mixed $value, string $name, & $errors): ?float {
 			if ((string)$value === (string)(float)$value) return (float)$value;
 
 			$errors[$key][] = __('Значение поля «:[name]» не является числом', ['name' => $name]);
@@ -248,6 +256,64 @@
 					case 'special': if (!preg_match('/[^0-9a-zA-Zа-яА-Я]/', $value)) { $errors[$key][] = __('Поле «:[name]» должно содержать специальные символы', ['name' => $name]); return null; } break;
 					default: return null;
 				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Проверяет значение на дату-время
+		 * @param string $key - Ключ
+		 * @param string $value - Значение
+		 * @param string $name - Имя
+		 * @param $errors - Ошибки
+		 * @return DateTime|null
+		 */
+		private static function datetime(string $key, string $value, string $name, & $errors): ?DateTime {
+			try {
+				return new DateTime($value);
+			} catch (Exception) {
+				$errors[$key][] = __('Значение поля «:[name]» не является датой-временем', ['name' => $name]);
+			}
+
+			return null;
+		}
+
+		/**
+		 * Проверяет значение на дату-время и преобразует в UTC
+		 * @param string $key - Ключ
+		 * @param string $value - Значение
+		 * @param string $name - Имя
+		 * @param $errors - Ошибки
+		 * @return DateTime|null
+		 */
+		private static function datetimeUTC(string $key, string $value, string $name, & $errors): ?DateTime {
+			if (!$datetime = self::datetime($key, $value, $name, $errors)) return null;
+
+			return $datetime->setTimezone(new DateTimeZone('UTC'));
+		}
+
+		/**
+		 * Проверяет значение на вхождение в таблицу
+		 * @param string $key - Ключ
+		 * @param int|float|string|null $value - Значение
+		 * @param string $name - Имя
+		 * @param array $arguments - Параметры запроса
+		 * @param $errors - Ошибки
+		 * @return int|float|string|null
+		 */
+		private static function foreign(string $key, int|float|string|null $value, string $name, array $arguments, & $errors): int|float|string|null {
+			$response = db($arguments[0])
+				->select()
+				->fields('*')
+				->table($arguments[1])
+				->where($arguments[2], $value)
+				->limit(1)
+				->query();
+
+			if (!$response->getOne()) {
+				$errors[$key][] = __('Значение поля «:[name]» отсутствует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
+				return null;
 			}
 
 			return $value;

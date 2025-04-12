@@ -8,6 +8,7 @@
 	use Base\DB\Response;
 	use Exception;
 	use Base\DB\Request\{Select, Insert, Update};
+	use stdClass;
 
 	/**
 	 * Базовый класс для работы с моделями-редакторами
@@ -18,6 +19,7 @@
 		const STATE_INACTIVE = 2;
 		const STATE_ARCHIVE = 3;
 		const STATE_BLOCK = 4;
+		const STATE_DRAFT = 5;
 		const STATE_DELETE = 100;
 
 		protected DB $db;
@@ -62,10 +64,11 @@
 		 * @param array $fields - Перечень полей для выборки
 		 * @param int $page_current - Текущая страница
 		 * @param int $page_entries - Количество записей на странице
+		 * @param stdClass|null $params - Параметры
 		 * @return array
 		 */
-		public function select(array $fields, int $page_current = 1, int $page_entries = 10): array {
-			$query = $this->getQuerySelect(...$fields);
+		public function select(array $fields, int $page_current = 1, int $page_entries = 10, stdClass $params = null): array {
+			$query = $this->getQuerySelect($fields, $params);
 
 			$ext = [];
 			if ($page_entries) {
@@ -252,10 +255,11 @@
 
 		/**
 		 * Возвращает запрос на выборку данных
-		 * @param string ...$fields - Перечень полей
+		 * @param array ...$fields - Перечень полей
+		 * @param stdClass $params - Параметры
 		 * @return Select
 		 */
-		protected function getQuerySelect(string ...$fields): Select {
+		protected function getQuerySelect(array $fields, stdClass $params): Select {
 			return $this->db
 				->select()
 				->fields(...$fields)

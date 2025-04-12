@@ -5,7 +5,7 @@
 	namespace Base\Editor\Actions\Traits;
 
 	/**
-	 * Работа с перечнем полей
+	 * Перечень полей
 	 */
 	trait Fields {
 		protected \Base\Editor\Fields $fields;

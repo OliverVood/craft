@@ -31,3 +31,5 @@
 
 	require DIR_BASE . 'editor/skins/edit/Text.php';
 	require DIR_BASE . 'editor/skins/edit/Password.php';
+	require DIR_BASE . 'editor/skins/edit/DateTime.php';
+	require DIR_BASE . 'editor/skins/edit/File.php';

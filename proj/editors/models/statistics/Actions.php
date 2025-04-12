@@ -4,6 +4,7 @@
 
 	use Base\DB\Driver\MySQLi\Request\Select;
 	use Base\Editor\Model;
+	use stdClass;
 
 	/**
 	 * Модель статистики деятельности пользователей
@@ -15,10 +16,11 @@
 
 		/**
 		 * Возвращает запрос на выборку данных
-		 * @param string ...$fields - Перечень полей
+		 * @param array ...$fields - Перечень полей
+		 * @param stdClass $params - Параметры
 		 * @return Select
 		 */
-		protected function getQuerySelect(string ...$fields): Select {
+		protected function getQuerySelect(array $fields, stdClass $params): Select {
 			return $this->db
 				->select()
 				->fields(...$fields)

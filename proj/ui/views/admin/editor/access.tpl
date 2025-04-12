@@ -15,13 +15,16 @@
 ?>
 <div class = "view editor access">
 	<div class = "navigate">
-		<?php foreach ($editor->getLinksNavigateAccess()->each() as $link) echo $link; ?>
+		<?php
+			$fnGetLinksNavigate = $editor->access->fnGetLinksNavigate;
+			foreach ($fnGetLinksNavigate()->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
 	<form action = "<?= $action->path(); ?>" class = "cn-mb-1">
 		<?php
 			echo (new Hidden('id', 'id'))->format($id);
 			foreach ($features->each() as /** @var Feature $feature */ $feature) {
+				if (!$feature->issetRight('access')) continue;
 				if (!allow($feature->name(), 'access')) continue;
 				?>
 				<h3 class = "cn-mb-1"><?= $feature->title(); ?></h3>

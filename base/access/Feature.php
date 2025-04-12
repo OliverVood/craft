@@ -62,8 +62,21 @@
 			return $this->rights->get($name);
 		}
 
+		/**
+		 * Возвращает итератор прав
+		 * @return Generator
+		 */
 		public function rightsEach(): Generator {
 			return $this->rights->each();
+		}
+
+		/**
+		 * Проверяет существование права
+		 * @param string $name - Наименование права
+		 * @return bool
+		 */
+		public function issetRight(string $name): bool {
+			return isset($this->rights->$name);
 		}
 
 	}

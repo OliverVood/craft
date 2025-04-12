@@ -28,43 +28,44 @@
 				'state' => __('Состояние'),
 			];
 
-			$this->actionSelect = new Select($this);
-			$this->actionSelect->fields()->browse->text('id', '#');
-			$this->actionSelect->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->actionSelect->fields()->browse->text('name', __('Наименование'));
-			$this->actionSelect->text('title', 'Список групп');
+			$this->select = new Select($this);
+			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
+			$this->select->fields()->browse->text('id', '#');
+			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
+			$this->select->fields()->browse->text('name', __('Наименование'));
+			$this->select->text('title', 'Список групп');
 
-			$this->actionBrowse = new Browse($this);
-			$this->actionBrowse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->actionBrowse->fields()->browse->text('name', __('Наименование'));
-			$this->actionBrowse->text('title', 'Просмотр группы');
+			$this->browse = new Browse($this);
+			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
+			$this->browse->fields()->browse->text('name', __('Наименование'));
+			$this->browse->text('title', 'Просмотр группы');
 
-			$this->actionCreate = new Create($this);
-			$this->actionCreate->fields()->edit->text('name', __('Наименование'));
-			$this->actionCreate->validate([
+			$this->create = new Create($this);
+			$this->create->fields()->edit->text('name', __('Наименование'));
+			$this->create->validate([
 				'name' => ['required', 'trim', 'string'],
 			]);
-			$this->actionCreate->text('title', 'Добавление группы');
-			$this->actionCreate->text('btn', 'Добавить');
-			$this->actionCreate->text('responseOk', 'Группа добавлена');
+			$this->create->text('title', 'Добавление группы');
+			$this->create->text('btn', 'Добавить');
+			$this->create->text('responseOk', 'Группа добавлена');
 
-			$this->actionUpdate = new Update($this);
-			$this->actionUpdate->fields()->edit->hidden('id');
-			$this->actionUpdate->fields()->edit->text('name', __('Наименование'));
-			$this->actionUpdate->fields()->edit->select('state', __('Состояние'), [
+			$this->update = new Update($this);
+			$this->update->fields()->edit->hidden('id');
+			$this->update->fields()->edit->text('name', __('Наименование'));
+			$this->update->fields()->edit->select('state', __('Состояние'), [
 				$model::STATE_ACTIVE => __('Активная'),
 				$model::STATE_INACTIVE => __('Не активная'),
 			]);
-			$this->actionUpdate->validate([
+			$this->update->validate([
 				'name' => ['required', 'trim', 'string'],
 				'state' => ['required', 'int', 'in:' . implode(',', [$model::STATE_ACTIVE, $model::STATE_INACTIVE])],
 			]);
-			$this->actionUpdate->text('title', 'Изменение группы');
-			$this->actionUpdate->text('responseOk', 'Группа изменена');
+			$this->update->text('title', 'Изменение группы');
+			$this->update->text('responseOk', 'Группа изменена');
 
-			$this->actionDelete = new Delete($this);
-			$this->actionDelete->text('confirm', 'Удалить группу?');
-			$this->actionDelete->text('responseOk', 'Группа удалена');
+			$this->delete = new Delete($this);
+			$this->delete->text('confirm', 'Удалить группу?');
+			$this->delete->text('responseOk', 'Группа удалена');
 		}
 
 		/**
@@ -72,14 +73,14 @@
 		 * @param array $item - Данные
 		 * @return Accumulator
 		 */
-		public function getLinksManage(array $item): Accumulator {
+		private function getLinksManage(array $item): Accumulator {
 			$links = new Accumulator();
 
 			$id = isset($item['id']) ? (int)$item['id'] : 0;
 
-			$links->push($this->update->linkHrefID($id, __($this->textDoUpdate), $item));
-			$links->push($this->access->linkHrefID($id, __($this->textDoAccess), ['id' => $id]));
-			$links->push($this->do_delete->linkHrefID($id, __($this->textDoDelete), $item));
+			$links->push($this->linkUpdate->linkHrefID($id, $this->update->__('do'), $item));
+			$links->push($this->linkAccess->linkHrefID($id, __('Установить права доступа'), ['id' => $id]));
+			$links->push($this->linkDoDelete->linkHrefID($id, $this->delete->__('do'), $item));
 
 			return $links;
 		}

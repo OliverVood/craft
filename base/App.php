@@ -47,6 +47,8 @@
 		 * @param string $xhr - Путь XHR
 		 */
 		private function __construct(string $version, int $assembly, string $html, string $xhr) {
+			session_start();
+
 			$this->request = new Request($html, $xhr);
 			$this->response = new Response();
 
@@ -63,8 +65,6 @@
 			$this->assembly = $assembly;
 
 			$this->params = new stdClass();
-
-			session_start();
 		}
 
 		/**

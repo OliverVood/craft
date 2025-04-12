@@ -8,18 +8,26 @@
 	use Base\Editor\Controller;
 	use Base\Editor\Fields;
 	use Base\Editor\Model;
+	use Base\Helper\Accumulator;
+	use Closure;
 	use JetBrains\PhpStorm\NoReturn;
 
+	/**
+	 * Контроллер-редактор создания
+	 */
 	class Create {
 		use Traits\Entree;
 		use Traits\Texts;
 		use Traits\Fields;
+		use Traits\Validation;
 
 		private Controller $controller;
 
-		private string $tpl = 'admin.editor.create';
+		public Closure $fnGetLinksNavigate;
+		public Closure $fnPrepareView;
+		public Closure $fnPrepareData;
 
-		private array $validate = [];
+		private string $tpl = 'admin.editor.create';
 
 		/**
 		 * @param Controller $controller - Контроллер
@@ -29,9 +37,15 @@
 
 			$this->access = 'create';
 
+			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
+			$this->fnPrepareView = fn (array & $item) => $this->prepareView($item);
+			$this->fnPrepareData = fn (array & $item) => $this->prepareData($item);
+
+
 			$this->fields = new Fields();
 
 			$this->text('title', 'Создание');
+			$this->text('do', 'Создать');
 			$this->text('btn', 'Создать');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
 			$this->text('responseErrorValidate', 'Ошибка валидации данных');
@@ -46,24 +60,39 @@
 		#[NoReturn] public function get(): void {
 			if (!$this->allow()) response()->forbidden($this->__('responseErrorAccess'));
 
-			$this->prepareView();
+			$prepareView = $this->fnPrepareView;
+			$item = [];
+			$prepareView($item);
 
 			$title = $this->__('title');
 			$fields = $this->fields();
-			$action = $this->controller->do_create;
+			$action = $this->controller->linkDoCreate;
 			$textBtn = $this->__('btn');
 			$editor = $this->controller;
 
-			response()->history($this->controller->create);
-			response()->section('content', view($this->tpl, compact('title', 'fields', 'action', 'textBtn', 'editor')));
+			response()->history($this->controller->linkCreate, (array)$this->controller->params);
+			response()->section('content', view($this->tpl, compact('title', 'fields', 'item', 'action', 'textBtn', 'editor')));
 			response()->ok();
 		}
 
 		/**
+		 * Возвращает ссылки навигации
+		 * @return Accumulator
+		 */
+		public function getLinksNavigate(): Accumulator {
+			$links = new Accumulator();
+
+			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . $this->controller->select->__('title'), array_merge(['page' => old('page')->int(1)], (array)$this->controller->params)));
+
+			return $links;
+		}
+
+		/**
 		 * Подготовка данных для блока создания
+		 * @param array $item - Данные
 		 * @return void
 		 */
-		private function prepareView(): void {  }
+		private function prepareView(array & $item): void {  }
 
 		/**
 		 * Создание
@@ -76,14 +105,14 @@
 			/** @var Model $model */ $model = $this->controller->model();
 
 			$data = $data->defined()->all();
-
-			$this->prepareData($data);
+			$prepareData = $this->fnPrepareData;
+			$prepareData($data);
 
 			$errors = [];
 			if (!$validated = $this->validation($data, $errors)) response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
 			if (!$id = $model->create($validated)) response()->unprocessableEntity($this->__('responseErrorCreate'));
 
-			$this->controller->actionBrowse->inside($id);
+			$this->controller->browse->inside($id);
 
 			response()->created(null, $this->__('responseOk'));
 		}
@@ -94,26 +123,5 @@
 		 * @return void
 		 */
 		private function prepareData(array & $data): void {  }
-
-		/**
-		 * Возвращает/устанавливает правила валидации
-		 * @param array|null $rules - Правила
-		 * @return array|null
-		 */
-		public function validate(?array $rules = null): ?array {
-			if ($rules) $this->validate = $rules;
-
-			return $this->validate;
-		}
-
-		/**
-		 * Проверяет данные для создания
-		 * @param array $data - Данные
-		 * @param array $errors - Ошибки
-		 * @return array|null
-		 */
-		private function validation(array $data, array & $errors): ?array {
-			return validation($data, $this->validate(), $this->controller->names, $errors);
-		}
 
 	}

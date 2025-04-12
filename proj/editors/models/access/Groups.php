@@ -10,6 +10,8 @@
 	 * Модель прав групп
 	 */
 	class Groups extends Model {
+		const PERMISSIONS = [];
+
 		public function __construct() {
 			parent::__construct('craft', 'access_groups');
 		}

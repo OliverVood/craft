@@ -9,7 +9,6 @@
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Editors;
-	use Proj\Editors\Controllers as EditorsControllers;
 	use Proj\Models\Users;
 	use Proj\UI\Templates\Admin\Template;
 
@@ -57,6 +56,7 @@
 			$this->setMainToMenu($template);
 			$this->setDevelopmentToMenu($template);
 			$this->setAccessToMenu($template);
+			$this->setSiteToMenu($template);
 		}
 
 		/**
@@ -127,17 +127,33 @@
 			if (isset($menu['users'])) $template->layout->menu->push(self::group(__('Пользователи'), $menu['users']));
 		}
 
-		private function setSiteToMenu(): void {//TODO Заполнить левое меню
-//			$menuNews = News::instance()->GetMenu();
-//			$menuChanges = Changes::instance()->GetMenu();
+		/**
+		 * Построение меню сайта
+		 * @param Template $template - Шаблон
+		 * @return void
+		 */
+		private function setSiteToMenu(Template $template): void {//TODO Заполнить левое меню
+			$menu = [];
+
+			/* Раздел новостей */
+			if (linkRight('news_select')->allow()) $menu['news'][] =  linkRight('news_select')->hyperlink(__('Список новостей'), ['page' => 1]);
+			if (linkRight('news_create')->allow()) $menu['news'][] = linkRight('news_create')->hyperlink(__('Добавить новость'));
+
+			/* Раздел изменений */
+			if (linkRight('changes_select')->allow()) $menu['changes'][] =  linkRight('changes_select')->hyperlink(__('Список изменений'), ['page' => 1]);
+			if (linkRight('changes_create')->allow()) $menu['changes'][] = linkRight('changes_create')->hyperlink(__('Добавить изменения'));
+
+			/* Раздел обратной связи */
 //			$menuFeedback = Feedback::instance()->GetMenu();
-//			if ($menuNews || $menuChanges) {
-//				Layout::instance()->menu->Push($this->OutMenuSeparator());
-//				Layout::instance()->menu->Push($this->OutMenuHead('Сайт'));
-//				if ($menuNews) Layout::instance()->menu->Push(TPL\Group::ToVar('Новости', $menuNews));
-//				if ($menuChanges) Layout::instance()->menu->Push(TPL\Group::ToVar('Актуальное', $menuChanges));
-//				if ($menuFeedback) Layout::instance()->menu->Push(TPL\Group::ToVar('Обратная связь', $menuFeedback));
-//			}
+
+			if (!$menu) return;
+
+			/* Построение меню */
+			$template->layout->menu->push($this->separator());
+			$template->layout->menu->push($this->head(__('Сайт')));
+			if (isset($menu['news'])) $template->layout->menu->push($this->group(__('Новости'), $menu['news']));
+			if (isset($menu['changes'])) $template->layout->menu->push($this->group(__('Изменения'), $menu['changes']));
+			if (isset($menu['feedback'])) $template->layout->menu->push($this->group(__('Обратная связь'), $menu['feedback']));
 		}
 
 		/**

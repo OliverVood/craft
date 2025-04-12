@@ -3,19 +3,20 @@
 	namespace Base\Editor\Skins\Browse;
 
 	use Base\Editor\Skins\Skin;
-	use DateTime;
 	use Exception;
 
 	/**
 	 * Скин для вывода даты/времени
 	 */
-	class Date extends Skin {
+	class DateTime extends Skin {
 		protected string $format;
+		protected bool $client;
 
-		public function __construct(string $name, string $title = '', $format = 'd.m.Y H:i:s') {
+		public function __construct(string $name, string $title = '', $format = 'd.m.Y H:i:s', $client = false) {
 			parent::__construct('date', $name, $title);
 
 			$this->format = $format;
+			$this->client = $client;
 		}
 
 		/**
@@ -25,12 +26,15 @@
 		 */
 		public function format(string $value): string {
 			try {
-				$date = date_format(new DateTime($value), $this->format);
+				$datetime = new \DateTime($value, new \DateTimeZone('UTC'));
+				$timezone = app()->request()->timezone();
+				if ($this->client && $timezone) $datetime->setTimezone(new \DateTimeZone($timezone));
+				$datetime = $datetime->format($this->format);
 			} catch (Exception) {
-				$date = '';
+				$datetime = '';
 			}
 
-			return $date;
+			return $datetime;
 		}
 
 	}

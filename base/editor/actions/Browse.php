@@ -8,14 +8,22 @@
 	use Base\Editor\Controller;
 	use Base\Editor\Fields;
 	use Base\Editor\Model;
+	use Base\Helper\Accumulator;
+	use Closure;
 	use JetBrains\PhpStorm\NoReturn;
 
+	/**
+	 * Контроллер-редактор просмотра
+	 */
 	class Browse {
 		use Traits\Entree;
 		use Traits\Texts;
 		use Traits\Fields;
 
 		private Controller $controller;
+
+		public Closure $fnGetLinksNavigate;
+		public Closure $fnPrepareView;
 
 		private string $tpl = 'admin.editor.browse';
 
@@ -27,9 +35,13 @@
 
 			$this->access = 'browse';
 
+			$this->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
+			$this->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
+
 			$this->fields = new Fields();
 
 			$this->text('title', 'Просмотр');
+			$this->text('do', 'Просмотреть');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
 		}
@@ -60,8 +72,8 @@
 			/** @var Model $model */ $model = $this->controller->model();
 
 			$item = $model->browse($id, ['*']);
-
-			$this->prepareView($id, $item);
+			$prepareView = $this->fnPrepareView;
+			$prepareView($id, $item);
 
 			if (!$item) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
@@ -69,8 +81,21 @@
 			$fields = $this->fields();
 			$editor = $this->controller;
 
-			response()->history($this->controller->browse, ['id' => $id]);
+			response()->history($this->controller->linkBrowse, array_merge(['id' => $id], (array)$this->controller->params));
 			response()->section('content', view($this->tpl, compact('title', 'fields', 'id', 'item', 'editor')));
+		}
+
+		/**
+		 * Возвращает ссылки навигации
+		 * @param array $item - Данные
+		 * @return Accumulator
+		 */
+		public function getLinksNavigate(array $item): Accumulator {
+			$links = new Accumulator();
+
+			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . $this->controller->select->__('title'), array_merge(['page' => old('page')->int(1)], (array)$this->controller->params)));
+
+			return $links;
 		}
 
 		/**

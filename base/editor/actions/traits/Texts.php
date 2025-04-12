@@ -5,7 +5,7 @@
 	namespace Base\Editor\Actions\Traits;
 
 	/**
-	 * Работа с текстами и переводами
+	 * Текста и переводы
 	 */
 	trait Texts {
 		private array $texts = [];

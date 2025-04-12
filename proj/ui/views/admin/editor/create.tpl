@@ -1,13 +1,14 @@
 <?php
 	/** @var string $title */
 	/** @var Base\Editor\Fields $fields */
+	/** @var array $item */
 	/** @var Base\Link\Right $action */
 	/** @var string $textBtn */
 	/** @var Base\Editor\Controller $editor */
 ?>
 <div class = "view editor create">
 	<div class = "navigate">
-		<?php foreach ($editor->getLinksNavigateCreate()->each() as $link) echo $link; ?>
+		<?php foreach ($editor->create->getLinksNavigate()->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
 	<form action = "<?= $action->path(); ?>">

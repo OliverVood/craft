@@ -3,7 +3,7 @@
 	namespace Base\Editor\Skins;
 
 	use Base\Editor\Fields;
-	use Base\Editor\Skins\Browse\Date;
+	use Base\Editor\Skins\Browse\DateTime;
 	use Base\Editor\Skins\Browse\Int2IP;
 	use Base\Editor\Skins\Browse\Text;
 	use Base\Editor\Skins\Browse\ValueFromArray;
@@ -29,10 +29,22 @@
 		 * Дата/время
 		 * @param string $name - Имя поля
 		 * @param string $title - Заголовок
+		 * @param string $format - Формат
 		 * @return void
 		 */
-		public function date(string $name, string $title = ''): void {
-			$this->skin->push($name, new Date($name, $title));
+		public function datetime(string $name, string $title = '', $format = 'd.m.Y H:i:s'): void {
+			$this->skin->push($name, new DateTime($name, $title, $format));
+		}
+
+		/**
+		 * Дата/время
+		 * @param string $name - Имя поля
+		 * @param string $title - Заголовок
+		 * @param string $format - Формат
+		 * @return void
+		 */
+		public function datetimeClient(string $name, string $title = '', $format = 'd.m.Y H:i:s'): void {
+			$this->skin->push($name, new DateTime($name, $title, $format, true));
 		}
 
 		/**
@@ -59,6 +71,6 @@
 	}
 
 	require DIR_BASE . 'editor/skins/browse/Text.php';
-	require DIR_BASE . 'editor/skins/browse/Date.php';
+	require DIR_BASE . 'editor/skins/browse/DateTime.php';
 	require DIR_BASE . 'editor/skins/browse/Int2IP.php';
 	require DIR_BASE . 'editor/skins/browse/ValueFromArray.php';

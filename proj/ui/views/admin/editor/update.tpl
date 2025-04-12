@@ -8,7 +8,7 @@
 ?>
 <div class = "view editor create">
 	<div class = "navigate">
-		<?php foreach ($editor->getLinksNavigateUpdate($item)->each() as $link) echo $link; ?>
+		<?php foreach ($editor->update->getLinksNavigate($item)->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
 	<form action = "<?= $action->path(); ?>">

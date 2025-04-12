@@ -27,3 +27,6 @@
 	const DIR_ENTRY							= DIR_ROOT . 'entry/';
 	const DIR_ENTRY_ADMIN					= DIR_ENTRY . 'admin/';
 	const DIR_ENTRY_SITE					= DIR_ENTRY . 'site/';
+
+	const DIR_RESOURCE						= DIR_PROJ . 'resource/';
+	const DIR_RESOURCE_IMAGE				= DIR_RESOURCE . 'image/';

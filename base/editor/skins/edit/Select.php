@@ -20,7 +20,7 @@
 
 		/**
 		 * Возвращает текстовое поле
-		 * @param string $value
+		 * @param string $value - Значение
 		 * @return string
 		 */
 		public function format(string $value): string {

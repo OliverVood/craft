@@ -1,12 +1,19 @@
 namespace Base {
 
+	type RequestOptionsCredentials 		= 'include' | 'omit' | 'same-origin';
+	type RequestOptionsCache 			= 'default' | 'force-cache' | 'no-cache' | 'no-store' | 'only-if-cached' | 'reload';
+
 	/**
 	 * XHR запросы
 	 */
 	export class Request {
+
 		public static xhr(address: string, data: BodyInit): Promise<Response> {
 			let xhr = GlobalParams.get('xhr');
 			let url = `${xhr}${address}`;
+
+			let timezone = `Etc/GMT${(new Date().getTimezoneOffset()) / 60}`;
+			setCookie('timezone', timezone);
 
 			return new Promise((resolve, reject) => {
 				fetch(url, Request.getInit(data/*, options*/)).then(async response => {
@@ -52,11 +59,11 @@ namespace Base {
 		}
 
 		private static getInit(data: BodyInit/*, options?: RequestOptions*/): RequestInit {
-			let method			: string			= 'post';
-			/*let cache			: RequestOptionsCache			= 'no-cache';
-			let credentials		: RequestOptionsCredentials		= 'include';
+			let method			: string						= 'post';
+			let cache			: RequestOptionsCache			= 'no-cache';
+			let credentials		: RequestOptionsCredentials		= 'same-origin';
 
-			if (options) {
+			/*if (options) {
 				if (options.method) method = options.method;
 				if (options.cache) cache = options.cache;
 				if (options.credentials) credentials = options.credentials;
@@ -64,8 +71,8 @@ namespace Base {
 
 			let init: RequestInit = {
 				method: method,
-				// cache: cache,
-				// credentials: credentials
+				cache: cache,
+				credentials: credentials
 			};
 
 			/*if (options?.method !== 'get')*/ init['body'] = data;

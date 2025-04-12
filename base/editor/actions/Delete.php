@@ -9,13 +9,19 @@
 	use Base\Editor\Actions\Traits\Texts;
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
+	use Closure;
 	use JetBrains\PhpStorm\NoReturn;
 
+	/**
+	 * Контроллер-редактор удаления
+	 */
 	class Delete {
 		use Entree;
 		use Texts;
 
 		private Controller $controller;
+
+		public Closure $fnPrepareData;
 
 		/**
 		 * @param Controller $controller - Контроллер
@@ -25,6 +31,9 @@
 
 			$this->access = 'update';
 
+			$this->fnPrepareData = fn (int $id) => $this->prepareData($id);
+
+			$this->text('do', 'Удалить');
 			$this->text('confirm', 'Удалить?');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
@@ -45,11 +54,12 @@
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			$this->prepareData($id);
+			$prepareData = $this->fnPrepareData;
+			$prepareData($id);
 
 			if (!$model->delete($id)) response()->unprocessableEntity($this->__('responseErrorDelete'));
 
-			$this->controller->actionSelect->inside(old('page')->int(1));
+			$this->controller->select->inside(old('page')->int(1));
 			response()->ok(null, $this->__('responseOk'));
 		}
 
@@ -58,6 +68,6 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		protected function prepareData(int $id): void {  }
+		private function prepareData(int $id): void {  }
 
 	}

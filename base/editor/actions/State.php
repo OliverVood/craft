@@ -9,13 +9,19 @@
 	use Base\Editor\Actions\Traits\Texts;
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
+	use Closure;
 	use JetBrains\PhpStorm\NoReturn;
 
+	/**
+	 * Контроллер-редактор состояния
+	 */
 	class State {
 		use Entree;
 		use Texts;
 
 		private Controller $controller;
+
+		public Closure $fnPrepareData;
 
 		/**
 		 * @param Controller $controller - Контроллер
@@ -25,6 +31,10 @@
 
 			$this->access = 'state';
 
+			$this->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
+
+			$this->text('do', 'Изменить состояние');
+			$this->text('confirm', 'Изменить состояние?');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
 			$this->text('responseErrorValidate', 'Ошибка валидации данных');
@@ -48,11 +58,12 @@
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			$this->prepareData($id, $state);
+			$prepareData = $this->fnPrepareData;
+			$prepareData($id, $state);
 
 			if (!$model->setState($id, $state)) response()->unprocessableEntity($this->__('responseErrorState'));
 
-			$this->controller->actionSelect->inside(old('page')->int(1));
+			$this->controller->select->inside(old('page')->int(1));
 			response()->ok(null, $this->text('responseOk'));
 		}
 

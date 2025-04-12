@@ -5,11 +5,15 @@
 	/** @var Base\Helper\Pagination|null $pagination */
 	/** @var Base\Editor\Controller $editor */
 
+	$linksManage = $editor->select->fnGetLinksManage;
 	$paginationHTML = $pagination ? (string)$pagination : '';
 ?>
 <div class = "view editor select">
 	<div class = "navigate">
-		<?php foreach ($editor->getLinksNavigateSelect()->each() as $link) echo $link; ?>
+		<?php
+			$fnGetLinksNavigate = $editor->select->fnGetLinksNavigate;
+			foreach ($fnGetLinksNavigate()->each() as $link) echo $link;
+		?>
 	</div>
 	<h1><?= $title; ?></h1>
 	<?= $paginationHTML; ?>
@@ -20,7 +24,7 @@
 				foreach ($fields->each() as /** @var Base\Editor\Skins\Skin $field */$field) {
 					?><th><?= $field->getTitle(); ?></th><?php
 				}
-				$count = $editor->getLinksManage([])->count();
+				$count = $linksManage([])->count();
 				if ($count) {
 					?><th colspan = "<?= $count; ?>"><?= __('Управление'); ?></th><?php
 				}
@@ -37,7 +41,7 @@
 				<?php } ?>
 				<?php
 					if ($count) {
-						foreach ($editor->getLinksManage($item)->each() as $link) {
+						foreach ($linksManage($item)->each() as $link) {
 							?><td><?= $link; ?></td><?php
 						}
 					} ?>

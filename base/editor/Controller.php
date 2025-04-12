@@ -7,9 +7,9 @@
 	use Base\Access\Feature;
 	use Base\ControllerAccess;
 	use Base\Data\Set;
-	use Base\Helper\Accumulator;
 	use Base\Models;
 	use JetBrains\PhpStorm\NoReturn;
+	use stdClass;
 
 	require DIR_BASE_EDITOR . 'Link.php';
 	require DIR_BASE_EDITOR . 'Fields.php';
@@ -17,6 +17,7 @@
 	require DIR_BASE_EDITOR . 'actions/traits/Texts.php';
 	require DIR_BASE_EDITOR . 'actions/traits/Entree.php';
 	require DIR_BASE_EDITOR . 'actions/traits/Fields.php';
+	require DIR_BASE_EDITOR . 'actions/traits/Validation.php';
 
 	require DIR_BASE_EDITOR . 'actions/Access.php';
 	require DIR_BASE_EDITOR . 'actions/Select.php';
@@ -33,38 +34,19 @@
 	abstract class Controller extends ControllerAccess {
 		use Link;
 
-		protected string $textDoAccess = 'Установить права доступа';
-		protected string $textDoBrowse = 'Просмотреть';
-		protected string $textDoUpdate = 'Изменить';
-		protected string $textDoDelete = 'Удалить';
-		protected string $textSetState = 'Изменить состояние';
-
-		protected string $textDeleteConfirm = 'Удалить?';
-		protected string $textSetStateConfirm = 'Изменить состояние?';
-
-		protected string $textResponseOkCreate = 'Создано';
-		protected string $textResponseOkUpdate = 'Изменено';
-		protected string $textResponseOkDelete = 'Удалено';
-
-		public ?Actions\Access $actionAccess = null;
-		public ?Actions\Select $actionSelect = null;
-		public ?Actions\Browse $actionBrowse = null;
-		public ?Actions\Create $actionCreate = null;
-		public ?Actions\Update $actionUpdate = null;
-		public ?Actions\Delete $actionDelete = null;
-		public ?Actions\State $actionState = null;
-
-		protected int $id;
-		protected string $name;
-		protected string $title;
 		protected string $modelName;
+
+		public ?Actions\Access $access = null;
+		public ?Actions\Select $select = null;
+		public ?Actions\Browse $browse = null;
+		public ?Actions\Create $create = null;
+		public ?Actions\Update $update = null;
+		public ?Actions\Delete $delete = null;
+		public ?Actions\State $state = null;
 
 		public array $names = [];
 
-		protected Fields $fieldsCreate;
-		protected Fields $fieldsUpdate;
-
-		protected array $validateDataUpdate = [];
+		public stdClass $params;
 
 		public function __construct(Feature $feature, string $modelName) {
 			parent::__construct($feature);
@@ -73,8 +55,7 @@
 
 			$this->links();
 
-			$this->fieldsCreate = new Fields();
-			$this->fieldsUpdate = new Fields();
+			$this->params = new stdClass();
 		}
 
 		/**
@@ -83,7 +64,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function access(Set $data): void { $this->actionAccess->get($data); }
+		#[NoReturn] public function access(Set $data): void { $this->access->get($data); }
 
 		/**
 		 * Блок выборки данных
@@ -91,7 +72,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function select(Set $data): void { $this->actionSelect->get($data); }
+		#[NoReturn] public function select(Set $data): void { $this->select->get($data); }
 
 		/**
 		 * Блок просмотра данных
@@ -99,14 +80,14 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function browse(Set $data): void { $this->actionBrowse->get($data); }
+		#[NoReturn] public function browse(Set $data): void { $this->browse->get($data); }
 
 		/**
 		 * Блок создания данных
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function create(): void { $this->actionCreate->get(); }
+		#[NoReturn] public function create(): void { $this->create->get(); }
 
 		/**
 		 * Блок обновления данных
@@ -114,7 +95,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function update(Set $data): void { $this->actionUpdate->get($data); }
+		#[NoReturn] public function update(Set $data): void { $this->update->get($data); }
 
 		/**
 		 * Устанавливает доступ
@@ -122,7 +103,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function doAccess(Set $data): void { $this->actionAccess->set($data); }
+		#[NoReturn] public function doAccess(Set $data): void { $this->access->set($data); }
 
 		/**
 		 * Создание
@@ -130,7 +111,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function doCreate(Set $data): void { $this->actionCreate->set($data); }
+		#[NoReturn] public function doCreate(Set $data): void { $this->create->set($data); }
 
 		/**
 		 * Обновление
@@ -138,7 +119,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function doUpdate(Set $data): void { $this->actionUpdate->set($data); }
+		#[NoReturn] public function doUpdate(Set $data): void { $this->update->set($data); }
 
 		/**
 		 * Удаление
@@ -146,7 +127,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function doDelete(Set $data): void { $this->actionDelete->set($data); }
+		#[NoReturn] public function doDelete(Set $data): void { $this->delete->set($data); }
 
 		/**
 		 * Изменение состояния
@@ -154,82 +135,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		public function setState(Set $data): void { $this->actionState->set($data); }
-
-		/**
-		 * Возвращает ссылки для навигации на странице создания
-		 * @return Accumulator
-		 */
-		public function getLinksNavigateAccess(): Accumulator {
-			$links = new Accumulator();
-
-			if ($this->select->allow()) $links->push($this->select->hyperlink('<< ' . __($this->actionSelect->text('title')), ['page' => old('page')->int(1)]));
-
-			return $links;
-		}
-
-		/**
-		 * Возвращает ссылки для навигации на странице выборки
-		 * @return Accumulator
-		 */
-		public function getLinksNavigateSelect(): Accumulator {
-			return new Accumulator();
-		}
-
-		/**
-		 * Возвращает ссылки для навигации на странице просмотра
-		 * @param array $item - Данные
-		 * @return Accumulator
-		 */
-		public function getLinksNavigateBrowse(array $item): Accumulator {
-			$links = new Accumulator();
-
-			if ($this->select->allow()) $links->push($this->select->hyperlink('<< ' . __($this->actionSelect->text('title')), ['page' => old('page')->int(1)]));
-
-			return $links;
-		}
-
-		/**
-		 * Возвращает ссылки для навигации на странице создания
-		 * @return Accumulator
-		 */
-		public function getLinksNavigateCreate(): Accumulator {
-			$links = new Accumulator();
-
-			if ($this->select->allow()) $links->push($this->select->hyperlink('<< ' . __($this->actionSelect->text('title')), ['page' => old('page')->int(1)]));
-
-			return $links;
-		}
-
-		/**
-		 * Возвращает ссылки для навигации на странице редактирования
-		 * @param array $item - Данные
-		 * @return Accumulator
-		 */
-		public function getLinksNavigateUpdate(array $item): Accumulator {
-			$links = new Accumulator();
-
-			if ($this->select->allow()) $links->push($this->select->hyperlink('<< ' . __($this->actionSelect->text('title')), ['page' => old('page')->int(1)]));
-
-			return $links;
-		}
-
-		/**
-		 * Возвращает ссылки для управления
-		 * @param array $item - Данные
-		 * @return Accumulator
-		 */
-		public function getLinksManage(array $item): Accumulator {
-			$links = new Accumulator();
-
-			$id = isset($item['id']) ? (int)$item['id'] : 0;
-
-			$links->push($this->browse->linkHrefID($id, __($this->textDoBrowse), $item));
-			$links->push($this->update->linkHrefID($id, __($this->textDoUpdate), $item));
-			$links->push($this->do_delete->linkHrefID($id, __($this->textDoDelete), $item));
-
-			return $links;
-		}
+		#[NoReturn] public function setState(Set $data): void { $this->state->set($data); }
 
 		/**
 		 * Возвращает модель редактора

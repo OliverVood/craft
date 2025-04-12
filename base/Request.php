@@ -12,15 +12,18 @@
 	class Request {
 		private string $protocol;
 		private string $host;
+		private ?string $timezone;
 
 		private string $html;
 		private string $xhr;
+
 
 		private Set $data;
 
 		public function __construct(string $html, string $xhr) {
 			$this->protocol = (isset($_SERVER['HTTPS'])) ? 'https' : 'http';
 			$this->host = $_SERVER['SERVER_NAME'];
+			$this->timezone = $_COOKIE['timezone'] ?? null;
 
 			$this->html = $html;
 			$this->xhr = $xhr;
@@ -42,6 +45,14 @@
 		 */
 		public function host(): string {
 			return $this->host;
+		}
+
+		/**
+		 * Возвращает часовой пояс клиента
+		 * @return string|null
+		 */
+		public function timezone(): ?string {
+			return $this->timezone;
 		}
 
 		/**
