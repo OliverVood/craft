@@ -95,7 +95,7 @@
 		public function update(array $data, int $id): bool {
 			if (!$_FILES['cover']['error']) {
 				$this->deleteCover($id);
-				[$data['hash'], $data['ext']] = $this->SaveCover($id, $_FILES['cover']);
+				[$data['hash'], $data['ext']] = $this->saveCover($id, $_FILES['cover']);
 			}
 
 			if (!parent::update($data, $id)) return false;

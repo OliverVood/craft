@@ -73,7 +73,7 @@
 			$textBtn = $this->__('btn');
 			$editor = $this->controller;
 
-			response()->history($this->controller->linkUpdate, ['id' => $id]);
+			response()->history($this->controller->linkUpdate, array_merge(['id' => $id], (array)$this->controller->params));
 			response()->section('content', view($this->tpl, compact('title', 'fields', 'id', 'item', 'action', 'textBtn', 'editor')));
 			response()->ok();
 		}

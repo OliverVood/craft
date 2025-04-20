@@ -64,7 +64,7 @@
 
 			/** @var Models\DBs $dbs */ $dbs = model('dbs');
 
-			$data = $data->post('tables')->data([]);
+			$data = $data->inputArray('tables')->data([]);
 
 			if (!$dbs->make($data)) response()->unprocessableEntity(__('Ошибка выполнения'));
 

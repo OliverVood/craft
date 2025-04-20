@@ -1,14 +1,21 @@
 namespace Base {
 
+	type RequestOptionsMethod			= 'get' | 'post' | 'delete' | 'patch' | 'put';
 	type RequestOptionsCredentials 		= 'include' | 'omit' | 'same-origin';
 	type RequestOptionsCache 			= 'default' | 'force-cache' | 'no-cache' | 'no-store' | 'only-if-cached' | 'reload';
+	type RequestOptions					= {
+		method							?: RequestOptionsMethod,
+		cache							?: RequestOptionsCache,
+		credentials						?: RequestOptionsCredentials,
+		json?: boolean
+	}
 
 	/**
 	 * XHR запросы
 	 */
 	export class Request {
 
-		public static xhr(address: string, data: BodyInit): Promise<Response> {
+		public static xhr(address: string, data: BodyInit, options?: RequestOptions): Promise<Response> {
 			let xhr = GlobalParams.get('xhr');
 			let url = `${xhr}${address}`;
 
@@ -16,7 +23,7 @@ namespace Base {
 			setCookie('timezone', timezone);
 
 			return new Promise((resolve, reject) => {
-				fetch(url, Request.getInit(data/*, options*/)).then(async response => {
+				fetch(url, Request.getInit(data, options)).then(async response => {
 					let result = await response.json();
 					if (response.status !== 200 && response.status !== 201) {
 						Response.error(result);
@@ -33,158 +40,103 @@ namespace Base {
 		/**
 		 * Отправляет запрос по адресу
 		 * @param address - Адрес запроса
+		 * @param options - Опции
 		 */
-		public static address(address: string): Promise<Response> {
-			return Request.xhr(address, '');
+		public static address(address: string, options?: RequestOptions): Promise<Response> {
+			return Request.xhr(address, '', options);
+		}
+
+		/**
+		 * Отправляет запрос GET по адресу
+		 * @param address - Адрес запроса
+		 */
+		public static get(address: string): Promise<Response> {
+			return Request.xhr(address, '', {method: 'get'});
 		}
 
 		/**
 		 * Отправляет запрос с объектом данных по адресу
 		 * @param address - Адрес запроса
 		 * @param data - Объект данных
+		 * @param options - Опции
 		 */
-		public static data(address: string, data: Object): Promise<Response> {
-			return Request.xhr(address, JSON.stringify(data));
+		public static data(address: string, data: Object, options?: RequestOptions): Promise<Response> {
+			return Request.xhr(address, JSON.stringify(data), options);
 		}
 
-		public static form(form: HTMLFormElement, options?: any/*RequestOptions*/): Promise<Response> {
+		/**
+		 * Отправляет форму
+		 * @param form - Форма
+		 * @param options - Опции
+		 */
+		public static form(form: HTMLFormElement, options?: RequestOptions): Promise<Response> {
 			let url = form.getAttribute('action') as string;
 			let formData = new FormData(form);
 
-			return Request.xhr(url, formData/*, options*/);
+			return Request.xhr(url, options?.json ? JSON.stringify(this.formDataToObject(formData)) : formData, options);
 		}
 
-		public static submit(element: HTMLElement): Promise<Response> {
-			return Request.form(element.closest('form') as HTMLFormElement);
+		/**
+		 * Отправляет форму через submit
+		 * @param element - Элемент
+		 * @param options - Опции
+		 */
+		public static submit(element: HTMLElement, options?: RequestOptions): Promise<Response> {
+			return Request.form(element.closest('form') as HTMLFormElement, options);
 		}
 
-		private static getInit(data: BodyInit/*, options?: RequestOptions*/): RequestInit {
+		/**
+		 * Возвращает настройки для инициализации запроса
+		 * @param data
+		 * @param options
+		 * @private
+		 */
+		private static getInit(data: BodyInit, options?: RequestOptions): RequestInit {
 			let method			: string						= 'post';
 			let cache			: RequestOptionsCache			= 'no-cache';
 			let credentials		: RequestOptionsCredentials		= 'same-origin';
 
-			/*if (options) {
+			if (options) {
 				if (options.method) method = options.method;
 				if (options.cache) cache = options.cache;
 				if (options.credentials) credentials = options.credentials;
-			}*/
+			}
 
 			let init: RequestInit = {
 				method: method,
 				cache: cache,
 				credentials: credentials
 			};
-
-			/*if (options?.method !== 'get')*/ init['body'] = data;
+			if (options?.method != 'get') init.body = data;
+			if (options?.json) init['headers'] = { 'Content-Type': 'application/json' };
 
 			return init;
 		}
 
-		// /**
-		//  * Отправляет данные. Каждый XHR запрос должен проходить через данный метод.
-		//  * @param address - Адрес запроса
-		//  * @param data - Данные
-		//  * @param handler - Обработчик
-		//  * @param params - Параметры
-		//  */
-		// public static send(address: string, data: Object, handler?: Function, params?: TypeRequestParams): void {
-		// 	let method			: string			= 'post';
-		// 	let request 		: string			= GlobalParams.get('xhr');
-		// 	let contentType		: string | false	= 'application/x-www-form-urlencoded;charset=UTF-8';
-		// 	let processData		: boolean			= true;
-		//
-		// 	if (params) {
-		// 		if (params.method) method = params.method;
-		// 		if (params.request !== undefined) request = params.request;
-		// 		if (params.contentType !== undefined) contentType = params.contentType;
-		// 		if (params.processData !== undefined) processData = params.processData;
-		// 	}
-		//
-		// 	let url				: string			= `${request}${address}`;
-		//
-		// 	switch (Query.technology) {
-		// 		case 'jq': Query.xhrJQ(url, method, data, contentType, processData, handler); break;
-		// 		case 'xhr': Query.xhrXMLHttpRequest(); break;
-		// 		case 'fetch': Query.xhrFetch(); break;1
-		// 	}
-		// }
+		/**
+		 * Преобразует FormData в объект
+		 * @param formData - Данные формы
+		 * @private
+		 */
+		private static formDataToObject(formData: FormData): Record<string, any> {
+			const data = {};
 
-		// /**
-		//  * Отправляет форму
-		//  * @param form - Форма
-		//  * @param handler - Обработчик
-		//  */
-		// public static sendForm(form: HTMLFormElement, handler?: Function) {
-		// 	Query.send(form.getAttribute('action') as string, new FormData(form), handler, {contentType: false, processData: false});
-		// }
-		//
-		// /**
-		//  * Отправляет форму. Инициатор внутренний элемент.
-		//  * @param element - Элемент в форме
-		//  * @param handler - Обработчик
-		//  */
-		// public static submitForm(element: HTMLElement, handler?: Function): void {
-		// 	Query.sendForm(element.closest('form') as HTMLFormElement, handler);
-		// }
-		//
-		// /**
-		//  * Отправляет методом ajax JQuery
-		//  * @param url - URL
-		//  * @param method - Метод
-		//  * @param data - Данные
-		//  * @param contentType - Тип контента
-		//  * @param processData - Прогресс
-		//  * @param handler - Обработчик
-		//  * @private
-		//  */
-		// private static xhrJQ(url: string, method: string, data: Object, contentType: string | false, processData: boolean, handler?: Function): void {
-		// 	$.ajax({
-		// 		url				: url,
-		// 		method			: method,
-		// 		dataType		: 'json',
-		// 		data 			: data,
-		// 		contentType		: contentType,
-		// 		processData		: processData,
-		// 		cache			: false,
-		// 		// beforeSend: function() { if (funcBeforeSend) funcBeforeSend(); },
-		// 		// complete: function() { if (funcComplete) funcComplete(); },
-		// 		success			: function(response) { Base.Response.run(response, handler ? handler : undefined); },
-		// 		error			: function(response) { console.log('request failed: ' + url); console.log(response); }
-		// 	});
-		// }
-		//
-		// /**
-		//  * Отправляет методом MLHttpRequest
-		//  * @private
-		//  */
-		// private static xhrXMLHttpRequest(): void {
-		// 	// let xhr = new XMLHttpRequest();
-		// 	// xhr.open(method, `${request}${address}`);
-		// 	// xhr.send(data);
-		// 	// xhr.responseType = 'json';
-		// 	// xhr.setRequestHeader('Content-Type', contentType ? contentType : '');
-		// 	// xhr.onload = function() {
-		// 	// 	alert(`Загружено: ${xhr.status} ${xhr.response}`);
-		// 	// };
-		// 	//
-		// 	// xhr.onerror = function() { // происходит, только когда запрос совсем не получилось выполнить
-		// 	// 	alert(`Ошибка соединения`);
-		// 	// };
-		// }
-		//
-		// /**
-		//  * Отправляет методом fetch
-		//  * @private
-		//  */
-		// private static xhrFetch(): void {
-		// 	// fetch()
-		// 	// .then((response) => {
-		// 	// 	Base.Response.run(response, handler ? handler : undefined);
-		// 	// }).
-		// 	// catch((response) => {
-		// 	// 	console.log('request failed: ' + address); console.log(response);
-		// 	// });
-		// }
+			formData.forEach((value, key) => {
+				const keys = key.split(/]\[|\[|]/).filter(Boolean);
+				let current: any = data;
+
+				keys.forEach((k, i) => {
+					if (i === keys.length - 1) {
+						current[k] = value;
+					} else {
+						current[k] = current[k] || {};
+						current = current[k];
+					}
+				});
+			});
+
+			return data;
+		}
 
 	}
 

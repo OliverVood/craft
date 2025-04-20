@@ -71,7 +71,7 @@ namespace Admin {
 					}
 
 					function onSubmit(): void {
-						Base.Request.form($form.html() as HTMLFormElement).then((result: any) => {
+						Base.Request.form($form.html() as HTMLFormElement, {method: 'patch', json: true}).then((result: any) => {
 							Base.Response.notices(result.notices)
 							Check.init(result.data.data, result.data.action);
 						});

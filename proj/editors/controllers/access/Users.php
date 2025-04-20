@@ -18,6 +18,9 @@
 
 			$this->access = new Access($this);
 			$this->access->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
+			$this->access->validate([
+				'id' => ['required', 'int', 'foreign:craft,users,id'],
+			]);
 			$this->access->text('title', 'Права пользователя');
 			$this->access->text('responseOkSet', 'Права пользователя установлены');
 		}

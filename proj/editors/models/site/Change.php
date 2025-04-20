@@ -24,16 +24,6 @@
 				self::STATE_ACTIVE		=> __('Активная'),
 				self::STATE_INACTIVE	=> __('Не активная'),
 			];
-//			public function Update(array $data, int $id): bool {
-//				if ($_FILES['form']['tmp_name']['cover']) {
-//					$this->DeleteCover($id);
-//					[$data['hash'], $data['ext']] = $this->SaveCover($id);
-//				}
-//
-//				$this->table->Update($data, "`id` = {$id}");
-//
-//				return true;
-//			}
 		}
 
 		/**
@@ -90,6 +80,23 @@
 			}
 
 			return $id;
+		}
+
+		/**
+		 * Обновление записи
+		 * @param array $data - Данные
+		 * @param int $id - Идентификатор
+		 * @return bool
+		 */
+		public function update(array $data, int $id): bool {
+			if (!$_FILES['cover']['error']) {
+				$this->deleteCover($id);
+				[$data['hash'], $data['ext']] = $this->saveCover($id, $_FILES['cover']);
+			}
+
+			if (!parent::update($data, $id)) return false;
+
+			return true;
 		}
 
 		/**

@@ -25,7 +25,7 @@
 	require DIR_BASE_EDITOR . 'actions/Create.php';
 	require DIR_BASE_EDITOR . 'actions/Update.php';
 	require DIR_BASE_EDITOR . 'actions/Delete.php';
-	require DIR_BASE_EDITOR . 'actions/State.php';
+	require DIR_BASE_EDITOR . 'actions/Status.php';
 
 	/**
 	 * Базовый класс для работы с контроллерами-редакторами
@@ -42,7 +42,7 @@
 		public ?Actions\Create $create = null;
 		public ?Actions\Update $update = null;
 		public ?Actions\Delete $delete = null;
-		public ?Actions\State $state = null;
+		public ?Actions\Status $status = null;
 
 		public array $names = [];
 
@@ -61,18 +61,20 @@
 		/**
 		 * Блок доступа
 		 * @param Set $data - Пользовательские данные
-		 * @controllerMethod
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
+		 * @controllerMethod
 		 */
-		#[NoReturn] public function access(Set $data): void { $this->access->get($data); }
+		#[NoReturn] public function access(Set $data, mixed ...$params): void { $this->access->get($data, ...$params); }
 
 		/**
 		 * Блок выборки данных
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function select(Set $data): void { $this->select->get($data); }
+		#[NoReturn] public function select(Set $data, mixed ...$params): void { $this->select->get($data, ...$params); }
 
 		/**
 		 * Блок просмотра данных
@@ -100,10 +102,11 @@
 		/**
 		 * Устанавливает доступ
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function doAccess(Set $data): void { $this->access->set($data); }
+		#[NoReturn] public function doAccess(Set $data, mixed ...$params): void { $this->access->set($data, ...$params); }
 
 		/**
 		 * Создание
@@ -135,7 +138,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function setState(Set $data): void { $this->state->set($data); }
+		#[NoReturn] public function setState(Set $data): void { $this->status->set($data); }
 
 		/**
 		 * Возвращает модель редактора

@@ -75,15 +75,17 @@
 
 			return $this->get($name);
 		}
+
 		/**
 		 * Запускает контроллера
 		 * @param int $source - Источник
 		 * @param string $name - Наименование контроллера
 		 * @param string $method - Метод
+		 * @param array $params - Параметры запроса
 		 * @return void
 		 */
-		public function run(int $source, string $name, string $method): void {
-			call_user_func_array([$this->registrationAndGet($name, $source), $method], [request()->data()]);
+		public function run(int $source, string $name, string $method, array $params): void {
+			call_user_func_array([$this->registrationAndGet($name, $source), $method], [request()->data(), ...$params]);
 		}
 
 	}

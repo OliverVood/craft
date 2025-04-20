@@ -135,6 +135,11 @@
 			return $this->version;
 		}
 
+		/**
+		 * Выводит ошибку приложения
+		 * @param Exception $e - Исключение
+		 * @return void
+		 */
 		#[NoReturn] public function error(Exception $e): void {
 			echo $e->getMessage();
 			exit;

@@ -10,6 +10,28 @@
 	 * Базовый класс признаков
 	 */
 	class Feature {
+		const RIGHT_ACCESS_ID = 1;
+		const RIGHT_SELECT_ID = 2;
+		const RIGHT_BROWSE_ID = 3;
+		const RIGHT_CREATE_ID = 4;
+		const RIGHT_UPDATE_ID = 5;
+		const RIGHT_DELETE_ID = 6;
+		const RIGHT_STATUS_ID = 7;
+		const RIGHT_CHECK_ID = 10;
+		const RIGHT_MAKE_ID = 11;
+		const RIGHT_STRUCTURE_ID = 12;
+
+		const RIGHT_ACCESS_NAME = 'access';
+		const RIGHT_SELECT_NAME = 'select';
+		const RIGHT_BROWSE_NAME = 'browse';
+		const RIGHT_CREATE_NAME = 'create';
+		const RIGHT_UPDATE_NAME = 'update';
+		const RIGHT_DELETE_NAME = 'delete';
+		const RIGHT_STATUS_NAME = 'status';
+		const RIGHT_CHECK_NAME = 'check';
+		const RIGHT_MAKE_NAME = 'make';
+		const RIGHT_STRUCTURE_NAME = 'structure';
+
 		protected int $id;
 		protected string $name;
 		protected string $title;

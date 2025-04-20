@@ -85,9 +85,9 @@
 			if (linkRight('dbs_structure')->allow()) $menu['dbs'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
 
 //			/* Раздел интерфейса Craft */
-////			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
+//			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
 //
-//			/* Раздел статистики */
+			/* Раздел статистики */
 			if (linkRight('statistics_ips_select')->allow()) $menu['statistics'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
 			if (linkRight('statistics_actions_select')->allow()) $menu['statistics'][] = linkRight('statistics_actions_select')->hyperlink(__('Действия клиента'), ['page' => 1]);
 
@@ -132,7 +132,7 @@
 		 * @param Template $template - Шаблон
 		 * @return void
 		 */
-		private function setSiteToMenu(Template $template): void {//TODO Заполнить левое меню
+		private function setSiteToMenu(Template $template): void {
 			$menu = [];
 
 			/* Раздел новостей */
@@ -144,7 +144,7 @@
 			if (linkRight('changes_create')->allow()) $menu['changes'][] = linkRight('changes_create')->hyperlink(__('Добавить изменения'));
 
 			/* Раздел обратной связи */
-//			$menuFeedback = Feedback::instance()->GetMenu();
+			if (linkRight('feedback_select')->allow()) $menu['feedback'][] = linkRight('feedback_select')->hyperlink(__('Список'), ['page' => 1]);
 
 			if (!$menu) return;
 

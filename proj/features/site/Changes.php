@@ -13,16 +13,15 @@
 	 * @param string $title - Заголовок
 	 */
 	class Changes extends Feature {
-
 		public function __construct(int $id, string $name, string $title = '') {
 			parent::__construct($id, $name, $title);
 
-			$this->rights->registration(1, 'access', __('Назначение прав'));
-			$this->rights->registration(2, 'select', __('Выборка'));
-			$this->rights->registration(3, 'browse', __('Вывод'));
-			$this->rights->registration(4, 'create', __('Создание'));
-			$this->rights->registration(5, 'update', __('Изменение'));
-			$this->rights->registration(6, 'delete', __('Удаление'));
+			$this->rights->registration(self::RIGHT_ACCESS_ID, self::RIGHT_ACCESS_NAME, __('Назначение прав'));
+			$this->rights->registration(self::RIGHT_SELECT_ID, self::RIGHT_SELECT_NAME, __('Выборка'));
+			$this->rights->registration(self::RIGHT_BROWSE_ID, self::RIGHT_BROWSE_NAME, __('Вывод'));
+			$this->rights->registration(self::RIGHT_CREATE_ID, self::RIGHT_CREATE_NAME, __('Создание'));
+			$this->rights->registration(self::RIGHT_UPDATE_ID, self::RIGHT_UPDATE_NAME, __('Изменение'));
+			$this->rights->registration(self::RIGHT_DELETE_ID, self::RIGHT_DELETE_NAME, __('Удаление'));
 		}
 
 	}

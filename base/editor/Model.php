@@ -219,7 +219,7 @@
 		protected function getState(int $id): int {
 			$query = $this->getQueryState($id);
 			$response = $this->db->query($query->get());
-			return $response->getOneField('state');
+			return (int)$response->getOneField('state');
 		}
 
 		/**

@@ -41,7 +41,6 @@
 			$this->fnPrepareView = fn (array & $item) => $this->prepareView($item);
 			$this->fnPrepareData = fn (array & $item) => $this->prepareData($item);
 
-
 			$this->fields = new Fields();
 
 			$this->text('title', 'Создание');

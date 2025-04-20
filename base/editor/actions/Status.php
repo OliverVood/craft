@@ -15,7 +15,7 @@
 	/**
 	 * Контроллер-редактор состояния
 	 */
-	class State {
+	class Status {
 		use Entree;
 		use Texts;
 
@@ -29,7 +29,7 @@
 		public function __construct(Controller $controller) {
 			$this->controller = $controller;
 
-			$this->access = 'state';
+			$this->access = 'status';
 
 			$this->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
 

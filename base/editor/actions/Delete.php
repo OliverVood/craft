@@ -29,7 +29,7 @@
 		public function __construct(Controller $controller) {
 			$this->controller = $controller;
 
-			$this->access = 'update';
+			$this->access = 'delete';
 
 			$this->fnPrepareData = fn (int $id) => $this->prepareData($id);
 

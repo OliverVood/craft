@@ -7,6 +7,7 @@
 	use Base\Data\Set;
 	use Base\Editor\Actions\Traits\Entree;
 	use base\editor\actions\traits\Texts;
+	use Base\Editor\Actions\Traits\Validation;
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
 	use Base\Helper\Accumulator;
@@ -19,6 +20,7 @@
 	class Access {
 		use Entree;
 		use Texts;
+		use Validation;
 
 		private Controller $controller;
 
@@ -40,17 +42,17 @@
 			$this->text('do', 'Установить права доступа');
 			$this->text('btn', 'Изменить');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseOkSet', 'Права доступа установлены');
 		}
 
 		/**
 		 * Возвращает блок доступа
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data): void {
-			$id = $data->defined('id')->int(0);
-
+		#[NoReturn] public function get(Set $data, int $id): void {
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
@@ -73,15 +75,19 @@
 		/**
 		 * Устанавливает доступ
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data): void {
-			$id = $data->defined('id')->int(0);
-			$rights = $data->defined('rights')->data([]);
+		#[NoReturn] public function set(Set $data, int $id): void {
+			$rights = request()->data()->inputArray('rights')->data([]);
 
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
+
+			$errors = [];
+			if (!$this->validation(['id' => $id], $errors)) response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
+
 			$model->setAccess($id, $rights);
 
 			response()->ok(null, $this->__('responseOkSet'));

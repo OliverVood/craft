@@ -12,17 +12,22 @@
 	class Request {
 		private string $protocol;
 		private string $host;
+		private string $url;
+		private string $method;
+
 		private ?string $timezone;
 
 		private string $html;
 		private string $xhr;
-
 
 		private Set $data;
 
 		public function __construct(string $html, string $xhr) {
 			$this->protocol = (isset($_SERVER['HTTPS'])) ? 'https' : 'http';
 			$this->host = $_SERVER['SERVER_NAME'];
+			$this->url = "{$this->protocol}://{$this->host}{$_SERVER['REQUEST_URI']}";
+			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
+
 			$this->timezone = $_COOKIE['timezone'] ?? null;
 
 			$this->html = $html;
@@ -45,6 +50,22 @@
 		 */
 		public function host(): string {
 			return $this->host;
+		}
+
+		/**
+		 * Возвращает URL
+		 * @return string
+		 */
+		public function url(): string {
+			return $this->url;
+		}
+
+		/**
+		 * Возвращает метод запроса
+		 * @return string
+		 */
+		public function method(): string {
+			return $this->method;
 		}
 
 		/**

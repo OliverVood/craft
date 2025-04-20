@@ -4,6 +4,7 @@
 
 	namespace Proj\Editors\Controllers\Site;
 
+	use Base\Data\Set;
 	use Base\Editor\Actions\Browse;
 	use Base\Editor\Actions\Create;
 	use Base\Editor\Actions\Delete;
@@ -11,6 +12,7 @@
 	use Base\Editor\Actions\Update;
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
+	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Editors\Models\Site\Change as Model;
 
 	/**
@@ -19,8 +21,6 @@
 	class Change extends Controller {
 		public function __construct() {
 			parent::__construct(app()->features('changes'), 'site.change');
-
-			$this->params->changes = request()->data()->defined('changes')->int(0);
 
 			/** @var Model $model */ $model = $this->model();
 
@@ -39,7 +39,8 @@
 
 			$this->create = new Create($this);
 			$this->create->fnPrepareView = fn (array & $item) => $this->prepareViewCreate($item);
-			$this->create->fields()->edit->hidden('cid');
+			$this->create->fnPrepareData = fn (array & $item) => $this->prepareDataCreate($item);
+			$this->create->fields()->edit->hidden('changes');
 			$this->create->fields()->edit->text('header', __('Заголовок'));
 			$this->create->fields()->edit->textarea('content', __('Текст'));
 			$this->create->fields()->edit->file('cover', __('Обложка'), __('Выберите обложку'), '.jpg, .jpeg, .png');
@@ -53,26 +54,35 @@
 			$this->create->text('responseOk', 'Изменение добавлено');
 
 			$this->update = new Update($this);
-//					'state'			=> new Edit\Select('Состояние', 'form[state]', [
-//						Consts\Changes::STATE_DRAFT	=> 'Черновик',
-//						Consts\Changes::STATE_ACTIVE	=> 'Активный',
-//						Consts\Changes::STATE_INACTIVE	=> 'Не активный',
-//					]),
-//					'header'		=> new Edit\Text('Заголовок', 'form[header]'),
-//					'content'		=> new Edit\TextArea('Текст', 'form[content]'),
-//					'cover'			=> new Edit\File('Обложка', 'form[cover]', 'Выберите обложку', '.jpg, .jpeg, .png')
-//				];
-//			$this->titleUpdate = 'Редактировать актуальное';
-//			$this->titleDoUpdate = 'Актуальное изменено';
+			$this->update->fnPrepareView = fn (int $id, array & $item) => $this->prepareViewUpdate($id, $item);
+			$this->update->fields()->edit->hidden('changes');
+			$this->update->fields()->edit->hidden('id');
+			$this->update->fields()->edit->select('state', __('Состояние'), $model->getStates());
+			$this->update->fields()->edit->text('header', __('Заголовок'));
+			$this->update->fields()->edit->textarea('content', __('Текст'));
+			$this->update->fields()->edit->file('cover', __('Обложка'), __('Выберите обложку'), '.jpg, .jpeg, .png');
+			$this->update->validate([
+				'header'	=> ['required', 'string', 'max:255'],
+				'content'	=> ['required', 'string'],
+			]);
+			$this->update->text('title', 'Редактирование изменения');
+			$this->update->text('responseOk', 'Изменение редактировано');
 
 			$this->delete = new Delete($this);
-//			$this->titleDelete = 'Удалить актуальное?';
-//			$this->titleDoDelete = 'Актуальное удалено';
-//
-//			protected function RegActionSelect(): void { $this->select = new ActionRight($this->id, $this->name, 'select', "/{$this->name}/select?cid=%cid%&page=%page%", /* @lang JavaScript */"Base.Common.Query.SendData('/{$this->name}/select', {cid: %cid%, page: %page%}); return false;"); }
-//			protected function RegActionCreate(): void { $this->create = new ActionRight($this->id, $this->name, 'create', "/{$this->name}/create?cid=%cid%", /* @lang JavaScript */"Base.Common.Query.SendData('/{$this->name}/create', {cid: %cid%}); return false;"); }
-//			protected function RegActionUpdate(): void { $this->update = new ActionRight($this->id, $this->name, 'update', "/{$this->name}/update?id=%id%&cid=%cid%", /* @lang JavaScript */"Base.Common.Query.SendData('/{$this->name}/update', {id: %id%, cid: %cid%}); return false;"); }
-//			protected function RegActionDoDelete(): void { $this->do_delete = new ActionRight($this->id, $this->name, 'do_delete', "/{$this->name}/do_delete?id=%id%&cid=%cid%", /* @lang JavaScript */ "if (confirm('{$this->titleDelete}')) Base.Common.Query.SendData('/{$this->name}/do_delete', {id: %id%, cid: %cid%}); return false;"); }
+			$this->delete->text('confirm', 'Удалить изменение?');
+			$this->delete->text('responseOk', 'Изменение удалено');
+		}
+
+		/**
+		 * Блок выборки данных
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function select(Set $data, mixed ...$params): void {
+			[$this->params->changes] = $params;
+			parent::select($data, ...$params);
 		}
 
 		/**
@@ -112,7 +122,26 @@
 		 * @return void
 		 */
 		private function prepareViewCreate(array & $item): void {
-			$item['cid'] = $this->params->changes;
+			$item['changes'] = $this->params->changes;
+		}
+
+		/**
+		 * Подготовка данных для блока обновления
+		 * @param int $id - Идентификатор
+		 * @param array $item - Данные
+		 * @return void
+		 */
+		private function prepareViewUpdate(int $id, array & $item): void {
+			$item['changes'] = $this->params->changes;
+		}
+
+		/**
+		 * Подготовка данных перед созданием
+		 * @param array $data - Данные
+		 * @return void
+		 */
+		private function prepareDataCreate(array & $data): void {
+			$data['cid'] = $data['changes'];
 		}
 
 	}
