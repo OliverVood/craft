@@ -42,6 +42,7 @@
 			$this->text('do', 'Установить права доступа');
 			$this->text('btn', 'Изменить');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorNotFound', 'Элемент не найден');
 			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseOkSet', 'Права доступа установлены');
 		}
@@ -56,6 +57,8 @@
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
+
+			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
 			$title = $this->__('title') . " #{$id}";
 			$features = app()->features;
@@ -84,6 +87,8 @@
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
+
+			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
 			$errors = [];
 			if (!$this->validation(['id' => $id], $errors)) response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);

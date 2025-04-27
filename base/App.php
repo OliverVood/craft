@@ -20,8 +20,7 @@
 	class App {
 		use Singleton;
 
-		const ASSEMBLY_PRODUCTION = 1;
-		const ASSEMBLY_DEVELOPMENT = 2;
+		private Config $config;
 
 		private Request $request;
 		private Response $response;
@@ -35,19 +34,16 @@
 		public DBs $dbs;
 		public Links $links;
 
-		private string $version;
-		private int $assembly;
-
 		public stdClass $params;
 
 		/**
-		 * @param string $version - Версия
-		 * @param int $assembly - Сборка
 		 * @param string $html - Путь HTML
 		 * @param string $xhr - Путь XHR
 		 */
-		private function __construct(string $version, int $assembly, string $html, string $xhr) {
+		private function __construct(string $html, string $xhr) {
 			session_start();
+
+			$this->config = new Config();
 
 			$this->request = new Request($html, $xhr);
 			$this->response = new Response();
@@ -61,10 +57,15 @@
 			$this->dbs = new DBs();
 			$this->links = new Links();
 
-			$this->version = $version;
-			$this->assembly = $assembly;
-
 			$this->params = new stdClass();
+		}
+
+		/**
+		 * Возвращает объект конфигурации
+		 * @return Config
+		 */
+		public function config(): Config {
+			return $this->config;
 		}
 
 		/**
@@ -132,7 +133,7 @@
 		 * @return string
 		 */
 		public function version(): string {
-			return $this->version;
+			return env('APP_VERSION', '1.0.0');
 		}
 
 		/**

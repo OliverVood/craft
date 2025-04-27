@@ -21,15 +21,6 @@
 		public function __construct() {
 			parent::__construct(app()->features('users'), 'users');
 
-			/** @var Models\Users $model */ $model = $this->model();
-			/** @var Models\Groups $groupsModel */ $groupsModel = model('groups', \Base\Models::SOURCE_EDITORS);
-
-			$response = $groupsModel->index('id', 'name');
-			$groups = [];
-			foreach ($response() as $group) {
-				$groups[$group['id']] = $group['name'];
-			}
-
 			$this->names = [
 				'login' => __('Логин'),
 				'first_name' => __('Имя'),
@@ -41,37 +32,46 @@
 				'state' => __('Состояние'),
 			];
 
+			/** @var Models\Users $model */ $model = $this->model();
+			/** @var Models\Groups $groupsModel */ $groupsModel = model('groups', \Base\Models::SOURCE_EDITORS);
+
+			$response = $groupsModel->index('id', 'name');
+			$groups = [];
+			foreach ($response() as $group) {
+				$groups[$group['id']] = $group['name'];
+			}
+
 			$this->select = new Select($this);
 			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
 			$this->select->fields()->browse->text('id', '#');
-			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->select->fields()->browse->text('group', __('Группа'));
-			$this->select->fields()->browse->text('login', __('Логин'));
-			$this->select->fields()->browse->text('last_name', __('Фамилия'));
-			$this->select->fields()->browse->text('first_name', __('Имя'));
-			$this->select->fields()->browse->text('father_name', __('Отчество'));
+			$this->select->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->select->fields()->browse->text('group', $this->names['gid']);
+			$this->select->fields()->browse->text('login', $this->names['login']);
+			$this->select->fields()->browse->text('last_name', $this->names['last_name']);
+			$this->select->fields()->browse->text('first_name', $this->names['first_name']);
+			$this->select->fields()->browse->text('father_name', $this->names['father_name']);
 			$this->select->text('title', 'Список пользователей');
 
 			$this->browse = new Browse($this);
 			$this->browse->text('title', 'Просмотр пользователя');
-			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->browse->fields()->browse->text('group', __('Группа'));
-			$this->browse->fields()->browse->text('login', __('Логин'));
-			$this->browse->fields()->browse->text('last_name', __('Фамилия'));
-			$this->browse->fields()->browse->text('first_name', __('Имя'));
-			$this->browse->fields()->browse->text('father_name', __('Отчество'));
+			$this->browse->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->browse->fields()->browse->text('group', $this->names['gid']);
+			$this->browse->fields()->browse->text('login', $this->names['login']);
+			$this->browse->fields()->browse->text('last_name', $this->names['last_name']);
+			$this->browse->fields()->browse->text('first_name', $this->names['first_name']);
+			$this->browse->fields()->browse->text('father_name', $this->names['father_name']);
 
 			$this->create = new Create($this);
-			$this->create->fields()->edit->select('gid', __('Группа'), $groups, ['empty' => ['key' => 0, 'value' => __('Выберите')]]);
-			$this->create->fields()->edit->text('login', __('Логин'));
-			$this->create->fields()->edit->text('last_name', __('Фамилия'));
-			$this->create->fields()->edit->text('first_name', __('Имя'));
-			$this->create->fields()->edit->text('father_name', __('Отчество'));
-			$this->create->fields()->edit->password('password', __('Пароль'));
-			$this->create->fields()->edit->password('password_confirm', __('Повторение пароля'));
+			$this->create->fields()->edit->select('gid', $this->names['gid'], $groups, ['empty' => ['key' => 0, 'value' => __('Выберите')]]);
+			$this->create->fields()->edit->text('login', $this->names['login']);
+			$this->create->fields()->edit->text('last_name', $this->names['last_name']);
+			$this->create->fields()->edit->text('first_name', $this->names['first_name']);
+			$this->create->fields()->edit->text('father_name', $this->names['father_name']);
+			$this->create->fields()->edit->password('password', $this->names['password']);
+			$this->create->fields()->edit->password('password_confirm', $this->names['password_confirm']);
 			$this->create->validate([
 				'gid' => ['required', 'int', 'foreign:craft,groups,id'],
-				'login' => ['required', 'trim', 'string'],
+				'login' => ['required', 'trim', 'string', 'unique:craft,users,login'],
 				'last_name' => ['trim', 'string'],
 				'first_name' => ['trim', 'string'],
 				'father_name' => ['trim', 'string'],
@@ -84,22 +84,19 @@
 
 			$this->update = new Update($this);
 			$this->update->fnPrepareView = fn (int $id, array & $item) => $this->prepareViewUpdate($id, $item);
-			$this->update->fields()->edit->hidden('id');
-			$this->update->fields()->edit->select('gid', __('Группа'), $groups, ['empty' => ['key' => 0, 'value' => __('Выберите')]]);
-			$this->update->fields()->edit->text('login', __('Логин'));
-			$this->update->fields()->edit->text('last_name', __('Фамилия'));
-			$this->update->fields()->edit->text('first_name', __('Имя'));
-			$this->update->fields()->edit->text('father_name', __('Отчество'));
-			$this->update->fields()->edit->password('password', __('Пароль'));
-			$this->update->fields()->edit->password('password_confirm', __('Повторение пароля'));
-			$this->update->fields()->edit->select('state', __('Состояние'), [
+			$this->update->fields()->edit->select('gid', $this->names['gid'], $groups, ['empty' => ['key' => 0, 'value' => __('Выберите')]]);
+			$this->update->fields()->edit->text('last_name', $this->names['last_name']);
+			$this->update->fields()->edit->text('first_name', $this->names['first_name']);
+			$this->update->fields()->edit->text('father_name', $this->names['father_name']);
+			$this->update->fields()->edit->password('password', $this->names['password']);
+			$this->update->fields()->edit->password('password_confirm', $this->names['password_confirm']);
+			$this->update->fields()->edit->select('state', $this->names['state'], [
 				$model::STATE_ACTIVE => __('Активный'),
 				$model::STATE_INACTIVE => __('Не активный'),
 				$model::STATE_BLOCK => __('Заблокированный'),
 			]);
 			$this->update->validate([
 				'gid' => ['required', 'int', 'foreign:craft,groups,id'],
-				'login' => ['required', 'trim', 'string'],
 				'last_name' => ['trim', 'string'],
 				'first_name' => ['trim', 'string'],
 				'father_name' => ['trim', 'string'],

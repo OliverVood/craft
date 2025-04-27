@@ -8,6 +8,8 @@
 	const DIR_BASE_HELPER					= DIR_BASE . 'helper/';
 	const DIR_BASE_EDITOR					= DIR_BASE . 'editor/';
 
+	const DIR_CONFIGS						= DIR_ROOT . 'configs/';
+
 	const DIR_PROJ							= DIR_ROOT . 'proj/';
 	const DIR_PROJ_CONFIGS					= DIR_PROJ . 'configs/';
 	const DIR_PROJ_PARAMS					= DIR_PROJ . 'params/';

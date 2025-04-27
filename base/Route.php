@@ -12,20 +12,12 @@
 	class Route {
 		use Singleton;
 
-		private string $entity = 'main';
-		private string $action = 'index';
-
 		private array $stack = [];
 
 		/**
 		 * @throws Exception
 		 */
-		private function __construct() {
-			$parts = explode('/', $_REQUEST['__url'] ?? '');
-
-			if (isset($parts[0]) && ($parts[0] != '')) $this->entity = $parts[0];
-			if (isset($parts[1]) && ($parts[1] != '')) $this->action = $parts[1];
-		}
+		private function __construct() {  }
 
 		/**
 		 * Регистрирует контроллер
@@ -48,13 +40,14 @@
 				$performer = $item['performer'];
 				$source = $item['source'];
 
-				$type = '*';
+				$method = '*';
 				preg_match('/:\[(get|post|put|delete|patch|\*)]/', $customer, $matches);
 				if ($matches) {
-					$type = $matches[1];
+					$method = $matches[1];
 					$customer = str_replace($matches[0], '', $customer);
 				}
-				if (!in_array($type, ['*', request()->method()])) continue;
+				if (!in_array($method, ['*', request()->methodVirtual()])) continue;
+				if (request()->methodVirtual() != 'get' && !csrfValidate()) app()->error(new Exception('Invalid csrf token'));
 
 				$customer = parse_url($customer, PHP_URL_PATH);
 				$customer = explode('/', $customer);
@@ -81,9 +74,9 @@
 
 				$parts = explode('::', $performer);
 				$controller = $parts[0];
-				$method = $parts[1] ?? '';
+				$call = $parts[1] ?? '';
 
-				app()->controllers->run($source, $controller, $method, $params);
+				app()->controllers->run($source, $controller, $call, $params);
 			}
 		}
 

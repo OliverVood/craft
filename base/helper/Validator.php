@@ -53,6 +53,7 @@
 						case 'unset': $unset[] = $key; break;
 						case 'unset_if_empty': $unsetIfEmpty[] = $key; break;
 						case 'foreign': $value = self::foreign($key, $value, $name, $arguments, $errors); break;
+						case 'unique': $value = self::unique($key, $value, $name, $arguments, $errors); break;
 						case 'datetime': $value = self::datetime($key, $value, $name, $errors); break;
 						case 'utc': $value = self::datetimeUTC($key, $value, $name, $errors); break;
 						default: app()->error(new ErrorException("Validation rule '{$rule}' not found"));
@@ -313,6 +314,23 @@
 
 			if (!$response->getOne()) {
 				$errors[$key][] = __('Значение поля «:[name]» отсутствует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
+				return null;
+			}
+
+			return $value;
+		}
+
+		private static function unique(string $key, int|float|string|null $value, string $name, array $arguments, & $errors): int|float|string|null {
+			$response = db($arguments[0])
+				->select()
+				->fields('*')
+				->table($arguments[1])
+				->where($arguments[2], $value)
+				->limit(1)
+				->query();
+
+			if ($response->getOne()) {
+				$errors[$key][] = __('Значение поля «:[name]» уже существует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
 				return null;
 			}
 

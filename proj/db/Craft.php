@@ -11,7 +11,7 @@
 	class Craft extends DB {
 
 		public function __construct() {
-			parent::__construct('MySQL-8.0', 'craft', 'root', '');
+			parent::__construct(env('DB_CRAFT_HOST'), env('DB_CRAFT_NAME'), env('DB_CRAFT_USER'), env('DB_CRAFT_PASS'));
 		}
 
 	}

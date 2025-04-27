@@ -80,24 +80,28 @@
 		 * Блок просмотра данных
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function browse(Set $data): void { $this->browse->get($data); }
+		#[NoReturn] public function browse(Set $data, mixed ...$params): void { $this->browse->get($data, ...$params); }
 
 		/**
 		 * Блок создания данных
 		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function create(): void { $this->create->get(); }
+		#[NoReturn] public function create(Set $data, mixed ...$params): void { $this->create->get($data, ...$params); }
 
 		/**
 		 * Блок обновления данных
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function update(Set $data): void { $this->update->get($data); }
+		#[NoReturn] public function update(Set $data, mixed ...$params): void { $this->update->get($data, ...$params); }
 
 		/**
 		 * Устанавливает доступ
@@ -112,33 +116,37 @@
 		 * Создание
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doCreate(Set $data): void { $this->create->set($data); }
+		#[NoReturn] public function doCreate(Set $data, mixed ...$params): void { $this->create->set($data, ...$params); }
 
 		/**
 		 * Обновление
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doUpdate(Set $data): void { $this->update->set($data); }
+		#[NoReturn] public function doUpdate(Set $data, mixed ...$params): void { $this->update->set($data, ...$params); }
 
 		/**
 		 * Удаление
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doDelete(Set $data): void { $this->delete->set($data); }
+		#[NoReturn] public function doDelete(Set $data, mixed ...$params): void { $this->delete->set($data, ...$params); }
 
 		/**
 		 * Изменение состояния
 		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function setState(Set $data): void { $this->status->set($data); }
+		#[NoReturn] public function setState(Set $data, mixed ...$params): void { $this->status->set($data, ...$params); }
 
 		/**
 		 * Возвращает модель редактора

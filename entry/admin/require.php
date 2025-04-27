@@ -14,6 +14,7 @@
 	require DIR_BASE . 'access/Right.php';
 	require DIR_BASE . 'access/Links.php';
 
+	require DIR_BASE . 'Config.php';
 	require DIR_BASE . 'Route.php';
 	require DIR_BASE . 'Controllers.php';
 	require DIR_BASE . 'Controller.php';
@@ -48,6 +49,7 @@
 	require DIR_BASE_HELPER . 'Response.php';
 	require DIR_BASE_HELPER . 'Validator.php';
 	require DIR_BASE_HELPER . 'Cryptography.php';
+	require DIR_BASE_HELPER . 'Security.php';
 	require DIR_BASE_HELPER . 'Accumulator.php';
 	require DIR_BASE_HELPER . 'Pagination.php';
 	require DIR_BASE_HELPER . 'Debugger.php';

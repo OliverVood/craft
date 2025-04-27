@@ -20,25 +20,34 @@
 		public function __construct() {
 			parent::__construct(app()->features('feedback'), 'site.feedback');
 
+			$this->names = [
+				'state' => __('Состояние'),
+				'name' => __('Имя'),
+				'contacts' => __('Контакт'),
+				'letter' => __('Тема сообщения'),
+				'content' => __('Содержание'),
+				'datecr' => __('Дата'),
+			];
+
 			/** @var Model $model */ $model = $this->model();
 
 			$this->select = new Select($this);
 			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
 			$this->select->fields()->browse->text('id', '#');
-			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->select->fields()->browse->text('name', __('Имя'));
-			$this->select->fields()->browse->text('contacts', __('Контакт'));
-			$this->select->fields()->browse->text('letter', __('Тема сообщения'));
-			$this->select->fields()->browse->datetime('datecr', __('Дата'), 'd.m.Y H:i');
+			$this->select->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->select->fields()->browse->text('name', $this->names['name']);
+			$this->select->fields()->browse->text('contacts', $this->names['contacts']);
+			$this->select->fields()->browse->text('letter', $this->names['letter']);
+			$this->select->fields()->browse->datetime('datecr', $this->names['datecr'], 'd.m.Y H:i');
 			$this->select->text('title', 'Список обратной связи');
 
 			$this->browse = new Browse($this);
-			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->browse->fields()->browse->datetime('datecr', __('Дата'), 'd.m.Y H:i');
-			$this->browse->fields()->browse->text('name', __('Имя'));
-			$this->browse->fields()->browse->text('contacts', __('Контакт'));
-			$this->browse->fields()->browse->text('letter', __('Тема сообщения'));
-			$this->browse->fields()->browse->text('content', __('Содержание'));
+			$this->browse->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->browse->fields()->browse->datetime('datecr', $this->names['datecr'], 'd.m.Y H:i');
+			$this->browse->fields()->browse->text('name', $this->names['name']);
+			$this->browse->fields()->browse->text('contacts', $this->names['contacts']);
+			$this->browse->fields()->browse->text('letter', $this->names['letter']);
+			$this->browse->fields()->browse->text('content', $this->names['content']);
 			$this->browse->text('title', 'Обратная связь');
 
 			$this->delete = new Delete($this);

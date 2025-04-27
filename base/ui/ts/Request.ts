@@ -55,6 +55,15 @@ namespace Base {
 		}
 
 		/**
+		 * Отправляет запрос DELETE по адресу
+		 * @param address - Адрес запроса
+		 * @param data - Объект данных
+		 */
+		public static delete(address: string, data: Object = ''): Promise<Response> {
+			return Request.data(address, data, {method: 'delete'});
+		}
+
+		/**
 		 * Отправляет запрос с объектом данных по адресу
 		 * @param address - Адрес запроса
 		 * @param data - Объект данных

@@ -10,6 +10,7 @@
 	use Base\Helper\Cryptography;
 	use Base\Helper\Debugger;
 	use Base\Helper\Response;
+	use Base\Helper\Security;
 	use Base\Helper\Translation;
 	use Base\Helper\Validator;
 	use Base\Link\External;
@@ -24,17 +25,16 @@
 	use Base\UI\Template;
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
+	use Proj\Models\Users;
 
 	/**
 	 * Возвращает / инициализирует экземпляр приложения
-	 * @param string $version - Версия
-	 * @param int $assembly - Сборка
 	 * @param string $html - Относительный путь точки входа HTML
 	 * @param string $xhr - Относительный путь точки входа XHR
 	 * @return App
 	 */
-	function app(string $version = '', int $assembly = 0, string $html = '', string $xhr = ''): App {
-		return App::instance($version, $assembly, $html, $xhr);
+	function app(string $html = '', string $xhr = ''): App {
+		return App::instance($html, $xhr);
 	}
 
 	/**
@@ -80,12 +80,33 @@
 		return app()->dbs->registrationAndGet($alias);
 	}
 
+	/**
+	 * Возвращает объект доступа
+	 * @return Access
+	 */
 	function access(): Access {
 		return app()->access();
 	}
 
+	/**
+	 * Проверяет право
+	 * @param string $feature - Наименование признака
+	 * @param string $right - Наименование права
+	 * @param int $id - Идентификатор
+	 * @return bool
+	 */
 	function allow(string $feature, string $right, int $id = 0): bool {
 		return app()->access->allow(app()->features($feature)->id(), app()->features($feature)->rights($right)->id(), $id);
+	}
+
+	/**
+	 * Возвращает переменную окружения
+	 * @param $key - Ключ
+	 * @param $default - Значение по умолчанию
+	 * @return mixed
+	 */
+	function env($key, $default = null): mixed {
+		return app()->config()->get($key, $default);
 	}
 
 	/**
@@ -222,4 +243,47 @@
 	 */
 	function encryption(string $string): string {
 		return Cryptography::encryption($string);
+	}
+
+	/**
+	 * Возвращает поле для метода PATCH
+	 * @return string
+	 */
+	function patch(): string { buffer()->start(); ?>
+		<input type = "hidden" name = "__method" value = "patch">
+	<?php return buffer()->read();
+	}
+
+	/**
+	 * Возвращает поле CSRF
+	 * @return string
+	 */
+	function csrf(): string {
+		/** @var Users $user */ $user = model('users');
+		buffer()->start();
+		?><input type = "hidden" name = "__csrf" value = "<?= $user->hash(); ?>"><?php
+		return buffer()->read();
+	}
+
+	/**
+	 * Валидация CSRF
+	 * @return bool
+	 */
+	function csrfValidate(): bool {
+		/** @var Users $user */ $user = model('users');
+
+		if (!$user->isAuth()) return true;
+		if (!$hash = $user->hash()) return false;
+		if (!$csrf = request()->data()->defined('__csrf')->string('')) return false;
+
+		return $hash == $csrf;
+	}
+
+	/**
+	 * Возвращает хеш пользователя
+	 * @return string
+	 */
+	function getUserHash(): string {
+		/** @var Users $user */ $user = model('users');
+		return $user->hash();
 	}

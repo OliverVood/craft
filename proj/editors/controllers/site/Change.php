@@ -17,33 +17,40 @@
 
 	/**
 	 * Контроллер-редактор изменения
+	 * @controller
 	 */
 	class Change extends Controller {
 		public function __construct() {
 			parent::__construct(app()->features('changes'), 'site.change');
+
+			$this->names = [
+				'state' =>  __('Состояние'),
+				'header' => __('Заголовок'),
+				'content' => __('Текст'),
+				'cover' => __('Обложка'),
+			];
 
 			/** @var Model $model */ $model = $this->model();
 
 			$this->select = new Select($this);
 			$this->select->fnGetLinksNavigate = fn () => $this->getLinksNavigateSelect();
 			$this->select->fields()->browse->text('id', '#');
-			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->select->fields()->browse->text('header', __('Заголовок'));
+			$this->select->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->select->fields()->browse->text('header', $this->names['header']);
 			$this->select->text('title', 'Список конкретных изменений');
 
 			$this->browse = new Browse($this);
-			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->browse->fields()->browse->text('header', __('Заголовок'));
-			$this->browse->fields()->browse->text('content', __('Текст'));
+			$this->browse->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->browse->fields()->browse->text('header', $this->names['header']);
+			$this->browse->fields()->browse->text('content', $this->names['content']);
 			$this->browse->text('title', 'Просмотр изменения');
 
 			$this->create = new Create($this);
 			$this->create->fnPrepareView = fn (array & $item) => $this->prepareViewCreate($item);
 			$this->create->fnPrepareData = fn (array & $item) => $this->prepareDataCreate($item);
-			$this->create->fields()->edit->hidden('changes');
-			$this->create->fields()->edit->text('header', __('Заголовок'));
-			$this->create->fields()->edit->textarea('content', __('Текст'));
-			$this->create->fields()->edit->file('cover', __('Обложка'), __('Выберите обложку'), '.jpg, .jpeg, .png');
+			$this->create->fields()->edit->text('header', $this->names['header']);
+			$this->create->fields()->edit->textarea('content', $this->names['content']);
+			$this->create->fields()->edit->file('cover', $this->names['cover'], __('Выберите обложку'), '.jpg, .jpeg, .png');
 			$this->create->validate([
 				'cid' => ['required', 'int', 'foreign:craft,changes,id'],
 				'header'	=> ['required', 'string', 'max:255'],
@@ -55,12 +62,10 @@
 
 			$this->update = new Update($this);
 			$this->update->fnPrepareView = fn (int $id, array & $item) => $this->prepareViewUpdate($id, $item);
-			$this->update->fields()->edit->hidden('changes');
-			$this->update->fields()->edit->hidden('id');
-			$this->update->fields()->edit->select('state', __('Состояние'), $model->getStates());
-			$this->update->fields()->edit->text('header', __('Заголовок'));
-			$this->update->fields()->edit->textarea('content', __('Текст'));
-			$this->update->fields()->edit->file('cover', __('Обложка'), __('Выберите обложку'), '.jpg, .jpeg, .png');
+			$this->update->fields()->edit->select('state', $this->names['state'], $model->getStates());
+			$this->update->fields()->edit->text('header', $this->names['header']);
+			$this->update->fields()->edit->textarea('content', $this->names['content']);
+			$this->update->fields()->edit->file('cover', $this->names['cover'], __('Выберите обложку'), '.jpg, .jpeg, .png');
 			$this->update->validate([
 				'header'	=> ['required', 'string', 'max:255'],
 				'content'	=> ['required', 'string'],
@@ -83,6 +88,78 @@
 		#[NoReturn] public function select(Set $data, mixed ...$params): void {
 			[$this->params->changes] = $params;
 			parent::select($data, ...$params);
+		}
+
+		/**
+		 * Блок просмотра данных
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function browse(Set $data, mixed ...$params): void {
+			[$this->params->changes, $id] = $params;
+			parent::browse($data, $id);
+		}
+
+		/**
+		 * Блок создания данных
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function create(Set $data, mixed ...$params): void {
+			[$this->params->changes] = $params;
+			parent::create($data, ...$params);
+		}
+
+		/**
+		 * Блок обновления данных
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function update(Set $data, mixed ...$params): void {
+			[$this->params->changes, $id] = $params;
+			parent::update($data, $id);
+		}
+
+		/**
+		 * Создание
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function doCreate(Set $data, mixed ...$params): void {
+			[$this->params->changes] = $params;
+			parent::doCreate($data, ...$params);
+		}
+
+		/**
+		 * Обновление
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function doUpdate(Set $data, mixed ...$params): void {
+			[$this->params->changes, $id] = $params;
+			$this->update->set($data, $id);
+		}
+
+		/**
+		 * Удаление
+		 * @controllerMethod
+		 * @param Set $data - Пользовательские данные
+		 * @param mixed ...$params - Параметры запроса
+		 * @return void
+		 */
+		#[NoReturn] public function doDelete(Set $data, mixed ...$params): void {
+			[$this->params->changes, $id] = $params;
+			parent::doDelete($data, $id);
 		}
 
 		/**
@@ -141,7 +218,7 @@
 		 * @return void
 		 */
 		private function prepareDataCreate(array & $data): void {
-			$data['cid'] = $data['changes'];
+			$data['cid'] = $this->params->changes;
 		}
 
 	}

@@ -49,11 +49,10 @@
 		/**
 		 * Возвращает блок просмотра
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data): void {
-			$id = $data->defined('id')->int(0);
-
+		#[NoReturn] public function get(Set $data, int $id): void {
 			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
 
 			$this->inside($id);
@@ -71,11 +70,10 @@
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			$item = $model->browse($id, ['*']);
+			if (!$item = $model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
+
 			$prepareView = $this->fnPrepareView;
 			$prepareView($id, $item);
-
-			if (!$item) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
 			$title = $this->__('title') . " #{$id}";
 			$fields = $this->fields();

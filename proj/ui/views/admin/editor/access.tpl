@@ -22,6 +22,7 @@
 	<h1><?= $title; ?></h1>
 	<form action = "<?= $action->path(['id' => $id]); ?>" enctype="multipart/form-data" class = "cn-mb-1">
 		<?php
+			echo csrf();
 			foreach ($features->each() as /** @var Feature $feature */ $feature) {
 				if (!$feature->issetRight('access')) continue;
 				if (!allow($feature->name(), 'access')) continue;

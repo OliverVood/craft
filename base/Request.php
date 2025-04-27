@@ -14,6 +14,7 @@
 		private string $host;
 		private string $url;
 		private string $method;
+		private string $methodVirtual;
 
 		private ?string $timezone;
 
@@ -34,6 +35,9 @@
 			$this->xhr = $xhr;
 
 			$this->data = new Set();
+
+			$__method = $this->data->defined('__method')->string('-');
+			$this->methodVirtual = in_array($__method, ['get', 'post', 'put', 'patch', 'delete']) ? $__method : $this->method;
 		}
 
 		/**
@@ -66,6 +70,14 @@
 		 */
 		public function method(): string {
 			return $this->method;
+		}
+
+		/**
+		 * Возвращает виртуальный метод запроса
+		 * @return string
+		 */
+		public function methodVirtual(): string {
+			return $this->methodVirtual;
 		}
 
 		/**

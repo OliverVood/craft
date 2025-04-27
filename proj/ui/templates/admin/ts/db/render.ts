@@ -17,13 +17,14 @@ namespace Admin {
 				 * Отрисовка данных проверки базы данных
 				 * @param data - Данные
 				 * @param action - Ссылка формы
+				 * @param csrf - CSRF
 				 */
-				public static init(data: TypeDataTables, action: string): void {
+				public static init(data: TypeDataTables, action: string, csrf: string): void {
 					let $container = document.querySelector('.view.dbs.check > div') as HTMLDivElement;
 
 					$container.innerHTML = '';
 
-					data.length ? Check.form($container, data, action) : Check.empty($container);
+					data.length ? Check.form($container, data, action, csrf) : Check.empty($container);
 				}
 
 				/**
@@ -31,17 +32,20 @@ namespace Admin {
 				 * @param $container - Контейнер
 				 * @param data - Данные
 				 * @param action - Ссылка формы
+				 * @param csrf - CSRF
 				 */
-				private static form($container: HTMLDivElement, data: TypeDataTables, action: string) {
+				private static form($container: HTMLDivElement, data: TypeDataTables, action: string, csrf: string) {
 					/* Elements */
 					let $form = el('form', {action: action});
 					let $table = el('table', {class: 'select'});
 					let $tbody = el('tbody');
+					let $csrf = el('input', {type: 'hidden', name: '__csrf', value: csrf});
 					let $submit = el('input', {type: 'submit', value: 'Исправить'});
 					let $checkbox = el('input', {type: 'checkbox'});
 
 					/* Building DOM */
 					$form.append(
+						$csrf,
 						$table.append(
 							el('thead').append(
 								el('tr').append(
@@ -73,7 +77,7 @@ namespace Admin {
 					function onSubmit(): void {
 						Base.Request.form($form.html() as HTMLFormElement, {method: 'patch', json: true}).then((result: any) => {
 							Base.Response.notices(result.notices)
-							Check.init(result.data.data, result.data.action);
+							Check.init(result.data.data, result.data.action, csrf);
 						});
 					}
 				}

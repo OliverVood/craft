@@ -44,15 +44,16 @@
 		/**
 		 * Удаление
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data): void {
-			$id = $data->defined('id')->int(0);
-
+		#[NoReturn] public function set(Set $data, int $id): void {
 			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
+
+			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
 			$prepareData = $this->fnPrepareData;
 			$prepareData($id);

@@ -21,27 +21,27 @@
 		public function __construct() {
 			parent::__construct(app()->features('groups'), 'groups');
 
-			/** @var Model $model */ $model = $this->model();
-
 			$this->names = [
 				'name' => __('Наименование'),
 				'state' => __('Состояние'),
 			];
 
+			/** @var Model $model */ $model = $this->model();
+
 			$this->select = new Select($this);
 			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
 			$this->select->fields()->browse->text('id', '#');
-			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->select->fields()->browse->text('name', __('Наименование'));
+			$this->select->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->select->fields()->browse->text('name', $this->names['name']);
 			$this->select->text('title', 'Список групп');
 
 			$this->browse = new Browse($this);
-			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->browse->fields()->browse->text('name', __('Наименование'));
+			$this->browse->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->browse->fields()->browse->text('name', $this->names['name']);
 			$this->browse->text('title', 'Просмотр группы');
 
 			$this->create = new Create($this);
-			$this->create->fields()->edit->text('name', __('Наименование'));
+			$this->create->fields()->edit->text('name', $this->names['name']);
 			$this->create->validate([
 				'name' => ['required', 'trim', 'string'],
 			]);
@@ -50,9 +50,8 @@
 			$this->create->text('responseOk', 'Группа добавлена');
 
 			$this->update = new Update($this);
-			$this->update->fields()->edit->hidden('id');
-			$this->update->fields()->edit->text('name', __('Наименование'));
-			$this->update->fields()->edit->select('state', __('Состояние'), [
+			$this->update->fields()->edit->text('name', $this->names['name']);
+			$this->update->fields()->edit->select('state', $this->names['state'], [
 				$model::STATE_ACTIVE => __('Активная'),
 				$model::STATE_INACTIVE => __('Не активная'),
 			]);

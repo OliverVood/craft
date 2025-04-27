@@ -48,6 +48,7 @@
 
 			$this->text('title', 'Выборка');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorNotFound', 'Элемент не найден');
 		}
 
 		/**

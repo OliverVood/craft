@@ -21,29 +21,37 @@
 		public function __construct() {
 			parent::__construct(app()->features('changes'), 'site.changes');
 
+			$this->names = [
+				'state'			=> __('Состояние'),
+				'datepb'		=> __('Дата публикации'),
+				'work_header'	=> __('Рабочий заголовок'),
+				'header'		=> __('Заголовок'),
+				'cover'			=> __('Обложка'),
+			];
+
 			/** @var Model $model */ $model = $this->model();
 
 			$this->select = new Select($this);
 			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
 			$this->select->fields()->browse->text('id', '#');
-			$this->select->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->select->fields()->browse->datetime('datepb', __('Дата публикации'), 'd.m.Y H:i');
-			$this->select->fields()->browse->text('work_header', __('Рабочий заголовок'));
-			$this->select->fields()->browse->text('header', __('Заголовок'));
+			$this->select->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->select->fields()->browse->datetime('datepb', $this->names['datepb'], 'd.m.Y H:i');
+			$this->select->fields()->browse->text('work_header', $this->names['work_header']);
+			$this->select->fields()->browse->text('header', $this->names['header']);
 			$this->select->text('title', __('Изменения'));
 
 			$this->browse = new Browse($this);
 			$this->browse->fields()->browse->text('id', '#');
-			$this->browse->fields()->browse->fromArray('state', __('Состояние'), $model->getStates());
-			$this->browse->fields()->browse->datetime('datepb', __('Дата публикации'), 'd.m.Y H:i');
-			$this->browse->fields()->browse->text('work_header', __('Рабочий заголовок'));
-			$this->browse->fields()->browse->text('header', __('Заголовок'));
+			$this->browse->fields()->browse->fromArray('state', $this->names['state'], $model->getStates());
+			$this->browse->fields()->browse->datetime('datepb', $this->names['datepb'], 'd.m.Y H:i');
+			$this->browse->fields()->browse->text('work_header', $this->names['work_header']);
+			$this->browse->fields()->browse->text('header', $this->names['header']);
 			$this->browse->text('title', 'Просмотр изменений');
 
 			$this->create = new Create($this);
-			$this->create->fields()->edit->text('work_header', __('Рабочий заголовок'));
-			$this->create->fields()->edit->text('header', __('Заголовок'));
-			$this->create->fields()->edit->datetime('datepb', __('Дата публикации'));
+			$this->create->fields()->edit->text('work_header', $this->names['work_header']);
+			$this->create->fields()->edit->text('header', $this->names['header']);
+			$this->create->fields()->edit->datetime('datepb', $this->names['datepb']);
 			$this->create->validate([
 				'work_header'	=> ['required', 'string', 'max:255'],
 				'header'		=> ['required', 'string', 'max:255'],
@@ -53,11 +61,10 @@
 			$this->create->text('responseOk', 'Изменение добавлено');
 
 			$this->update = new Update($this);
-			$this->update->fields()->edit->hidden('id');
-			$this->update->fields()->edit->select('state', __('Состояние'), $model->getStates());
-			$this->update->fields()->edit->text('work_header', __('Рабочий заголовок'));
-			$this->update->fields()->edit->text('header', __('Заголовок'));
-			$this->update->fields()->edit->datetime('datepb', __('Дата публикации'));
+			$this->update->fields()->edit->select('state', $this->names['state'], $model->getStates());
+			$this->update->fields()->edit->text('work_header', $this->names['work_header']);
+			$this->update->fields()->edit->text('header', $this->names['header']);
+			$this->update->fields()->edit->datetime('datepb', $this->names['datepb']);
 			$this->update->validate([
 				'state'		=> ['required', 'in:' . implode(',', array_keys($model->getStates()))],
 				'work_header'	=> ['required', 'string', 'max:255'],

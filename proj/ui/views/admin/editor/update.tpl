@@ -11,8 +11,10 @@
 		<?php foreach ($editor->update->getLinksNavigate($item)->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
-	<form action = "<?= $action->path(); ?>">
+	<form action = "<?= $action->path(array_merge(['id' => $item['id']], (array)$editor->params)); ?>">
 		<?php
+			echo patch();
+			echo csrf();
 			foreach ($fields->each() as /** @var Base\Editor\Skins\Skin $field */ $field) if ($field->isHide()) echo $field->format($item[$field->getName()] ?? '');
 		?>
 		<table class = "update">

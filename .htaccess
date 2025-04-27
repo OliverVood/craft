@@ -26,13 +26,13 @@
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^admin/xhr/?(.*)$ admin.xhr.php?__url=$1 [QSA,NC,L]
+	RewriteRule ^admin/xhr/?(.*)$ admin.xhr.php [QSA,NC,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^admin/?(.*)$ admin.html.php?__url=$1 [QSA,NC,L]
+	RewriteRule ^admin/?(.*)$ admin.html.php [QSA,NC,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^/?(.*)$ index.php?__url=$1 [QSA,NC,L]
+	RewriteRule ^/?(.*)$ index.php [QSA,NC,L]
 </IfModule>

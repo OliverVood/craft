@@ -44,8 +44,8 @@
 			$this->text('btn', 'Изменить');
 			$this->text('do', 'Изменить');
 			$this->text('responseErrorAccess', 'Не достаточно прав');
-			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
+			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseErrorUpdate', 'Ошибка обновления');
 			$this->text('responseOk', 'Изменено');
 		}
@@ -53,17 +53,17 @@
 		/**
 		 * Возвращает блок обновления
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data): void {
-			$id = $data->defined('id')->int(0);
-
+		#[NoReturn] public function get(Set $data, int $id): void {
 			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			$item = $model->browse($id, ['*']);
+			if (!$item = $model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
+
 			$prepareView = $this->fnPrepareView;
 			$prepareView($id, $item);
 
@@ -86,7 +86,7 @@
 		public function getLinksNavigate(array $item): Accumulator {
 			$links = new Accumulator();
 
-			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . __($this->controller->select->text('title')), ['page' => old('page')->int(1)]));
+			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . __($this->controller->select->text('title')), array_merge(['page' => old('page')->int(1)], (array)$this->controller->params)));
 
 			return $links;
 		}
@@ -102,15 +102,16 @@
 		/**
 		 * Обновление
 		 * @param Set $data - Пользовательские данные
+		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data): void {
-			$id = $data->defined('id')->int(0);
-
+		#[NoReturn] public function set(Set $data, int $id): void {
 			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
 			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
 
 			/** @var Model $model */ $model = $this->controller->model();
+
+			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
 
 			$data = $data->defined()->all();
 			$prepareData = $this->fnPrepareData;

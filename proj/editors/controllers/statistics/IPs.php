@@ -16,13 +16,21 @@
 		public function __construct() {
 			parent::__construct(app()->features('statistics_ips'), 'statistics.ips');
 
+			$this->names = [
+				'datecr' => __('Дата'),
+				'cid' => __('ID Клиента'),
+				'ip' => __('IP адрес'),
+				'path' => __('Путь'),
+				'params' => __('Параметры'),
+			];
+
 			$this->select = new Select($this);
 			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
-			$this->select->fields()->browse->datetime('datecr', 'Дата');
-			$this->select->fields()->browse->text('cid', 'ID Клиента');
-			$this->select->fields()->browse->int2IP('ip', 'IP адрес');
-			$this->select->fields()->browse->text('path', 'Путь');
-			$this->select->fields()->browse->text('params', 'Параметры');
+			$this->select->fields()->browse->datetime('datecr', $this->names['datecr']);
+			$this->select->fields()->browse->text('cid', $this->names['cid']);
+			$this->select->fields()->browse->int2IP('ip', $this->names['ip']);
+			$this->select->fields()->browse->text('path', $this->names['path']);
+			$this->select->fields()->browse->text('params', $this->names['params']);
 			$this->select->text('title', 'Статистика запросов к серверу');
 		}
 

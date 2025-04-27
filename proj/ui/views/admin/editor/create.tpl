@@ -11,8 +11,9 @@
 		<?php foreach ($editor->create->getLinksNavigate()->each() as $link) echo $link; ?>
 	</div>
 	<h1><?= $title; ?></h1>
-	<form action = "<?= $action->path(); ?>">
+	<form action = "<?= $action->path((array)$editor->params); ?>">
 		<?php
+			echo csrf();
 			foreach ($fields->each() as /** @var Base\Editor\Skins\Skin $field */ $field) if ($field->isHide()) echo $field->format($item[$field->getName()] ?? '');
 		?>
 		<table class = "create">

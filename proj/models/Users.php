@@ -5,6 +5,7 @@
 	namespace Proj\Models;
 
 	use Base\DB\DB;
+	use Base\Helper\Security;
 	use Base\Model;
 
 	/**
@@ -21,6 +22,7 @@
 		private static int | null $id = null;
 		private static int | null $group = null;
 		private static string | null $alias = null;
+		private static string | null $hash = null;
 
 		public function __construct() {
 			parent::__construct();
@@ -76,6 +78,7 @@
 			self::$id = (int)$data['id'];
 			self::$group = (int)$data['gid'];
 			self::$alias = $data['login'];
+			self::$hash = Security::csrf();
 
 			$this->updateSession();
 			$this->updateAccess();
@@ -91,6 +94,7 @@
 			self::$id = null;
 			self::$group = null;
 			self::$alias = null;
+			self::$hash = null;
 
 			$this->updateSession();
 			$this->updateAccess();
@@ -106,6 +110,7 @@
 			$_SESSION['ADMIN']['USER']['ID'] = self::$id;
 			$_SESSION['ADMIN']['USER']['GROUP'] = self::$group;
 			$_SESSION['ADMIN']['USER']['ALIAS'] = self::$alias;
+			$_SESSION['ADMIN']['USER']['HASH'] = self::$hash;
 		}
 
 		/**
@@ -119,6 +124,7 @@
 				self::$id = $_SESSION['ADMIN']['USER']['ID'] ?? null;
 				self::$group = $_SESSION['ADMIN']['USER']['GROUP'] ?? null;
 				self::$alias = $_SESSION['ADMIN']['USER']['ALIAS'] ?? null;
+				self::$hash = $_SESSION['ADMIN']['USER']['HASH'] ?? null;
 			}
 		}
 
@@ -159,6 +165,10 @@
 		 */
 		public function getAlias(): string {
 			return self::$alias ?? '';
+		}
+
+		public function hash(): string {
+			return self::$hash ?? '';
 		}
 
 	}
