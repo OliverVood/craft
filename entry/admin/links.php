@@ -37,6 +37,9 @@
 	app()->links->right('users_do_update', 'users', 'update', '/users/:[id]', /* @lang JavaScript */ "Base.Request.submit(this).then(result => Base.Response.execute(result)); return false;");
 	app()->links->right('users_do_delete', 'users', 'delete', '/users/:[id]', /* @lang JavaScript */ "if (confirm(__('Удалить пользователя?'))) Base.Request.delete('/users/:[id]', {__csrf: '{$csrf}'}).then(result => Base.Response.execute(result)); return false;");
 
+	app()->links->right('craft', 'craft', 'update', '/craft/:[entity]/:[action]', /* @lang JavaScript */ "Base.Request.get('/craft/:[entity]/:[action]').then(result => Base.Response.execute(result)); return false;");
+	app()->links->right('craft_run', 'craft', 'update', '/craft/:[entity]/:[action]', /* @lang JavaScript */ "Base.Request.submit(this).then(result => Base.Response.execute(result)); return false;");
+
 	app()->links->right('news_select', 'news', 'select', '/news?page=:[page]', /* @lang JavaScript */"Base.Request.get('/news?page=:[page]').then(result => Base.Response.execute(result)); return false;");
 	app()->links->right('news_browse', 'news', 'browse', '/news/:[id]', /* @lang JavaScript */"Base.Request.get('/news/:[id]').then(result => Base.Response.execute(result)); return false;");
 	app()->links->right('news_create', 'news', 'create', '/news/create', /* @lang JavaScript */"Base.Request.get('/news/create').then(result => Base.Response.execute(result)); return false;");

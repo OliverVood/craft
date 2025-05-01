@@ -7,6 +7,7 @@
 	require_once DIR_PROJ_FEATURES . 'Groups.php';
 	require_once DIR_PROJ_FEATURES . 'Authentication.php';
 	require_once DIR_PROJ_FEATURES . 'Out.php';
+	require_once DIR_PROJ_FEATURES . 'Craft.php';
 	require_once DIR_PROJ_FEATURES . 'statistics/IPs.php';
 	require_once DIR_PROJ_FEATURES . 'statistics/Actions.php';
 	require_once DIR_PROJ_FEATURES . 'site/News.php';
@@ -18,6 +19,7 @@
 	app()->features->registration(Proj\Features\Groups::class, 3, 'groups', 'Группы');
 	app()->features->registration(Proj\Features\Authentication::class, 4, 'authentication', 'Аутентификация');
 	app()->features->registration(Proj\Features\Out::class, 5, 'out', 'Вывод');
+	app()->features->registration(Proj\Features\Craft::class, 6, 'craft', 'Ремесло');
 	app()->features->registration(Proj\Features\Statistics\IPs::class, 10, 'statistics_ips', 'Статистика запросов');
 	app()->features->registration(Proj\Features\Statistics\Actions::class, 11, 'statistics_actions', 'Статистика действий');
 	app()->features->registration(Proj\Features\Site\News::class, 20, 'news', 'Новости');

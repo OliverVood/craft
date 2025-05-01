@@ -1,0 +1,35 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPASE>;
+
+	use Base\Controller;
+//	use Base\Data\Set;
+//	use JetBrains\PhpStorm\NoReturn;<USE_MODEL>
+
+	/**
+	 * Пользовательский класс
+	 * @controller
+	 */
+	class <CLASS> extends Controller {
+		public function __construct() {
+			parent::__construct();
+		}
+
+//		/**
+//		 * Пользовательский метод
+//		 * @controllerMethod
+//		 * @param Set $data - Пользовательские данные
+//		 * @return void
+//		 */
+//		#[NoReturn] public function example(Set $data): void {<MODEL>
+//			if (false) response()->notFound(__('Ошибка'));
+//
+//			$errors = [];
+//			$validated = validation($data->defined()->all(), [], [], $errors);
+//
+//			response()->ok();
+//		}
+
+	}

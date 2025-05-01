@@ -1,0 +1,86 @@
+<?php
+
+	const DIR_BASE = __DIR__ . '/base/';
+
+	require __DIR__ . '/base/craft/Craft.php';
+
+	/**
+	 * Craft. Работа с командной строкой.
+	 */
+	abstract class Craft {
+		/**
+		 * Запускает интерпретатор
+		 * @return void
+		 */
+		public static function run(): void {
+			$command = $_SERVER['argv'][1] ?? '';
+			$entity = $_SERVER['argv'][2] ?? '';
+			$name = $_SERVER['argv'][3] ?? '';
+			$flag = []; for ($i = 4; $i < count($_SERVER['argv']); $i++) $flag[] = $_SERVER['argv'][$i];
+
+			[, $messages] = \Base\Craft\Craft::run($entity, $command, $name, $flag);
+
+			foreach ($messages as $message) {
+				switch ($message['type']) {
+					case 'info': Message::info($message['message']); break;
+					case 'success': Message::success($message['message']); break;
+					case 'warning': Message::warning($message['message']); break;
+					case 'error': Message::error($message['message']); break;
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Craft. Работа с сообщениями
+	 */
+	abstract class Message {
+		/**
+		 * Выводит информационное сообщения в консоль
+		 * @param string $message - Сообщение
+		 * @return void
+		 */
+		public static function info(string $message): void {
+			self::echo("Информация: {$message}");
+		}
+
+		/**
+		 * Выводит сообщение об успехе в консоль
+		 * @param string $message - Сообщение
+		 * @return void
+		 */
+		public static function success(string $message): void {
+			self::echo("Успех: {$message}");
+		}
+
+		/**
+		 * Выводит предупреждение в консоль
+		 * @param string $message - Сообщение
+		 * @return void
+		 */
+		public static function warning(string $message): void {
+			self::echo("Предупреждение: {$message}");
+		}
+
+		/**
+		 * Выводит сообщение об ошибке в консоль
+		 * @param string $message - Сообщение
+		 * @return void
+		 */
+		public static function error(string $message): void {
+			self::echo("Ошибка: {$message}");
+		}
+
+		/**
+		 * Выводит сообщение в консоль
+		 * @param string $message - Сообщение
+		 * @return void
+		 */
+		private static function echo(string $message): void {
+			echo "{$message}\n";
+		}
+
+	}
+
+	Craft::run();

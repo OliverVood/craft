@@ -37,6 +37,9 @@
 	route()->registration('/admin/xhr/users/:(num):[patch]', 'users::doUpdate', Controllers::SOURCE_EDITORS);
 	route()->registration('/admin/xhr/users/:(num):[delete]', 'users::doDelete', Controllers::SOURCE_EDITORS);
 
+	route()->registration('/admin/xhr/craft/:(str)/create:[get]', 'admin.craft::create');
+	route()->registration('/admin/xhr/craft/:(str)/:(str):[post]', 'admin.craft::run');
+
 	route()->registration('/admin/xhr/news:[get]', 'site.news::select', Controllers::SOURCE_EDITORS);
 	route()->registration('/admin/xhr/news/:(num):[get]', 'site.news::browse', Controllers::SOURCE_EDITORS);
 	route()->registration('/admin/xhr/news/create:[get]', 'site.news::create', Controllers::SOURCE_EDITORS);

@@ -4,12 +4,11 @@
 
 	namespace Proj\Controllers\Admin;
 
-	use AllowDynamicProperties;
 	use Base\Controller;
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Editors;
-	use Proj\Models\Users;
+	use Proj\Models;
 	use Proj\UI\Templates\Admin\Template;
 
 	/**
@@ -17,7 +16,7 @@
 	 * @controller
 	 * @property Users $users
 	 */
-	#[AllowDynamicProperties] class Out extends Controller {
+	class Out extends Controller {
 
 		public function __construct() {
 			parent::__construct();
@@ -29,10 +28,10 @@
 		 * @return void
 		 */
 		public function setHead(): void {
-			$this->users = model('users');
+			/** @var Models\Users $users */ $users = model('users');
 
 			$data = [
-				'user' => $this->users->getAlias(),
+				'user' => $users->getAlias(),
 				'links' => [
 					'logout' => linkInternal('users_exit'),
 				],
@@ -51,7 +50,7 @@
 		 * @return void
 		 */
 		public function setMenu(): void {
-			/** @var Template $template */$template = template();
+			/** @var Template $template */ $template = template();
 
 			$this->setMainToMenu($template);
 			$this->setDevelopmentToMenu($template);
@@ -80,13 +79,32 @@
 		private function setDevelopmentToMenu(Template $template): void {
 			$menu = [];
 
+			/* Раздел Craft */
+			if (linkRight('craft')->allow()) {
+				$menu['craft'][] = $this->group(__('Контроллер'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'controller', 'action' => 'create'])
+				]);
+				$menu['craft'][] = $this->group(__('Модель'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'model', 'action' => 'create'])
+				]);
+				$menu['craft'][] = $this->group(__('Признак'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'feature', 'action' => 'create'])
+				]);
+				$menu['craft'][] = $this->group(__('Структура'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'structure', 'action' => 'create'])
+				]);
+				$menu['craft'][] = $this->group(__('Отображение'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'view', 'action' => 'create'])
+				]);
+				$menu['craft'][] = $this->group(__('Редактор'), [
+					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'editor', 'action' => 'create'])
+				]);
+			}
+
 			/* Раздел работы с базой данных */
 			if (linkRight('dbs_check')->allow()) $menu['dbs'][] = linkRight('dbs_check')->hyperlink(__('Проверить'));
 			if (linkRight('dbs_structure')->allow()) $menu['dbs'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
 
-//			/* Раздел интерфейса Craft */
-//			$menuComposition = Composition::instance()->GetMenu();//TODO Заполнить левое меню
-//
 			/* Раздел статистики */
 			if (linkRight('statistics_ips_select')->allow()) $menu['statistics'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
 			if (linkRight('statistics_actions_select')->allow()) $menu['statistics'][] = linkRight('statistics_actions_select')->hyperlink(__('Действия клиента'), ['page' => 1]);
@@ -97,8 +115,8 @@
 			$template->layout->menu->push($this->separator());
 			$template->layout->menu->push($this->head(__('Разработка')));
 
+			if (isset($menu['craft'])) $template->layout->menu->push($this->group(__('Ремесло'), $menu['craft']));
 			if (isset($menu['dbs'])) $template->layout->menu->push($this->group(__('База данных'), $menu['dbs']));
-//			// Композиция
 			if (isset($menu['statistics'])) $template->layout->menu->push($this->group(__('Статистика'), $menu['statistics']));
 		}
 
