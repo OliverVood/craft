@@ -1,0 +1,19 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPACE>;
+
+	use Base\DB\Table;
+
+	/**
+	 * Структура пользовательских таблиц
+	 */
+	class <CLASS> {<PROPERTIES_TABLES>
+		public function __construct() {
+			$structure = app()->db('<DB_NAME>')->structure();<FIELDS_TABLES>
+		}
+
+	}
+
+	new <CLASS>();

@@ -22,6 +22,7 @@
 	use Base\Route;
 	use Base\Templates;
 	use Base\UI\Buffer;
+	use Base\UI\Component;
 	use Base\UI\Template;
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
@@ -147,6 +148,7 @@
 	}
 
 	/**
+	 * Возвращает отображение
 	 * @param string $name - Наименование отображения
 	 * @param array $data - Данные
 	 * @param bool $showName - Показывать ли имя отображения
@@ -156,6 +158,14 @@
 	 */
 	function view(string $name, array $data = [], bool $showName = false, bool $showVarsKeys = false, bool $showVars = false): string {
 		return View::get($name, $data, $showName, $showVarsKeys, $showVars);
+	}
+
+	/**
+	 * Возвращает класс компонентов
+	 * @return Component
+	 */
+	function component(): Component {
+		return Component::instance();
 	}
 
 	/**

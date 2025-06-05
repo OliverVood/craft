@@ -1,6 +1,8 @@
 <?php
 
-	const DIR_BASE = __DIR__ . '/base/';
+	const DIR_ROOT = __DIR__ . '/';
+
+	require  __DIR__ . '/consts/dirs.php';
 
 	require __DIR__ . '/base/craft/Craft.php';
 
@@ -18,7 +20,9 @@
 			$name = $_SERVER['argv'][3] ?? '';
 			$flag = []; for ($i = 4; $i < count($_SERVER['argv']); $i++) $flag[] = $_SERVER['argv'][$i];
 
-			[, $messages] = \Base\Craft\Craft::run($entity, $command, $name, $flag);
+			[$state, $messages] = \Base\Craft\Craft::run($entity, $command, $name, $flag);
+
+			($state) ? Message::echo("\n\033[32mКоманда выполнена успешно\033[0m") : Message::echo("\n\033[31mВыполнение команды завершено с ошибкой\033[0m");
 
 			foreach ($messages as $message) {
 				switch ($message['type']) {
@@ -42,7 +46,7 @@
 		 * @return void
 		 */
 		public static function info(string $message): void {
-			self::echo("Информация: {$message}");
+			self::echo("\033[36mИнформация:\033[0m {$message}");
 		}
 
 		/**
@@ -51,7 +55,7 @@
 		 * @return void
 		 */
 		public static function success(string $message): void {
-			self::echo("Успех: {$message}");
+			self::echo("\033[32mУспех:\033[0m {$message}");
 		}
 
 		/**
@@ -60,7 +64,7 @@
 		 * @return void
 		 */
 		public static function warning(string $message): void {
-			self::echo("Предупреждение: {$message}");
+			self::echo("\033[33mПредупреждение:\033[0m {$message}");
 		}
 
 		/**
@@ -69,7 +73,7 @@
 		 * @return void
 		 */
 		public static function error(string $message): void {
-			self::echo("Ошибка: {$message}");
+			self::echo("\033[31mОшибка:\033[0m {$message}");
 		}
 
 		/**
@@ -77,7 +81,7 @@
 		 * @param string $message - Сообщение
 		 * @return void
 		 */
-		private static function echo(string $message): void {
+		public static function echo(string $message): void {
 			echo "{$message}\n";
 		}
 

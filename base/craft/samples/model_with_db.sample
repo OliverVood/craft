@@ -1,0 +1,42 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPACE>;
+
+	use Base\DB\DB;
+	use Base\Model;
+
+	/**
+	 * Пользовательская модель
+	 */
+	class <CLASS> extends Model {
+		private DB $db;
+
+		public function __construct() {
+			parent::__construct();
+
+			$this->db = app()->db('<DB_NAME>');
+		}
+
+//		/**
+//		 * Пользовательский метод
+//		 * @param array $data - Данные
+//		 * @return bool
+//		 */
+//		public function example(array $data): bool {
+//			$response = $this->db
+//				->select()
+//				->table('table')
+//				->fields('*')
+//				->where('field', 'value')
+//				->query();
+//
+//			$data = $response->getOne();
+//
+//			if (!$data) return false;
+//
+//			return true;
+//		}
+
+	}

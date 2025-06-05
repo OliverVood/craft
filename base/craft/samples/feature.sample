@@ -1,0 +1,21 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPACE>;
+
+	use Base\Access\Feature;
+
+	/**
+	 * Пользовательский признак
+	 * @param int $id - Идентификатор
+	 * @param string $name - Наименование
+	 * @param string $title - Заголовок
+	 */
+	class <CLASS> extends Feature {
+
+		public function __construct(int $id, string $name, string $title = '') {
+			parent::__construct($id, $name, $title);<RIGHTS>
+		}
+
+	}

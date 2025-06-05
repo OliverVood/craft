@@ -276,8 +276,11 @@ table.update > tbody { vertical-align: top; }
 //.cn-mb-1 { margin-bottom: 1rem; }
 //.cn-center { text-align: center; }
 
+@import "components";
+
 div.view {
 	@import "views/out";
 	@import "views/db";
 	@import "views/notices";
+	@import "views/craft/controller_create";
 }

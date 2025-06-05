@@ -43,6 +43,7 @@
 	require DIR_BASE_UI . 'CSS.php';
 	require DIR_BASE_UI . 'JS.php';
 	require DIR_BASE_UI . 'View.php';
+	require DIR_BASE_UI . 'Component.php';
 	require DIR_BASE_UI . 'Buffer.php';
 
 	require DIR_BASE_HELPER . 'Translation.php';

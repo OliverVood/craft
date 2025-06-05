@@ -7,6 +7,7 @@
 	use Base\Controller;
 //	use Base\Data\Set;
 //	use JetBrains\PhpStorm\NoReturn;
+//	use <MODEL_USE>\<CLASS> as Model;
 
 	/**
 	 * Пользовательский класс
@@ -28,6 +29,10 @@
 //
 //			$errors = [];
 //			if (!$validated = validation($data, [], [], $errors)) response()->unprocessableEntity(__('Error validation'), $errors);
+//
+//			/** @var Model $model */ $model = model('<MODEL_NAME>');
+//
+//			if (!$model->example($validated)) response()->unprocessableEntity('error');
 //
 //			response()->ok();
 //		}

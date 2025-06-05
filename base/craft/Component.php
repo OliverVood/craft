@@ -4,11 +4,11 @@
 
 	namespace Base\Craft;
 
-	abstract class View {
+	abstract class Component {
 		const COMMAND_CREATE			= 'create';
 
 		/**
-		 * Запускает Craft для отображений
+		 * Запускает Craft для компонентов
 		 * @param string $command - Команда
 		 * @param string $name - Наименование
 		 * @param array $flags - Флаги
@@ -22,17 +22,17 @@
 		}
 
 		/**
-		 * Создаёт отображение
+		 * Создаёт компонент
 		 * @param string $name - Наименование
 		 * @param array $flags - Флаги
 		 * @return bool
 		 */
 		static public function create(string $name, array $flags = []): bool {
-			if ($name === '') { Message::error('Имя отображения не указано'); return false; }
+			if ($name === '') { Message::error('Имя компонента не указано'); return false; }
 
 			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
 
-			$path = 'proj/ui/views/' . Helper::generatePath($matches[2]);
+			$path = 'proj/ui/views/components/' . Helper::generatePath($matches[2]);
 			$name = $matches[3];
 
 			$sample = 'view';
@@ -42,11 +42,11 @@
 
 			$file = "{$path}{$name}.php";
 
-			if (file_exists($file)) { Message::error("Отображение '{$file}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error("Компонент '{$file}' уже существует"); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 
-			Message::success("Отображение '{$file}' создано");
+			Message::success("Компонент '{$file}' создан");
 
 			return true;
 		}

@@ -17,7 +17,7 @@
 		 * @param array $flags - Флаги
 		 * @return bool
 		 */
-		static public function run(string $command, string $name, array $flags): bool {
+		static public function run(string $command, string $name, array $flags = []): bool {
 			switch ($command) {
 				case self::COMMAND_CREATE: return self::create($name, $flags);
 				default: Message::error("Команда {$command}' не найдена"); return false;
@@ -26,69 +26,43 @@
 
 		/**
 		 * Создаёт контроллер
-		 * @param string $name
-		 * @param array $flags
+		 * @param string $name - Наименование
+		 * @param array $flags - Флаги
 		 * @return bool
 		 */
-		static private function create(string $name, array $flags): bool {
-			$sample = file_get_contents(DIR_BASE . 'craft/samples/controller.sample');
+		static private function create(string $name, array $flags = []): bool {
+			if ($name === '') { Message::error('Имя контроллера не указано'); return false; }
 
 			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
 
-			/* Формирование имени */
-			$parts = explode('_', $matches[3]);
-			$parts = array_map(function ($part) { return ucfirst(strtolower($part)); }, $parts);
-			$class = implode('', $parts);
+			[$path, $namespace, $namespaceSuffix] = Helper::generatePathAndNamespace('Proj\Controllers', DIR_PROJ_CONTROLLERS, $matches[2]);
+			$class = Helper::generateClassName($matches[3]);
 
-			/* Формирование пути и пространства имён */
-			$namespace = 'Proj\Controllers';
-			$namespaceSuffix = '';
-			$path = DIR_PROJ_CONTROLLERS;
-
-			if ($matches[2] !== '') {
-				/* Формирование пространства имён */
-				$result = array_map(function ($elem) {
-					$parts = explode('_', $elem);
-					$parts = array_map(function ($part) { return ucfirst(strtolower($part)); }, $parts);
-					return implode('', $parts);
-				}, explode('.', $matches[2]));
-
-				$namespaceSuffix = '\\' . implode('\\', $result);
-				$namespace .= $namespaceSuffix;
-
-				/* Формирование пути */
-				$result = array_map(function ($elem) {
-					$parts = explode('_', $elem);
-					$parts = array_map(function ($part) { return ucfirst(strtolower($part)); }, $parts);
-					return lcfirst(implode('', $parts));
-				}, explode('.', $matches[2]));
-
-				$path = $path . implode('/', $result) . '/';
-			}
-
-			$useModel = array_intersect(['-model', '-m'], $flags);
+			$sample = 'controller';
 
 			$replace = [
-				'<NAMESPASE>' => $namespace,
-				'<CLASS>' => $class,
-				'<USE_MODEL>' => $useModel ? "\n\tuse Proj\Models{$namespaceSuffix} as Model;" : '',
-				'<MODEL>' => $useModel ? "\n\t\t\t/** @var Model \$model */ \$model = model('" . lcfirst($class) . "');\n" : '',
+				'<NAMESPACE>'						=> $namespace,
+				'<CLASS>'							=> $class,
 			];
 
-			$sample = str_replace(array_keys($replace), $replace, $sample);
-			dd($sample);
+			if (array_intersect(['-model', '-m'], $flags)) {
+				if (!Model::create($name, $flags)) return false;
 
-			self::writeFile("{$path}{$class}.php", $sample);
+				$sample = 'controller_with_model';
 
-			Message::success("Контроллер '{$class}' создан");
+				$replace['<MODEL_USE>']				= "Proj\Models{$namespaceSuffix}";
+				$replace['<MODEL_NAME>']			= lcfirst($class);
+			}
+
+			$file = "{$path}{$class}.php";
+
+			if (file_exists($file)) { Message::error("Контроллер '{$namespace}\\{$class}' уже существует"); return false; }
+
+			Helper::generateFileAndSave($sample, $replace, $file);
+
+			Message::success("Контроллер '{$namespace}\\{$class}' создан");
+
 			return true;
-		}
-
-		private static function writeFile($name, string $content): void {//super_texts.my_test.my_class
-			$info = pathinfo($name);
-
-			if (!is_dir($info['dirname'])) mkdir($info['dirname'], 0777, true);
-			file_put_contents("{$info['dirname']}/{$info['basename']}", $content);
 		}
 
 	}

@@ -1,0 +1,8 @@
+&.craft.controller.create {
+	> form {
+		.component.checkbox {
+			+ div { display: none; }
+			&.active + div { display: block; }
+		}
+	}
+}

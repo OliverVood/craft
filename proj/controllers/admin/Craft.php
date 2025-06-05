@@ -59,6 +59,7 @@
 
 		/**
 		 * Запускает Craft
+		 * @controllerMethod
 		 * @param Set $data - Пользовательские данные
 		 * @param string $entity - Сущность
 		 * @param string $action - Действие
@@ -69,15 +70,27 @@
 
 			$name = trim($data->defined('name')->string());
 			$flags = $data->defined('flags')->data([]);
+			$params = $data->defined('params')->data([]);
+
+			$paramsKeys = array_keys($params);
+			foreach ($flags as & $value) {
+				if (in_array($value, $paramsKeys)) $value .= ":{$params[$value]}";
+			}
 
 			if (!$name) response()->unprocessableEntity(__('Ошибка валидации'), ['name' => [__('Поле не заполнено')]]);
 
 			require DIR_BASE . 'craft/Craft.php';
 
-			[$state, $message] = \Base\Craft\Craft::run($entity, $action, $name, $flags);
-			dump($state);
-			dump($message);
-			dd('stop!');
+			[, $messages] = \Base\Craft\Craft::run($entity, $action, $name, $flags);
+
+			foreach ($messages as ['type' => $type, 'message' => $message]) {
+				switch ($type) {
+					case 'success': response()->noticeOk($message); break;
+					case 'error': response()->noticeError($message); break;
+				}
+			}
+
+			response()->ok();
 		}
 
 	}
