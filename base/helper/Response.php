@@ -183,20 +183,22 @@
 		/**
 		 * Добавляет оповещение об ошибке
 		 * @param string $notice - Сообщение
+		 * @param array $data - Данные
 		 * @return void
 		 */
-		public function noticeError(string $notice): void {
-			$this->notice(self::TYPE_NOTICE_ERROR, $notice);
+		public function noticeError(string $notice, array $data = []): void {
+			$this->notice(self::TYPE_NOTICE_ERROR, $notice, $data);
 		}
 
 		/**
 		 * Добавляет оповещение в ответ
 		 * @param string $type - Тип
 		 * @param string $text - Текст
+		 * @param array $data - Данные
 		 * @return void
 		 */
-		private function notice(string $type, string $text): void {
-			$this->push(self::TYPE_NOTICES, ['type' => $type, 'text' => $text]);
+		private function notice(string $type, string $text, array $data = []): void {
+			$this->push(self::TYPE_NOTICES, ['type' => $type, 'text' => $text, 'data' => $data]);
 		}
 
 		/**

@@ -20,7 +20,7 @@
 		static public function run(string $command, string $name, array $flags = []): bool {
 			switch ($command) {
 				case self::COMMAND_CREATE: return self::create($name, $flags);
-				default: Message::error("Команда {$command}' не найдена"); return false;
+				default: Message::error("Команда '{$command}' не найдена"); return false;
 			}
 		}
 
@@ -33,10 +33,7 @@
 		static private function create(string $name, array $flags = []): bool {
 			if ($name === '') { Message::error('Имя признака не указано'); return false; }
 
-			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
-
-			[$path, $namespace] = Helper::generatePathAndNamespace('Proj\Features', DIR_PROJ_FEATURES, $matches[2]);
-			$class = Helper::generateClassName($matches[3]);
+			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Features', DIR_PROJ_FEATURES, $name);
 
 			$sample = 'feature';
 			$replace = [
@@ -45,15 +42,7 @@
 				'<RIGHTS>'							=> '',
 			];
 
-			$getRights = function($flags): array {
-				foreach ($flags as $flag) {
-					if (preg_match('/^-(rights):(.*)$/', $flag, $matches)) return $matches[2] === '' ? [] : explode(',', $matches[2]);
-				}
-
-				return [];
-			};
-
-			if ($rights = $getRights($flags)) {
+			if ($rights = Helper::getRightsFromFlags($flags)) {
 				$rightsList = [
 					'access' => 'Назначение прав',
 					'select' => 'Выборка',

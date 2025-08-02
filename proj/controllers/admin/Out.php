@@ -81,24 +81,24 @@
 
 			/* Раздел Craft */
 			if (linkRight('craft')->allow()) {
-				$menu['craft'][] = $this->group(__('Контроллер'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'controller', 'action' => 'create'])
-				]);
-				$menu['craft'][] = $this->group(__('Модель'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'model', 'action' => 'create'])
-				]);
-				$menu['craft'][] = $this->group(__('Признак'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'feature', 'action' => 'create'])
-				]);
-				$menu['craft'][] = $this->group(__('Структура'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'structure', 'action' => 'create'])
-				]);
-				$menu['craft'][] = $this->group(__('Отображение'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'view', 'action' => 'create'])
-				]);
-				$menu['craft'][] = $this->group(__('Редактор'), [
-					linkRight('craft')->hyperlink(__('Создать'), ['entity' => 'editor', 'action' => 'create'])
-				]);
+				$menu['craft'][] = linkRight('craft')->hyperlink(__('Описание'));
+				$menu['craft'][] = linkRight('craft_help')->hyperlink(__('Помощь'));
+
+				if (linkRight('craft_action')->allow()) {
+					$menu['craft'][] = $this->separator();
+					$menu['craft'][] = $this->group(__('Создать'), [
+						linkRight('craft_action')->hyperlink(__('Признак'), ['entity' => 'feature', 'action' => 'create']),
+						$this->separator(),
+						linkRight('craft_action')->hyperlink(__('Контроллер'), ['entity' => 'controller', 'action' => 'create']),
+						linkRight('craft_action')->hyperlink(__('Модель'), ['entity' => 'model', 'action' => 'create']),
+						linkRight('craft_action')->hyperlink(__('Редактор'), ['entity' => 'editor', 'action' => 'create']),
+						$this->separator(),
+						linkRight('craft_action')->hyperlink(__('Отображение'), ['entity' => 'view', 'action' => 'create']),
+						linkRight('craft_action')->hyperlink(__('Компонент'), ['entity' => 'component', 'action' => 'create']),
+						$this->separator(),
+						linkRight('craft_action')->hyperlink(__('Структуру'), ['entity' => 'structure', 'action' => 'create']),
+					]);
+				}
 			}
 
 			/* Раздел работы с базой данных */

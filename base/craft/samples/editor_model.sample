@@ -1,0 +1,17 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPACE>;
+
+	use Base\Editor\Model;
+
+	/**
+	 * Пользовательская контроллер-модель
+	 */
+	class <CLASS> extends Model {
+		public function __construct() {
+			parent::__construct('<DB_ALIAS>', '<TABLE_NAME>');
+		}
+
+	}

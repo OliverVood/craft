@@ -20,7 +20,7 @@
 		static public function run(string $command, string $name, array $flags = []): bool {
 			switch ($command) {
 				case self::COMMAND_CREATE: return self::create($name, $flags);
-				default: Message::error("Команда {$command}' не найдена"); return false;
+				default: Message::error("Команда '{$command}' не найдена"); return false;
 			}
 		}
 
@@ -33,10 +33,7 @@
 		static private function create(string $name, array $flags = []): bool {
 			if ($name === '') { Message::error('Имя контроллера не указано'); return false; }
 
-			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
-
-			[$path, $namespace, $namespaceSuffix] = Helper::generatePathAndNamespace('Proj\Controllers', DIR_PROJ_CONTROLLERS, $matches[2]);
-			$class = Helper::generateClassName($matches[3]);
+			[$path, $namespace, $class, $namespaceSuffix] = Helper::generateClassInfo('Proj\Controllers', DIR_PROJ_CONTROLLERS, $name);
 
 			$sample = 'controller';
 

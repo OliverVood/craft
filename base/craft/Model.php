@@ -4,6 +4,9 @@
 
 	namespace Base\Craft;
 
+	/**
+	 * Craft. Работа с моделями
+	 */
 	abstract class Model {
 		const COMMAND_CREATE			= 'create';
 
@@ -17,7 +20,7 @@
 		static public function run(string $command, string $name, array $flags = []): bool {
 			switch ($command) {
 				case self::COMMAND_CREATE: return self::create($name, $flags);
-				default: Message::error("Команда {$command}' не найдена"); return false;
+				default: Message::error("Команда '{$command}' не найдена"); return false;
 			}
 		}
 
@@ -30,10 +33,7 @@
 		static public function create(string $name, array $flags = []): bool {
 			if ($name === '') { Message::error('Имя модели не указано'); return false; }
 
-			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
-
-			[$path, $namespace] = Helper::generatePathAndNamespace('Proj\Models', DIR_PROJ_MODELS, $matches[2]);
-			$class = Helper::generateClassName($matches[3]);
+			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Models', DIR_PROJ_MODELS, $name);
 
 			$sample = 'model';
 			$replace = [
@@ -41,18 +41,10 @@
 				'<CLASS>'							=> $class,
 			];
 
-			$getDB = function($flags): ?string {
-				foreach ($flags as $flag) {
-					if (preg_match('/^-(database|db):(.*)$/', $flag, $matches)) return $matches[2] === '' ? null : strtolower($matches[2]);
-				}
-
-				return null;
-			};
-
-			if ($db = $getDB($flags)) {
+			if ($db = Helper::getBDFromFlags($flags)) {
 				$sample = 'model_with_db';
 
-				$replace['<DB_NAME>']				= $db;
+				$replace['<DB_ALIAS>']				= $db;
 			}
 
 			$file = "{$path}{$class}.php";

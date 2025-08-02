@@ -20,7 +20,7 @@
 		static public function run(string $command, string $name, array $flags = []): bool {
 			switch ($command) {
 				case self::COMMAND_CREATE: return self::create($name, $flags);
-				default: Message::error("Команда {$command}' не найдена"); return false;
+				default: Message::error("Команда '{$command}' не найдена"); return false;
 			}
 		}
 
@@ -31,42 +31,21 @@
 		 * @return bool
 		 */
 		static private function create(string $name, array $flags = []): bool {
-			$getDB = function($flags): ?string {
-				foreach ($flags as $flag) {
-					if (preg_match('/^-(database|db):(.*)$/', $flag, $matches)) return $matches[2] === '' ? null : strtolower($matches[2]);
-				}
+			if ($name === '') { Message::error(__('Ошибка валидации данных'), ['name' => [__('Псевдоним структуры не указан')]]); return false; }
+			if (!$db = Helper::getBDFromFlags($flags)) { Message::error(__('Ошибка валидации данных'), ['database' => [__('Псевдоним базы данных не указан')]]); return false; }
 
-				return null;
-			};
-
-			$getTables = function($flags): array {
-				$tables = [];
-
-				foreach ($flags as $flag) {
-					if (preg_match('/^-(table):(.*)$/', $flag, $matches)) if ($matches[2] !== '') $tables[] =  $matches[2];
-				}
-
-				return $tables;
-			};
-
-			if ($name === '') { Message::error('Имя структуры не указано'); return false; }
-			if (!$db = $getDB($flags)) { Message::error('База данных не указана'); return false; }
-
-			preg_match('/^((.*)\.)?(.+)$/', $name, $matches);
-
-			[$path, $namespace] = Helper::generatePathAndNamespace('Proj\Structures', DIR_PROJ_STRUCTURES, $matches[2]);
-			$class = Helper::generateClassName($matches[3]);
+			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Structures', DIR_PROJ_STRUCTURES, $name);
 
 			$sample = 'structure';
 			$replace = [
-				'<DB_NAME>'							=> $db,
+				'<DB_ALIAS>'						=> $db,
 				'<NAMESPACE>'						=> $namespace,
 				'<CLASS>'							=> $class,
 				'<PROPERTIES_TABLES>'				=> '',
 				'<FIELDS_TABLES>'					=> '',
 			];
 
-			if ($tables = $getTables($flags)) {
+			if ($tables = Helper::getTablesFromFlags($flags)) {
 				[$replace['<PROPERTIES_TABLES>'], $replace['<FIELDS_TABLES>']] = self::useTables($tables);
 			}
 

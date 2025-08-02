@@ -51,20 +51,22 @@
 		/**
 		 * Добавляет сообщение об ошибке
 		 * @param string $message - Сообщение
+		 * @param array $data - Данные
 		 * @return void
 		 */
-		static public function error(string $message): void {
-			self::message(self::TYPE_ERROR, $message);
+		static public function error(string $message, array $data = []): void {
+			self::message(self::TYPE_ERROR, $message, $data);
 		}
 
 		/**
 		 * Добавляет сообщение
 		 * @param string $type - Тип
 		 * @param string $message - Сообщение
+		 * @param array $data - Данные
 		 * @return void
 		 */
-		static private function message(string $type, string $message): void {
-			self::$messages[] = ['type' => $type, 'message' => $message];
+		static private function message(string $type, string $message, array $data = []): void {
+			self::$messages[] = ['type' => $type, 'message' => $message, 'data' => $data];
 		}
 
 	}

@@ -4,9 +4,9 @@
 		<?php echo csrf(); ?>
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Название контроллера'); ?>">
 			<div class = "errors"></div></div>
-		<?= component()->checkbox(__('Создать модель'), ['name' => 'flags[]', 'value' => '-model']); ?>
+		<?= componentSolution()->checkbox(__('Создать модель'), ['name' => 'flags[]', 'value' => '-model']); ?>
 		<div>
-			<?= component()->checkbox(__('Использовать базу данных'), ['name' => 'flags[]', 'value' => '-database', 'onchange' => /** @lang JavaScript */ "console.log(this);"]); ?>
+			<?= componentSolution()->checkbox(__('Использовать базу данных'), ['name' => 'flags[]', 'value' => '-database', 'onchange' => /** @lang JavaScript */ "console.log(this);"]); ?>
 			<div><label><input type = "text" name = "params[-database]" placeholder = "<?= __('База данных'); ?>"></label></div>
 		</div>
 		<div><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>

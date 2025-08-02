@@ -19,11 +19,11 @@
 		}
 
 		public function index(): void {
-
+			dd('index');
 		}
 
 		public function help(): void {
-
+			dd('help');
 		}
 
 		/**
@@ -37,11 +37,16 @@
 			if (!$this->allow('update')) response()->forbidden(__('Не достаточно прав'));
 
 			switch ($entity) {
-				case 'controller': response()->section('content', view('admin.craft.controller.create')); break;
-				default: app()->error(new Exception(__("Craft entity '{$entity}' not found")));
+				case 'structure':
+				case 'controller':
+				case 'view':
+				case 'component':
+					response()->section('content', view("admin.craft.{$entity}.create")); break;
+				default:
+					app()->error(new Exception(__("Craft entity '{$entity}' not found")));
 			}
 
-			response()->history(linkRight('craft'), ['entity' => $entity, 'action' => 'create']);
+			response()->history(linkRight('craft_action'), ['entity' => $entity, 'action' => 'create']);
 			response()->ok();
 
 //			dd('create');
@@ -69,24 +74,21 @@
 			if (!$this->allow('update')) response()->forbidden(__('Не достаточно прав'));
 
 			$name = trim($data->defined('name')->string());
-			$flags = $data->defined('flags')->data([]);
 			$params = $data->defined('params')->data([]);
 
-			$paramsKeys = array_keys($params);
-			foreach ($flags as & $value) {
-				if (in_array($value, $paramsKeys)) $value .= ":{$params[$value]}";
+			$flags = [];
+			foreach ($params as $key => $value) {
+				$flags[] = "{$key}:{$value}";
 			}
-
-			if (!$name) response()->unprocessableEntity(__('Ошибка валидации'), ['name' => [__('Поле не заполнено')]]);
 
 			require DIR_BASE . 'craft/Craft.php';
 
 			[, $messages] = \Base\Craft\Craft::run($entity, $action, $name, $flags);
 
-			foreach ($messages as ['type' => $type, 'message' => $message]) {
+			foreach ($messages as ['type' => $type, 'message' => $message, 'data' => $data]) {
 				switch ($type) {
 					case 'success': response()->noticeOk($message); break;
-					case 'error': response()->noticeError($message); break;
+					case 'error': response()->noticeError($message, $data); break;
 				}
 			}
 

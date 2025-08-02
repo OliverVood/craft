@@ -37,6 +37,8 @@
 	route()->registration('/admin/xhr/users/:(num):[patch]', 'users::doUpdate', Controllers::SOURCE_EDITORS);
 	route()->registration('/admin/xhr/users/:(num):[delete]', 'users::doDelete', Controllers::SOURCE_EDITORS);
 
+	route()->registration('/admin/xhr/craft:[get]', 'admin.craft::index');
+	route()->registration('/admin/xhr/craft/help:[get]', 'admin.craft::help');
 	route()->registration('/admin/xhr/craft/:(str)/create:[get]', 'admin.craft::create');
 	route()->registration('/admin/xhr/craft/:(str)/:(str):[post]', 'admin.craft::run');
 

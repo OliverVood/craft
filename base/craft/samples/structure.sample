@@ -11,7 +11,7 @@
 	 */
 	class <CLASS> {<PROPERTIES_TABLES>
 		public function __construct() {
-			$structure = app()->db('<DB_NAME>')->structure();<FIELDS_TABLES>
+			$structure = app()->db('<DB_ALIAS>')->structure();<FIELDS_TABLES>
 		}
 
 	}

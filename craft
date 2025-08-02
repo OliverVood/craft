@@ -4,7 +4,9 @@
 
 	require  __DIR__ . '/consts/dirs.php';
 
-	require __DIR__ . '/base/craft/Craft.php';
+	require DIR_BASE . 'craft/Craft.php';
+	require DIR_BASE . 'functions.php';
+	require DIR_BASE_HELPER . 'Translation.php';
 
 	/**
 	 * Craft. Работа с командной строкой.
@@ -29,7 +31,7 @@
 					case 'info': Message::info($message['message']); break;
 					case 'success': Message::success($message['message']); break;
 					case 'warning': Message::warning($message['message']); break;
-					case 'error': Message::error($message['message']); break;
+					case 'error': Message::error($message['message']); if ($message['data']) { Message::echo(__('Подробнее:')); foreach ($message['data'] as $values) foreach ($values as $text) Message::info($text); } break;
 				}
 			}
 		}

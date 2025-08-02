@@ -161,10 +161,23 @@
 	}
 
 	/**
+	 * Возвращает отображение
+	 * @param string $name - Наименование отображения
+	 * @param array $data - Данные
+	 * @param bool $showName - Показывать ли имя отображения
+	 * @param bool $showVarsKeys - Показывать ли ключи переменных
+	 * @param bool $showVars - Показывать ли переменные
+	 * @return string
+	 */
+	function component(string $name, array $data = [], bool $showName = false, bool $showVarsKeys = false, bool $showVars = false): string {
+		return view("components.{$name}", $data, $showName, $showVarsKeys, $showVars);
+	}
+
+	/**
 	 * Возвращает класс компонентов
 	 * @return Component
 	 */
-	function component(): Component {
+	function componentSolution(): Component {
 		return Component::instance();
 	}
 

@@ -17,7 +17,7 @@
 		 * @return string
 		 */
 		public function checkbox(string $text = '', array $attributes = []): string {
-			return view('admin.components.checkbox', compact('text', 'attributes'));
+			return component('admin.checkbox', compact('text', 'attributes'));
 		}
 
 	}

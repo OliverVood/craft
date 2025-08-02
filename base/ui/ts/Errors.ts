@@ -5,13 +5,17 @@ namespace Base {
 	 */
 	export class Errors {
 
+		public static clear(): void {
+			document.querySelectorAll('div[data-field]').forEach(($element) => { $element.classList.remove('error'); });
+			document.querySelectorAll('div[data-field] > .errors').forEach(($element) => { $element.innerHTML = ''; });
+		}
+
 		/**
 		 * Запускает обработку с ошибок
 		 * @param data
 		 */
-		public static execute(data: Record<string, string[]>) {
-			document.querySelectorAll('div[data-field]').forEach(($element) => { $element.classList.remove('error'); });
-			document.querySelectorAll('div[data-field] > .errors').forEach(($element) => { $element.innerHTML = ''; });
+		public static execute(data: Record<string, string[]>, clear: boolean = true): void {
+			if (clear) this.clear();
 
 			for (const keyData in data) {
 				let $cover = document.querySelector(`div[data-field="${keyData}"]`);

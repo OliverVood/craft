@@ -13,11 +13,12 @@ namespace Base {
 	// type TypeResponseDebugger		= TypeResponseGeneric<'debugger', TypeResponseDebuggerData>;
 
 	type ResponseSuccess			= { history?: ResponseHistory, sections?: ResponseSection[], notices?: ResponseNotice[] };
-	type ResponseError				= { notices?: ResponseNotice[], data?: Record<string, string[]> };
+	type ResponseError				= { notices?: ResponseNotice[], data?: ResponseErrorData };
+	type ResponseErrorData			= Record<string, string[]>;
 
 	type ResponseHistory			= { address: string, xhr: string/*, handler: string*/ };
 	type ResponseSection			= { name: string, html: string, empty: boolean };
-	type ResponseNotice				= { type: TypeNotice, text: string };
+	type ResponseNotice				= { type: TypeNotice, text: string, data?: ResponseErrorData };
 	// type TypeResponseNoticeData		= { type: 'ok' | 'info' | 'error', notice: string };
 	// type TypeResponseDebuggerData	= any;
 
@@ -75,8 +76,11 @@ namespace Base {
 		 * @private
 		 */
 		public static notices(notices: ResponseNotice[]): void {
+			Errors.clear();
+
 			for (const i in notices) {
 				Base.Notice.create(notices[i].type, notices[i].text);
+				if (notices[i].data) Errors.execute(notices[i].data || {}, false);
 			}
 		}
 

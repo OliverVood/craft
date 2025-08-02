@@ -18,6 +18,7 @@
 			parent::__construct($id, $name, $title);
 
 			$this->rights->registration(self::RIGHT_ACCESS_ID, self::RIGHT_ACCESS_NAME, __('Назначение прав'));
+			$this->rights->registration(self::RIGHT_SELECT_ID, self::RIGHT_SELECT_NAME, __('Выборка'));
 			$this->rights->registration(self::RIGHT_UPDATE_ID, self::RIGHT_UPDATE_NAME, __('Изменение'));
 		}
 

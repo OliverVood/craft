@@ -16,7 +16,7 @@
 		public function __construct() {
 			parent::__construct();
 
-			$this->db = app()->db('<DB_NAME>');
+			$this->db = app()->db('<DB_ALIAS>');
 		}
 
 //		/**
