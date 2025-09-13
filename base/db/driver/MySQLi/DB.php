@@ -88,7 +88,7 @@
 		 * @return Response
 		 */
 		public function query(string $query): Response {
-			$this->addToHistory($query);
+			self::addToHistory($query);
 
 			$result = $this->db->query($query);
 

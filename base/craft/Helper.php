@@ -120,57 +120,112 @@
 		}
 
 		/**
-		 * Ищет в перечне флагов наименование признака и возвращает его
+		 * Ищет во флагах наименование признака и возвращает его
 		 * @param array $flags - Перечень флагов
 		 * @return string|null
 		 */
 		public static function getFeatureFromFlags(array $flags): ?string {
-			foreach ($flags as $flag) {
-				if (preg_match('/^-(feature|f):(.*)$/', $flag, $matches)) return $matches[2] === '' ? null : strtolower($matches[2]);
-			}
+			$list = self::getListParamsFlagsByName($flags, ['feature', 'f']);
 
-			return null;
+			return isset($list[0][0]) ? strtolower($list[0][0]) : null;
 		}
 
 		/**
-		 * Ищет в перечне флагов наименование базы данных и возвращает его
+		 * Ищет во флагах наименование базы данных и возвращает его
 		 * @param array $flags - Перечень флагов
 		 * @return string|null
 		 */
 		public static function getBDFromFlags(array $flags): ?string {
-			foreach ($flags as $flag) {
-				if (preg_match('/^-(database|db):(.*)$/', $flag, $matches)) return $matches[2] === '' ? null : strtolower($matches[2]);
-			}
+			$list = self::getListParamsFlagsByName($flags, ['database', 'db']);
 
-			return null;
+			return isset($list[0][0]) ? strtolower($list[0][0]) : null;
 		}
 
 		/**
-		 * Ищет в перечне флагов наименование таблиц и возвращает их
+		 * Ищет во флагах перечень таблиц и возвращает их
 		 * @param array $flags - Перечень флагов
 		 * @return array
 		 */
 		public static function getTablesFromFlags(array $flags): array {
 			$tables = [];
 
-			foreach ($flags as $flag) {
-				if (preg_match('/^-(table|t):(.*)$/', $flag, $matches)) if ($matches[2] !== '') $tables[] =  $matches[2];
+			foreach (self::getListParamsFlagsByName($flags, ['table', 't']) as $params) {
+				foreach ($params as $param) {
+					if (!$param) continue;
+					$tables[] = strtolower($param);
+				}
 			}
 
 			return $tables;
 		}
 
 		/**
-		 * Ищет в перечне флагов наименование прав и возвращает их
+		 * Ищет во флагах перечень прав и возвращает их
 		 * @param array $flags - Перечень флагов
-		 * @return array
+		 * @return array|null
 		 */
-		public static function getRightsFromFlags(array $flags): array {
-			foreach ($flags as $flag) {
-				if (preg_match('/^-(rights):(.*)$/', $flag, $matches)) return $matches[2] === '' ? [] : explode(',', $matches[2]);
+		public static function getRightsFromFlags(array $flags): ?array {
+			$defaultRights = [
+				'access' => 'Назначение прав',
+				'select' => 'Выборка',
+				'browse' => 'Вывод',
+				'create' => 'Создание',
+				'update' => 'Изменение',
+				'delete' => 'Удаление',
+				'status' => 'Изменение состояния',
+			];
+
+			$rights = [];
+
+			foreach (self::getListParamsFlagsByName($flags, ['right', 'r']) as $params) {
+				foreach ($params as $param) {
+					if (in_array($param, $rights)) continue;
+					if ($param == 'all') {
+						if (!in_array('access', $rights)) $rights[] = ['name' => 'access', 'title' => $defaultRights['access']];
+						if (!in_array('select', $rights)) $rights[] = ['name' => 'select', 'title' => $defaultRights['select']];
+						if (!in_array('browse', $rights)) $rights[] = ['name' => 'browse', 'title' => $defaultRights['browse']];
+						if (!in_array('create', $rights)) $rights[] = ['name' => 'create', 'title' => $defaultRights['create']];
+						if (!in_array('update', $rights)) $rights[] = ['name' => 'update', 'title' => $defaultRights['update']];
+						if (!in_array('delete', $rights)) $rights[] = ['name' => 'delete', 'title' => $defaultRights['delete']];
+						if (!in_array('status', $rights)) $rights[] = ['name' => 'status', 'title' => $defaultRights['status']];
+						continue;
+					}
+					if (!in_array($param, array_keys($defaultRights))) { Message::error("Не найдено право '{$param}'"); return null; }
+					$rights[] = ['name' => $param, 'title' => $defaultRights[$param]];
+				}
 			}
 
-			return [];
+			return $rights;
+		}
+
+		/**
+		 * Возвращает массив парамеры по имени флага
+		 * @param array $flags - Перечень флагов
+		 * @param array $names - Наименования
+		 * @return array
+		 */
+		private static function getListParamsFlagsByName(array $flags, array $names): array {
+			$out = [];
+
+			foreach ($flags as $flag) {
+				if (in_array($flag['name'], $names)) $out[] = $flag['params'];
+			}
+
+			return $out;
+		}
+
+		/**
+		 * Проверяет наличие флага из перечня флагов
+		 * @param array $flags - Перечень флагов
+		 * @param array $names - Наименования
+		 * @return bool
+		 */
+		public static function isFlag(array $flags, array $names): bool {
+			foreach ($flags as $flag) {
+				if (in_array($flag['name'], $names)) return true;
+			}
+
+			return false;
 		}
 
 	}

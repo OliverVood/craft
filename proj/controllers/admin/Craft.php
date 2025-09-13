@@ -18,11 +18,11 @@
 			parent::__construct(app()->features('craft'));
 		}
 
-		public function index(): void {
+		public function index(): void {//todo
 			dd('index');
 		}
 
-		public function help(): void {
+		public function help(): void {//todo
 			dd('help');
 		}
 
@@ -37,8 +37,11 @@
 			if (!$this->allow('update')) response()->forbidden(__('Не достаточно прав'));
 
 			switch ($entity) {
+				case 'feature':
 				case 'structure':
 				case 'controller':
+				case 'model':
+				case 'editor':
 				case 'view':
 				case 'component':
 					response()->section('content', view("admin.craft.{$entity}.create")); break;
@@ -48,18 +51,6 @@
 
 			response()->history(linkRight('craft_action'), ['entity' => $entity, 'action' => 'create']);
 			response()->ok();
-
-//			dd('create');
-			// проверка на права
-
-//			$data = $data->defined()->all();
-//
-//			$command = $data['command'] ?? '';
-//			$entity = $data['entity'] ?? '';
-//			$name = $data['name'] ?? '';
-//			$flags = $data['flags'] ?? [];
-//
-//			\Base\Craft\Craft::run($command, $entity, $name, $flags);
 		}
 
 		/**
@@ -78,7 +69,7 @@
 
 			$flags = [];
 			foreach ($params as $key => $value) {
-				$flags[] = "{$key}:{$value}";
+				$flags[] = ['name' => $key, 'params' => is_array($value) ? $value : [$value]];
 			}
 
 			require DIR_BASE . 'craft/Craft.php';

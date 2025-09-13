@@ -5,12 +5,15 @@
 	use Base\Access;
 	use Base\App;
 	use Base\Data\Defined;
+	use Base\Data\Get;
 	use Base\Data\Old;
+	use Base\Data\Post;
 	use Base\DB\DB;
 	use Base\Helper\Cryptography;
 	use Base\Helper\Debugger;
 	use Base\Helper\Response;
 	use Base\Helper\Security;
+	use Base\Helper\Timestamp;
 	use Base\Helper\Translation;
 	use Base\Helper\Validator;
 	use Base\Link\External;
@@ -200,6 +203,24 @@
 	}
 
 	/**
+	 * Возвращает значение из $_POST
+	 * @param string|null $key - Ключ
+	 * @return mixed
+	 */
+	function post(?string $key = null): Post {
+		return request()->data()->post($key);
+	}
+
+	/**
+	 * Возвращает значение из $_GET
+	 * @param string|null $key - Ключ
+	 * @return mixed
+	 */
+	function get(?string $key = null): Get {
+		return request()->data()->get($key);
+	}
+
+	/**
 	 * Возвращает значение из $_POST или $_GET по ключу
 	 * @param string|null $key - Ключ
 	 * @return mixed
@@ -218,13 +239,21 @@
 	}
 
 	/**
+	 * Возвращает экземпляр отладчика
+	 * @return Debugger
+	 */
+	function debugger(): Debugger {
+		return Debugger::instance();
+	}
+
+	/**
 	 * Печатает переменную
 	 * @param mixed $var - Переменная
 	 * @param string $title - Заголовок
 	 * @return void
 	 */
 	function dump(mixed $var, string $title = ''): void {
-		Debugger::dump($var, $title);
+		debugger()->dump($var, $title);
 	}
 
 	/**
@@ -234,7 +263,43 @@
 	 * @return void
 	 */
 	#[NoReturn] function dd(mixed $var, string $title = ''): void {
-		Debugger::dd($var, $title);
+		debugger()->dd($var, $title);
+	}
+
+	/**
+	 * Создаёт отметку времени и возвращает её имя
+	 * @param string $name
+	 * @return string
+	 */
+	function timestampStart(string $name = ''): string {
+		return Timestamp::start($name);
+	}
+
+	/**
+	 * Останавливает отметку времени
+	 * @param string $name
+	 * @return void
+	 */
+	function timestampStop(string $name): void {
+		Timestamp::stop($name);
+	}
+
+	/**
+	 * Добавляет отметку времени
+	 * @param string $name
+	 * @param string $mark - Название промежуточной отметки
+	 * @return void
+	 */
+	function timestampAdd(string $name, string $mark = ''): void {
+		Timestamp::stamp($name, $mark);
+	}
+
+	/**
+	 * Возвращает список отметок времени
+	 * @return array
+	 */
+	function timestampList(): array {
+		return Timestamp::list();
 	}
 
 	/**

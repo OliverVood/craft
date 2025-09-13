@@ -9,7 +9,6 @@
 	use Base\Access\Links;
 	use Base\DB\DB;
 	use Base\Helper\Response;
-	use Base\Link\External;
 	use Exception;
 	use JetBrains\PhpStorm\NoReturn;
 	use stdClass;

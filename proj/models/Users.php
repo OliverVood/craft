@@ -160,6 +160,14 @@
 		}
 
 		/**
+		 * Возвращает идентификатора пользователя
+		 * @return int|null
+		 */
+		public function getId(): ?int {
+			return self::$id ?? null;
+		}
+
+		/**
 		 * Возвращает псевдоним пользователя
 		 * @return string
 		 */

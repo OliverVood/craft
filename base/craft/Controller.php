@@ -31,7 +31,7 @@
 		 * @return bool
 		 */
 		static private function create(string $name, array $flags = []): bool {
-			if ($name === '') { Message::error('Имя контроллера не указано'); return false; }
+			if ($name === '') { Message::error(__('Ошибка валидации данных'), ['name' => [__('Псевдоним контроллера не указан')]]); return false; }
 
 			[$path, $namespace, $class, $namespaceSuffix] = Helper::generateClassInfo('Proj\Controllers', DIR_PROJ_CONTROLLERS, $name);
 
@@ -42,7 +42,7 @@
 				'<CLASS>'							=> $class,
 			];
 
-			if (array_intersect(['-model', '-m'], $flags)) {
+			if (Helper::isFlag($flags, ['model', 'm'])) {
 				if (!Model::create($name, $flags)) return false;
 
 				$sample = 'controller_with_model';

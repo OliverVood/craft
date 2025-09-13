@@ -7,13 +7,14 @@
 	require DIR_BASE . 'Singleton.php';
 
 	require DIR_BASE . 'App.php';
-	require DIR_BASE . 'Request.php';
+
 	require DIR_BASE . 'access/Features.php';
 	require DIR_BASE . 'access/Feature.php';
 	require DIR_BASE . 'access/Rights.php';
 	require DIR_BASE . 'access/Right.php';
 	require DIR_BASE . 'access/Links.php';
 
+	require DIR_BASE . 'Request.php';
 	require DIR_BASE . 'Config.php';
 	require DIR_BASE . 'Route.php';
 	require DIR_BASE . 'Controllers.php';
@@ -53,4 +54,5 @@
 	require DIR_BASE_HELPER . 'Security.php';
 	require DIR_BASE_HELPER . 'Accumulator.php';
 	require DIR_BASE_HELPER . 'Pagination.php';
+	require DIR_BASE_HELPER . 'Timestamp.php';
 	require DIR_BASE_HELPER . 'Debugger.php';

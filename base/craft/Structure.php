@@ -70,11 +70,8 @@
 			$fields = [];
 
 			foreach ($tables as $table) {
-				$nameLower = strtolower($table);
-				$nameUpper = Helper::generateClassName($table);
-
-				$properties[] = Helper::generateFile('structure_property_table', ['<TABLE_NAME_UPERCASE>' => $nameUpper]);
-				$fields[] = Helper::generateFile('structure_fields_table', ['<TABLE_NAME_UPERCASE>' => $nameUpper, '<TABLE_NAME_LOWERCASE>' => $nameLower]);
+				$properties[] = Helper::generateFile('structure_property_table', ['<TABLE_NAME>' => $table]);
+				$fields[] = Helper::generateFile('structure_fields_table', ['<TABLE_NAME>' => $table]);
 			}
 
 			return ["\n" . implode("\n", $properties) . "\n", "\n\n" . implode("\n\n", $fields)];

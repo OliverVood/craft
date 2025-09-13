@@ -20,9 +20,15 @@
 			$command = $_SERVER['argv'][1] ?? '';
 			$entity = $_SERVER['argv'][2] ?? '';
 			$name = $_SERVER['argv'][3] ?? '';
-			$flag = []; for ($i = 4; $i < count($_SERVER['argv']); $i++) $flag[] = $_SERVER['argv'][$i];
+			$flags = [];
+			for ($i = 4; $i < count($_SERVER['argv']); $i++) {
+				$param = $_SERVER['argv'][$i];
+				if (!preg_match('/^--([a-zA-Z0-9]+)(:(.*))?$/', $param, $matches)) continue;
 
-			[$state, $messages] = \Base\Craft\Craft::run($entity, $command, $name, $flag);
+				$flags[] = ['name' => $matches[1], 'params' => isset($matches[3]) ? explode(',', $matches[3]) : []];
+			}
+
+			[$state, $messages] = \Base\Craft\Craft::run($entity, $command, $name, $flags);
 
 			($state) ? Message::echo("\n\033[32mКоманда выполнена успешно\033[0m") : Message::echo("\n\033[31mВыполнение команды завершено с ошибкой\033[0m");
 

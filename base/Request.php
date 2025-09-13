@@ -12,11 +12,13 @@
 	class Request {
 		private string $protocol;
 		private string $host;
+		private string $urlBase;
 		private string $url;
 		private string $method;
 		private string $methodVirtual;
 
 		private ?string $timezone;
+		private string $clientIP;
 
 		private string $html;
 		private string $xhr;
@@ -27,9 +29,11 @@
 			$this->protocol = (isset($_SERVER['HTTPS'])) ? 'https' : 'http';
 			$this->host = $_SERVER['SERVER_NAME'];
 			$this->url = "{$this->protocol}://{$this->host}{$_SERVER['REQUEST_URI']}";
+			$this->urlBase = explode('?', $this->url)[0];
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 
 			$this->timezone = $_COOKIE['timezone'] ?? null;
+			$this->clientIP = $this->getClientIP();
 
 			$this->html = $html;
 			$this->xhr = $xhr;
@@ -65,6 +69,14 @@
 		}
 
 		/**
+		 * Возвращает базовый (без параметров) URL
+		 * @return string
+		 */
+		public function urlBase(): string {
+			return $this->urlBase;
+		}
+
+		/**
 		 * Возвращает метод запроса
 		 * @return string
 		 */
@@ -86,6 +98,14 @@
 		 */
 		public function timezone(): ?string {
 			return $this->timezone;
+		}
+
+		/**
+		 * Возвращает IP клиента
+		 * @return string
+		 */
+		public function clientIP(): string {
+			return $this->clientIP;
 		}
 
 		/**
@@ -118,6 +138,20 @@
 		 */
 		public function data(): Set {
 			return $this->data;
+		}
+
+		/**
+		 * Получает IP клиента
+		 * @return string
+		 */
+		function getClientIP(): string {
+			$client = @$_SERVER['HTTP_CLIENT_IP'];
+			$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+			$remote = @$_SERVER['REMOTE_ADDR'];
+
+			if (filter_var($client, FILTER_VALIDATE_IP)) return $client;
+			else if (filter_var($forward, FILTER_VALIDATE_IP)) return $forward;
+			else return $remote;
 		}
 
 	}

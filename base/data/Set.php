@@ -40,21 +40,21 @@
 
 		/**
 		 * Возвращает данные по ключу из суперглобального массива $_GET
-		 * @param string $key - Ключ
+		 * @param string|null $key - Ключ
 		 * @return Get
 		 */
-		public function get(string $key): Get {
-			$this->get->key($key);
+		public function get(?string $key = null): Get {
+			if (isset($key)) $this->get->key($key);
 			return $this->get;
 		}
 
 		/**
 		 * Возвращает данные по ключу из суперглобального массива $_POST
-		 * @param string $key - Ключ
+		 * @param string|null $key - Ключ
 		 * @return Post
 		 */
-		public function post(string $key): Post {
-			$this->post->key($key);
+		public function post(?string $key = null): Post {
+			if (isset($key)) $this->post->key($key);
 			return $this->post;
 		}
 

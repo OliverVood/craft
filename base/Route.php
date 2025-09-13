@@ -4,8 +4,6 @@
 
 	namespace Base;
 
-	use Exception;
-
 	/**
 	 * Маршрутизатор
 	 */
@@ -14,9 +12,6 @@
 
 		private array $stack = [];
 
-		/**
-		 * @throws Exception
-		 */
 		private function __construct() {  }
 
 		/**

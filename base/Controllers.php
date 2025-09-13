@@ -14,6 +14,8 @@
 
 		private array $controllers = [];
 
+		private static array $history = [];
+
 		/**
 		 * Регистрирует контроллер
 		 * @param string $name - Наименование контроллера
@@ -85,7 +87,25 @@
 		 * @return void
 		 */
 		public function run(int $source, string $name, string $method, array $params): void {
+			self::addToHistory("{$name}::{$method}");
 			call_user_func_array([$this->registrationAndGet($name, $source), $method], [request()->data(), ...$params]);
+		}
+
+		/**
+		 * Добавляет вызов в историю
+		 * @param string $call - Вызов
+		 * @return void
+		 */
+		private function addToHistory(string $call): void {
+			self::$history[] = $call;
+		}
+
+		/**
+		 * Возвращает историю вызовов
+		 * @return array
+		 */
+		public static function getHistory(): array {
+			return self::$history;
 		}
 
 	}

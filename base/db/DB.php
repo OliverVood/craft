@@ -23,7 +23,7 @@
 	abstract class DB {
 		protected Structure $structure;
 
-		protected array $history = [];
+		protected static array $history = [];
 
 		protected bool $state;
 
@@ -48,8 +48,16 @@
 		 * @param string $query - Текст запроса
 		 * @return void
 		 */
-		protected function addToHistory(string $query): void {
-			$this->history[self::class][] = $query;
+		protected static function addToHistory(string $query): void {
+			self::$history[] = ['db' => self::class, 'query' => $query, 'time' => microtime()];
+		}
+
+		/**
+		 * Возвращает историю запросов
+		 * @return array
+		 */
+		public static function getHistory(): array {
+			return self::$history;
 		}
 
 		/**

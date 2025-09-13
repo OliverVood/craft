@@ -14,6 +14,7 @@
 		const TYPE_DATA = 'data';
 		const TYPE_SECTIONS = 'sections';
 		const TYPE_HISTORY = 'history';
+		const TYPE_DEBUGGER = 'debugger';
 		const TYPE_NOTICES = 'notices';
 		const TYPE_NOTICE_OK = 'ok';
 		const TYPE_NOTICE_INFO = 'info';
@@ -115,6 +116,7 @@
 		 * @return void
 		 */
 		#[NoReturn] private function send(int $code): void {
+			if (env('APP_DEBUGGER')) $this->debugger(debugger()->getLog());
 			http_response_code($code);
 			$this->sendJSON($this->response);
 		}
@@ -160,6 +162,15 @@
 		public function history(Internal $action, array $data = []/*, string $handler = null*/): void {
 			if (input('no_history')) return;
 			$this->set(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->path($data)/*, 'handler' => $handler*/]);
+		}
+
+		/**
+		 * Добавляет данные отладчика в ответ
+		 * @param array $data - Данные
+		 * @return void
+		 */
+		public function debugger(array $data): void {
+			$this->set(self::TYPE_DEBUGGER, $data);
 		}
 
 		/**
@@ -214,77 +225,5 @@
 		private function set(string $type, mixed $data): void {
 			$this->response[$type] = $data;
 		}
-
-//		/**
-//		 * Добавляет уведомление об успехе в стек ответов
-//		 * @param string $notice - Текст сообщения
-//		 * @return void
-//		 */
-//		public static function pushNoticeOk(string $notice): void {
-//			self::pushNotice(self::TYPE_NOTICE_OK, $notice);
-//		}
-//
-////		public static function PushNoticeInfo(string $notice): void {
-////			self::PushNotice('info', $notice);
-////		}
-//
-//		/**
-//		 * Добавляет уведомление об ошибке в стек ответов
-//		 * @param string $notice - Текст сообщения
-//		 * @return void
-//		 */
-//		public static function pushNoticeError(string $notice): void {
-//			self::pushNotice(self::TYPE_NOTICE_ERROR, $notice);
-//		}
-//
-//		/**
-//		 * Добавляет уведомление в стек ответов
-//		 * @param string $type - Тип уведомления
-//		 * @param string $notice - Текст сообщения
-//		 * @return void
-//		 */
-//		private static function pushNotice(string $type, string $notice): void {
-//			self::push(self::TYPE_NOTICE, ['type' => $type, 'notice' => $notice]);
-//		}
-//
-//		/**
-//		 * Добавляет ошибки в стек ответов
-//		 * @param array $errors
-//		 * @return void
-//		 */
-//		public static function pushErrors(array $errors): void {
-//			self::push(self::TYPE_ERRORS, $errors);
-//		}
-//
-//		/**
-//		 * Отправляет стек ответов в формате JSON
-//		 * @return void
-//		 */
-//		#[NoReturn] public static function sendJSON(): void {
-////			if (DEBUGGER) self::$stack[] = ['type' => 'debugger', 'data' => \Base\Debugger::Get()];
-//			self::sendJSONData(self::$stack);
-//		}
-//
-//		/**
-//		 * Отправляет сообщение об ошибке
-//		 * @param string $notice - Текст сообщения
-//		 * @return void
-//		 */
-//		#[NoReturn] public static function sendNoticeError(string $notice):void {
-//			self::$stack = [];
-//			self::pushNoticeError($notice);
-//			self::sendJSON();
-//		}
-//
-//		/**
-//		 * Отправляет массив данных
-//		 * @param array $data - Данные
-//		 * @return void
-//		 */
-//		#[NoReturn] public static function sendData(array $data): void {
-//			self::$stack = [];
-//			self::pushData($data);
-//			self::sendJSON();
-//		}
 
 	}

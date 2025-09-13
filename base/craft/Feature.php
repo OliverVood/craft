@@ -31,7 +31,7 @@
 		 * @return bool
 		 */
 		static private function create(string $name, array $flags = []): bool {
-			if ($name === '') { Message::error('Имя признака не указано'); return false; }
+			if ($name === '') { Message::error(__('Ошибка валидации данных'), ['name' => [__('Псевдоним признака не указан')]]); return false; }
 
 			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Features', DIR_PROJ_FEATURES, $name);
 
@@ -42,22 +42,13 @@
 				'<RIGHTS>'							=> '',
 			];
 
-			if ($rights = Helper::getRightsFromFlags($flags)) {
-				$rightsList = [
-					'access' => 'Назначение прав',
-					'select' => 'Выборка',
-					'browse' => 'Вывод',
-					'create' => 'Создание',
-					'update' => 'Изменение',
-					'delete' => 'Удаление',
-					'status' => 'Изменение состояния',
-				];
-				if (in_array('all', $rights)) $rights = array_keys($rightsList);
+			$rights = Helper::getRightsFromFlags($flags);
+			if ($rights === null) return false;
+			if ($rights) {
 				$rightsSample = "\t\t\t\$this->rights->registration(self::RIGHT_<KEY>_ID, self::RIGHT_<KEY>_NAME, __('<TITLE>'));";
 				$rightsArray = [];
 				foreach ($rights as $right) {
-					if (!isset($rightsList[$right])) { Message::error("Не найдено право '{$right}'"); return false; }
-					$rightsArray[] = str_replace(['<KEY>', '<TITLE>'], [strtoupper($right), $rightsList[$right]], $rightsSample);
+					$rightsArray[] = str_replace(['<KEY>', '<TITLE>'], [strtoupper($right['name']), $right['title']], $rightsSample);
 				}
 				$replace['<RIGHTS>'] = "\n\n" . implode("\n", $rightsArray);
 			}

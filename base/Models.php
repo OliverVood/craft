@@ -14,6 +14,8 @@
 
 		private array $models = [];
 
+		private static array $history = [];
+
 		/**
 		 * Регистрирует модель
 		 * @param string $name - Наименование модели
@@ -52,7 +54,9 @@
 				self::SOURCE_EDITORS => "\\Proj\\Editors\\Models\\{$path}",
 				default => die('Unexpected match value')
 			};
-			$this->models[$name] = new $class();
+			$this->models["{$name}.{$source}"] = new $class();
+
+			self::addToHistory($class);
 		}
 
 		/**
@@ -73,7 +77,24 @@
 		public function registrationAndGet(string $name, int $source): Model {
 			if (!isset($this->models["{$name}.{$source}"])) $this->registration($name, $source);
 
-			return $this->get($name);
+			return $this->get("{$name}.{$source}");
+		}
+
+		/**
+		 * Добавляет вызов в историю
+		 * @param string $call - Вызов
+		 * @return void
+		 */
+		private function addToHistory(string $call): void {
+			self::$history[] = $call;
+		}
+
+		/**
+		 * Возвращает историю вызовов
+		 * @return array
+		 */
+		public static function getHistory(): array {
+			return self::$history;
 		}
 
 	}

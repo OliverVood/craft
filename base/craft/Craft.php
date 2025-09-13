@@ -38,13 +38,13 @@
 		static public function run(string $entity, string $command, string $name, array $flags): array {
 			$state = false;
 			switch ($entity) {
-				case self::ENTITY_STRUCTURE: $state = Structure::run($command, $name, $flags); break;
 				case self::ENTITY_FEATURE: $state = Feature::run($command, $name, $flags); break;
 				case self::ENTITY_CONTROLLER: $state = Controller::run($command, $name, $flags); break;
 				case self::ENTITY_MODEL: $state = Model::run($command, $name, $flags); break;
 				case self::ENTITY_EDITOR: $state = Editor::run($command, $name, $flags); break;
 				case self::ENTITY_VIEW: $state = View::run($command, $name, $flags); break;
 				case self::ENTITY_COMPONENT: $state = Component::run($command, $name, $flags); break;
+				case self::ENTITY_STRUCTURE: $state = Structure::run($command, $name, $flags); break;
 				default: Message::error("Сущность '{$entity}' не найдена");
 			}
 

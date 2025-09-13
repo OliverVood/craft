@@ -17,6 +17,7 @@
 			$(function() {
 				Base.GlobalParams.set('request', '<?= request()->html(); ?>');
 				Base.GlobalParams.set('xhr', '<?= request()->xhr(); ?>');
+				Base.Debugger.getInstance();
 				getContent('admin');
 				Base.History.Initialization();
 			});

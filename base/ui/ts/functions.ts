@@ -11,15 +11,6 @@ function getContent(route: string = ''): void {
 	Base.Request.address(`${pathname}${params}`, {method: 'get'}).then(result => Base.Response.execute(result));
 }
 
-/**
- * Функция декоратор для создания элементов
- * @param $name - Имя элемента
- * @param attributes - Атрибуты элемента
- */
-function el($name: string, attributes?: Base.TypeElementAttributes): Base.Element {
-	return new Base.Element($name, attributes);
-}
-
 type CookieOptionsKeys = 'path' | 'secure' | 'expires';
 type CookieOptions = { path?: string;
 	// domain?: string;
@@ -63,5 +54,5 @@ function setCookie(name: string, value: string, options: CookieOptions = {}) {
  * @param text - Текст для перевода
  */
 function __(text: string): string {
-	return text;
+	return `_${text}`;
 }

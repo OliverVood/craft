@@ -31,13 +31,19 @@
 		 * @return bool
 		 */
 		static private function create(string $name, array $flags = []): bool {
-			if ($name === '') { Message::error('Имя редактора не указано'); return false; }
+			$db = Helper::getBDFromFlags($flags);
+			$table = ($tables = Helper::getTablesFromFlags($flags)) ? $tables[0] : '';
 
-			[$path, $namespace, $class, $namespaceSuffix] = Helper::generateClassInfo('Proj\Editors\Models', DIR_PROJ_EDITORS_MODELS, $name);
-			if (!self::createModel($path, $namespace, $class, $namespaceSuffix, $flags)) return false;
+			if ($name === '') { Message::error(__('Ошибка валидации данных'), ['name' => [__('Псевдоним редактора не указан')]]); return false; }
+			if (!$feature = Helper::getFeatureFromFlags($flags)) { Message::error(__('Ошибка валидации данных'), ['feature' => [__('Псевдоним признака не указан')]]); return false; }
+			if (!$db) { Message::error(__('Ошибка валидации данных'), ['database' => [__('База данных не указана')]]); return false; }
+			if (!$table)  { Message::error(__('Ошибка валидации данных'), ['table' => [__('Таблица не указана')]]); return false; }
+
+			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Editors\Models', DIR_PROJ_EDITORS_MODELS, $name);
+			if (!self::createModel($path, $namespace, $class, $db, $table)) return false;
 
 			[$path, $namespace, $class, $namespaceSuffix] = Helper::generateClassInfo('Proj\Editors\Controllers', DIR_PROJ_EDITORS_CONTROLLERS, $name);
-			if (!self::createController($path, $namespace, $class, $namespaceSuffix, $flags)) return false;
+			if (!self::createController($path, $namespace, $class, $namespaceSuffix, $feature)) return false;
 
 			Message::success("Редактор '{$namespace}\\{$class}' создан");
 
@@ -50,12 +56,10 @@
 		 * @param string $namespace - Пространство имён
 		 * @param string $class - Класс
 		 * @param string $namespaceSuffix - Суффикс пространства имён
-		 * @param array $flags - Флаги
+		 * @param string $feature - Признак
 		 * @return bool
 		 */
-		static private function createController(string $path, string $namespace, string $class, string $namespaceSuffix, array $flags): bool {
-			if (!$feature = Helper::getFeatureFromFlags($flags)) { Message::error('Признак не указан'); return false; }
-
+		static private function createController(string $path, string $namespace, string $class, string $namespaceSuffix, string $feature): bool {
 			$sample = 'editor_controller';
 
 			$replace = [
@@ -81,21 +85,18 @@
 		 * @param string $path - Путь
 		 * @param string $namespace - Пространство имён
 		 * @param string $class - Класс
-		 * @param string $namespaceSuffix - Суффикс пространства имён
-		 * @param array $flags - Флаги
+		 * @param string $db - База данных
+		 * @param string $table - Таблица
 		 * @return bool
 		 */
-		static private function createModel(string $path, string $namespace, string $class, string $namespaceSuffix, array $flags): bool {
-			if (!$db = Helper::getBDFromFlags($flags)) { Message::error('База данных не указана'); return false; }
-			if (!$tables = Helper::getTablesFromFlags($flags)) { Message::error('Таблица не указана'); return false; }
-
+		static private function createModel(string $path, string $namespace, string $class, string $db, string $table): bool {
 			$sample = 'editor_model';
 
 			$replace = [
 				'<NAMESPACE>'						=> $namespace,
 				'<CLASS>'							=> $class,
 				'<DB_ALIAS>'						=> strtolower($db),
-				'<TABLE_NAME>'						=> strtolower($tables[0]),
+				'<TABLE_NAME>'						=> strtolower($table),
 			];
 
 			$file = "{$path}{$class}.php";

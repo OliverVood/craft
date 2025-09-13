@@ -31,7 +31,7 @@
 		 * @return bool
 		 */
 		static public function create(string $name, array $flags = []): bool {
-			if ($name === '') { Message::error('Имя модели не указано'); return false; }
+			if ($name === '') { Message::error(__('Ошибка валидации данных'), ['name' => [__('Псевдоним модели не указан')]]); return false; }
 
 			[$path, $namespace, $class] = Helper::generateClassInfo('Proj\Models', DIR_PROJ_MODELS, $name);
 

@@ -36,7 +36,7 @@ namespace Base {
 		 * @param $form - Форма
 		 * @param options - Опции
 		 */
-		public static sendForm($form: Element, options?: TypeRequestOptions): Promise<any> {
+		public static sendForm($form: UIElement, options?: TypeRequestOptions): Promise<any> {
 			let url = $form.getAttribute('action') as string;
 			let data = QueryWait.formToDataForm($form);
 
@@ -48,7 +48,7 @@ namespace Base {
 		 * @param $form - Форма
 		 * @param options - Опции
 		 */
-		public static sendFormJSON($form: Element, options?: TypeRequestOptions): Promise<any> {
+		public static sendFormJSON($form: UIElement, options?: TypeRequestOptions): Promise<any> {
 			let url = $form.getAttribute('action') as string;
 			let formData =  QueryWait.formToDataForm($form);
 			let data = QueryWait.getDataFormToJSON(formData);
@@ -118,7 +118,7 @@ namespace Base {
 		 * @param $form - Форма
 		 * @private
 		 */
-		private static formToDataForm($form: Element): FormData {
+		private static formToDataForm($form: UIElement): FormData {
 			return new FormData($form.html() as HTMLFormElement);
 		}
 

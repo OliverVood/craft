@@ -1,1 +1,1 @@
-		private Table $table_<TABLE_NAME_UPERCASE>;
+		private Table $table_<TABLE_NAME>;

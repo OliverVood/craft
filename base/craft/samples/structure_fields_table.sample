@@ -1,5 +1,5 @@
-			$this->table_<TABLE_NAME_UPERCASE> = $structure->table('<TABLE_NAME_LOWERCASE>', __('Пользовательская таблица <TABLE_NAME_LOWERCASE>'));
-			$this->table_<TABLE_NAME_UPERCASE>->id('id', __('Идентификатор'));
-			$this->table_<TABLE_NAME_UPERCASE>->uint8('state', __('Состояние'));
-			$this->table_<TABLE_NAME_UPERCASE>->timestamp('datecr', false, __('Дата создания'));
-			$this->table_<TABLE_NAME_UPERCASE>->timestamp('datemd', true, __('Дата изменения'));
+			$this->table_<TABLE_NAME> = $structure->table('<TABLE_NAME>', __('Пользовательская таблица <TABLE_NAME>'));
+			$this->table_<TABLE_NAME>->id('id', __('Идентификатор'));
+			$this->table_<TABLE_NAME>->uint8('state', __('Состояние'));
+			$this->table_<TABLE_NAME>->timestamp('datecr', false, __('Дата создания'));
+			$this->table_<TABLE_NAME>->timestamp('datemd', true, __('Дата изменения'));

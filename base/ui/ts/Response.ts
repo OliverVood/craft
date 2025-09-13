@@ -1,26 +1,13 @@
 namespace Base {
 
-	// type TypeResponse 				= TypeResponseHistory | TypeResponseSection | TypeResponseDebugger;
-	//
-	// type TypeResponseGeneric<Type extends string, Data> = {
-	// 	type					: Type,
-	// 	data					: Data
-	// }
-
-	// type TypeResponseHistory		= TypeResponseGeneric<'history', TypeResponseHistoryData>;
-	// type TypeResponseSection		= TypeResponseGeneric<'section', TypeResponseSectionData>;
-	// type TypeResponseNotice			= TypeResponseGeneric<'notice', TypeResponseNoticeData>;
-	// type TypeResponseDebugger		= TypeResponseGeneric<'debugger', TypeResponseDebuggerData>;
-
-	type ResponseSuccess			= { history?: ResponseHistory, sections?: ResponseSection[], notices?: ResponseNotice[] };
+	type ResponseSuccess			= { history?: ResponseHistory, sections?: ResponseSection[], notices?: ResponseNotice[], debugger?: ResponseDebugger };
 	type ResponseError				= { notices?: ResponseNotice[], data?: ResponseErrorData };
 	type ResponseErrorData			= Record<string, string[]>;
 
-	type ResponseHistory			= { address: string, xhr: string/*, handler: string*/ };
+	type ResponseHistory			= { address: string, xhr: string };
 	type ResponseSection			= { name: string, html: string, empty: boolean };
 	type ResponseNotice				= { type: TypeNotice, text: string, data?: ResponseErrorData };
-	// type TypeResponseNoticeData		= { type: 'ok' | 'info' | 'error', notice: string };
-	// type TypeResponseDebuggerData	= any;
+	type ResponseDebugger			= DebuggerData;
 
 	/**
 	 * Ответы от сервера
@@ -36,9 +23,7 @@ namespace Base {
 			if (result.sections) Response.sections(result.sections);
 			if (result.history) Response.history(result.history);
 			if (result.notices) Response.notices(result.notices);
-			// case 'data': Response.handler(handler, data); break;
-			// case 'errors': Response.errors(data); break;
-			// case 'debugger': Debugger.append(data); break;
+			if (result.debugger) Response.debugger(result.debugger);
 		}
 
 		/**
@@ -56,7 +41,7 @@ namespace Base {
 		 * @private
 		 */
 		private static history(data: ResponseHistory): void {
-			window.history.pushState({xhr: data.xhr/*, handler: data.handler*/}, '', data.address);
+			window.history.pushState({xhr: data.xhr}, '', data.address);
 		}
 
 		/**
@@ -84,24 +69,13 @@ namespace Base {
 			}
 		}
 
-		// /**
-		//  * Запускает обработчик
-		//  * @param handler - Обработчик
-		//  * @param data - Данные
-		//  * @private
-		//  */
-		// private static handler(handler: Function | undefined, data: any): void {
-		// 	if (handler) handler(data);
-		// }
-		//
-		// /**
-		//  *
-		//  * @param data - Данные по ошибкам
-		//  * @private
-		//  */
-		// private static errors(data: Record<string, string[]>): void {
-		// 	Base.Errors.execute(data);
-		// }
+		/**
+		 * Добавляет данные в отладчик
+		 * @param data - Данные
+		 */
+		public static debugger(data: ResponseDebugger): void {
+			Debugger.getInstance().append(data);
+		}
 
 	}
 
