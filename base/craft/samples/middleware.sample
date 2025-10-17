@@ -1,0 +1,26 @@
+<?php
+
+	declare(strict_types=1);
+
+	namespace <NAMESPACE>;
+
+	use Base\Middleware;
+
+	/**
+	 * Пользовательское программное обеспечение
+	 */
+	class <CLASS> extends Middleware {
+
+		/**
+		 * Before
+		 * @return void
+		 */
+		public function inlet(): void {  }
+
+		/**
+		 * After
+		 * @return void
+		 */
+		public function outlet(): void {  }
+
+	}

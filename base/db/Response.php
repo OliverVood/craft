@@ -30,16 +30,22 @@
 		abstract protected function each(): Generator;
 
 		/**
+		 * Возвращает все записи
+		 * @return array
+		 */
+		abstract protected function all(): array;
+
+		/**
 		 * Возвращает одну запись
 		 * @return array|null
 		 */
-		abstract protected function getOne(): ?array;
+		abstract protected function get(): ?array;
 
 		/**
 		 * Возвращает одно поле
 		 * @param string $name - Наименование поля, по умолчанию возьмёт первое
 		 * @return string|null
 		 */
-		abstract protected function getOneField(string $name = ''): ?string;
+		abstract protected function field(string $name = ''): ?string;
 
 	}

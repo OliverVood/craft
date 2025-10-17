@@ -9,7 +9,7 @@
 	 */
 	class Old extends Base {
 		public function __construct() {
-			parent::__construct($_SESSION['__old'] ?? []);
+			parent::__construct(session()->get('__old') ?? []);
 		}
 
 	}

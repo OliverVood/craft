@@ -5,9 +5,11 @@
 	use Exception;
 
 	/**
-	 * Класс конфигурации
+	 * Конфигурации
 	 */
 	class Config {
+		use Singleton;
+
 		private array $env = [];
 
 		/**

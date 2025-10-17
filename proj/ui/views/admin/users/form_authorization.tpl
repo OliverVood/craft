@@ -1,5 +1,6 @@
 <div class = "view user form_authorization">
 	<form action = "<?= app()->links->getInternal('users_auth')->path(); ?>">
+		<?= csrfInput(); ?>
 		<div data-field = "login">
 			<label><input type = "text" name = "login" placeholder = "<?= __('Логин'); ?>"></label>
 			<div class = "errors"></div>

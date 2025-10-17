@@ -27,7 +27,7 @@
 		public function format(string $value): string {
 			try {
 				$datetime = new \DateTime($value, new \DateTimeZone('UTC'));
-				$timezone = app()->request()->timezone();
+				$timezone = app()->request()->clientTimezone();
 				if ($this->client && $timezone) $datetime->setTimezone(new \DateTimeZone($timezone));
 				$datetime = $datetime->format($this->format);
 			} catch (Exception) {

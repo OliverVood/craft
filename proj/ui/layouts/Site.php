@@ -1,13 +1,16 @@
 <?php
 
-	namespace proj\ui\templates\site;
+	declare(strict_types=1);
 
-	use Base\Template\Section;
+	namespace Proj\UI\Layouts;
+
+	use Base\UI\Layout;
+	use Base\UI\Section;
 
 	/**
 	 * Макет сайта
 	 */
-	class Layout extends \Base\Template\Layout {
+	class Site extends Layout {
 		public Section $header;
 		public Section $main;
 		public Section $footer;

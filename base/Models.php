@@ -5,7 +5,7 @@
 	namespace Base;
 
 	/**
-	 * Класс моделей
+	 * Модели
 	 * @property Model[] $models
 	 */
 	class Models {

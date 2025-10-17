@@ -28,6 +28,7 @@
 				switch ($condition['type']) {
 					case 'where': $list[] = "{$connection}{$this->shield($data['field'])} {$data['operator']} '{$data['value']}'"; break;
 					case 'compare': $list[] = "{$connection}{$this->shield($data['field1'])} {$data['operator']} {$this->shield($data['field2'])}"; break;
+					case 'compare_func': $list[] = "{$connection}{$this->shield($data['field'])} {$data['operator']} {$data['value']}"; break;
 				}
 				$first = false;
 			}

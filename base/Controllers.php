@@ -4,8 +4,10 @@
 
 	namespace Base;
 
+	use Exception;
+
 	/**
-	 * Класс контроллеров
+	 * Контроллеры
 	 * @property Controller[] $controllers
 	 */
 	class Controllers {
@@ -35,10 +37,14 @@
 		 */
 		private function load(string $name, int $source): void {
 			$path = str_replace('.', '/', $name);
-			switch ($source) {
-				case self::SOURCE_CONTROLLERS: require_once DIR_PROJ_CONTROLLERS . $path . '.php'; break;
-				case self::SOURCE_EDITORS: require_once DIR_PROJ_EDITORS_CONTROLLERS . $path . '.php'; break;
-			}
+			$file = match ($source) {
+				self::SOURCE_CONTROLLERS =>  DIR_PROJ_CONTROLLERS . $path . '.php',
+				self::SOURCE_EDITORS => DIR_PROJ_EDITORS_CONTROLLERS . $path . '.php',
+			};
+
+			if (!file_exists($file)) app()->error(new Exception('Controller not found'));
+
+			require_once $file;
 		}
 
 		/**
@@ -54,6 +60,9 @@
 				self::SOURCE_EDITORS => "\\Proj\\Editors\\Controllers\\{$path}",
 				default => die('Unexpected match value')
 			};
+
+			if (!class_exists($class)) app()->error(new Exception('Controller not found'));
+
 			$this->controllers[$name] = new $class();
 		}
 
@@ -79,7 +88,7 @@
 		}
 
 		/**
-		 * Запускает контроллера
+		 * Запускает контроллер
 		 * @param int $source - Источник
 		 * @param string $name - Наименование контроллера
 		 * @param string $method - Метод
@@ -87,8 +96,13 @@
 		 * @return void
 		 */
 		public function run(int $source, string $name, string $method, array $params): void {
+			$class = $this->registrationAndGet($name, $source);
+
+			if (!method_exists($class, $method)) app()->error(new Exception('Controller method not found'));
+
 			self::addToHistory("{$name}::{$method}");
-			call_user_func_array([$this->registrationAndGet($name, $source), $method], [request()->data(), ...$params]);
+
+			call_user_func_array([$class, $method], [request()->data(), ...$params]);
 		}
 
 		/**

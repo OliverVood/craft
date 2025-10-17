@@ -67,6 +67,7 @@
 			$this->update->fields()->edit->textarea('content', $this->names['content']);
 			$this->update->fields()->edit->file('cover', $this->names['cover'], __('Выберите обложку'), '.jpg, .jpeg, .png');
 			$this->update->validate([
+				'state'		=> ['required', 'in:' . implode(',', array_keys($model->getStates()))],
 				'header'	=> ['required', 'string', 'max:255'],
 				'content'	=> ['required', 'string'],
 			]);

@@ -44,11 +44,10 @@
 			if (!$this->allow('check')) response()->forbidden(__('Не достаточно прав'));
 
 			/** @var Models\DBs $dbs */ $dbs = model('dbs');
-			/** @var Models\Users $users */ $users = model('users');
 
 			$data = $dbs->check();
 			$action = linkInternal('dbs_make')->path();
-			$csrf = $users->hash();
+			$csrf = app()->csrf();
 
 			response()->history(linkInternal('dbs_check'));
 			response()->section('content', view('admin.db.check', compact('data', 'action', 'csrf')));

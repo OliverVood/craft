@@ -18,7 +18,7 @@
 				Base.GlobalParams.set('request', '<?= request()->html(); ?>');
 				Base.GlobalParams.set('xhr', '<?= request()->xhr(); ?>');
 				Base.Debugger.getInstance();
-				getContent('admin');
+				getContent('<?= request()->html(); ?>');
 				Base.History.Initialization();
 			});
 		</script>

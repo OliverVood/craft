@@ -5,7 +5,6 @@
 	namespace Proj\Models;
 
 	use Base\DB\DB;
-	use Base\Helper\Security;
 	use Base\Model;
 
 	/**
@@ -22,7 +21,6 @@
 		private static int | null $id = null;
 		private static int | null $group = null;
 		private static string | null $alias = null;
-		private static string | null $hash = null;
 
 		public function __construct() {
 			parent::__construct();
@@ -50,7 +48,7 @@
 				->where('password', $password)
 				->query();
 
-			$data = $response->getOne();
+			$data = $response->get();
 
 			if (!$data) return false;
 
@@ -78,7 +76,6 @@
 			self::$id = (int)$data['id'];
 			self::$group = (int)$data['gid'];
 			self::$alias = $data['login'];
-			self::$hash = Security::csrf();
 
 			$this->updateSession();
 			$this->updateAccess();
@@ -94,7 +91,6 @@
 			self::$id = null;
 			self::$group = null;
 			self::$alias = null;
-			self::$hash = null;
 
 			$this->updateSession();
 			$this->updateAccess();
@@ -105,12 +101,11 @@
 		 * @return void
 		 */
 		private function updateSession(): void {
-			$_SESSION['ADMIN']['USER']['AUTH'] = self::$auth;
+			session()->set(self::$auth, 'ADMIN', 'USER', 'AUTH');
 
-			$_SESSION['ADMIN']['USER']['ID'] = self::$id;
-			$_SESSION['ADMIN']['USER']['GROUP'] = self::$group;
-			$_SESSION['ADMIN']['USER']['ALIAS'] = self::$alias;
-			$_SESSION['ADMIN']['USER']['HASH'] = self::$hash;
+			session()->set(self::$id, 'ADMIN', 'USER', 'ID');
+			session()->set(self::$group, 'ADMIN', 'USER', 'GROUP');
+			session()->set(self::$alias, 'ADMIN', 'USER', 'ALIAS');
 		}
 
 		/**
@@ -118,13 +113,12 @@
 		 * @return void
 		 */
 		private function updateDataFromSession(): void {
-			if (isset($_SESSION['ADMIN']['USER'])) {
-				self::$auth = $_SESSION['ADMIN']['USER']['AUTH'] ?? false;
+			if (session()->get('ADMIN', 'USER') !== null) {
+				self::$auth = session()->get('ADMIN', 'USER', 'AUTH') ?? false;
 
-				self::$id = $_SESSION['ADMIN']['USER']['ID'] ?? null;
-				self::$group = $_SESSION['ADMIN']['USER']['GROUP'] ?? null;
-				self::$alias = $_SESSION['ADMIN']['USER']['ALIAS'] ?? null;
-				self::$hash = $_SESSION['ADMIN']['USER']['HASH'] ?? null;
+				self::$id = session()->get('ADMIN', 'USER', 'ID') ?? null;
+				self::$group = session()->get('ADMIN', 'USER', 'GROUP') ?? null;
+				self::$alias = session()->get('ADMIN', 'USER', 'ALIAS') ?? null;
 			}
 		}
 
@@ -173,10 +167,6 @@
 		 */
 		public function getAlias(): string {
 			return self::$alias ?? '';
-		}
-
-		public function hash(): string {
-			return self::$hash ?? '';
 		}
 
 	}

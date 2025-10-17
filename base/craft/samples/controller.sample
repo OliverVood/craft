@@ -9,7 +9,7 @@
 //	use JetBrains\PhpStorm\NoReturn;
 
 	/**
-	 * Пользовательский класс
+	 * Отвечает за обработку запросов
 	 * @controller
 	 */
 	class <CLASS> extends Controller {

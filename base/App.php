@@ -9,22 +9,22 @@
 	use Base\Access\Links;
 	use Base\DB\DB;
 	use Base\Helper\Response;
+	use Base\Helper\Security;
 	use Exception;
 	use JetBrains\PhpStorm\NoReturn;
 	use stdClass;
 
 	/**
-	 * Класс приложения
+	 * Приложение
 	 */
 	class App {
 		use Singleton;
-
-		private Config $config;
 
 		private Request $request;
 		private Response $response;
 
 		public Controllers $controllers;
+		public Middlewares $middlewares;
 		public Models $models;
 
 		public Access $access;
@@ -35,19 +35,22 @@
 
 		public stdClass $params;
 
+		private string $csrf;
+
 		/**
 		 * @param string $html - Путь HTML
 		 * @param string $xhr - Путь XHR
 		 */
 		private function __construct(string $html, string $xhr) {
-			session_start();
+			session()->start();
 
-			$this->config = new Config();
+			$this->csrf = Security::csrf();
 
 			$this->request = new Request($html, $xhr);
 			$this->response = new Response();
 
 			$this->controllers = new Controllers();
+			$this->middlewares = new Middlewares();
 			$this->models = new Models();
 
 			$this->access = Access::instance();
@@ -57,14 +60,6 @@
 			$this->links = new Links();
 
 			$this->params = new stdClass();
-		}
-
-		/**
-		 * Возвращает объект конфигурации
-		 * @return Config
-		 */
-		public function config(): Config {
-			return $this->config;
 		}
 
 		/**
@@ -128,6 +123,14 @@
 		}
 
 		/**
+		 * Возвращает CSRF
+		 * @return string
+		 */
+		public function csrf(): string {
+			return $this->csrf;
+		}
+
+		/**
 		 * Возвращает версию
 		 * @return string
 		 */
@@ -140,7 +143,7 @@
 		 * @param Exception $e - Исключение
 		 * @return void
 		 */
-		#[NoReturn] public function error(Exception $e): void {
+		#[NoReturn] public function error(Exception $e): void {//todo
 			echo $e->getMessage();
 			exit;
 		}

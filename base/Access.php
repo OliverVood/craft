@@ -5,7 +5,7 @@
 	namespace Base;
 
 	/**
-	 * Базовый класс работы с правами пользователя
+	 * Права пользователя
 	 */
 	class Access {
 		use Singleton;

@@ -5,74 +5,85 @@
 	namespace Base;
 
 	/**
-	 * Маршрутизатор
+	 * Маршрут
 	 */
 	class Route {
-		use Singleton;
+		private array $middlewares = [];
 
-		private array $stack = [];
-
-		private function __construct() {  }
+		public function __construct(
+			private string          $url,
+			private readonly string $method,
+			private readonly string $handler,
+			private readonly int    $source = Controllers::SOURCE_CONTROLLERS
+		) {  }
 
 		/**
-		 * Регистрирует контроллер
-		 * @param string $customer - Адреса
-		 * @param string $performer - Обработчик
-		 * @param int $source - Источник
-		 * @return void
+		 * Возвращает путь маршрута
+		 * @return string
 		 */
-		public function registration(string $customer, string $performer, int $source = Controllers::SOURCE_CONTROLLERS): void {
-			$this->stack[] = ['customer' => $customer, 'performer' => $performer, 'source' => $source];
+		public function url(): string {
+			return $this->url;
 		}
 
 		/**
-		 * Выполняет маршрутизацию
+		 * Возвращает метод маршрута
+		 * @return string
+		 */
+		public function method(): string {
+			return $this->method;
+		}
+
+		/**
+		 * Возвращает исполнителя маршрута
+		 * @return string
+		 */
+		public function handler(): string {
+			return $this->handler;
+		}
+
+		/**
+		 * Возвращает источник
+		 * @return int
+		 */
+		public function source(): int {
+			return $this->source;
+		}
+
+		/**
+		 * Возвращает массив промежуточных программных обеспечений
+		 * @return array
+		 */
+		public function middlewares(): array {
+			$out = [];
+			foreach ($this->middlewares as $name) {
+				$out[] = app()->middlewares->registration($name);
+			}
+
+			return $out;
+		}
+
+		/**
+		 * Задаёт заказчика маршрута
+		 * @param string $url - Заказчик
 		 * @return void
 		 */
-		public function run(): void {
-			foreach ($this->stack as $item) {
-				$customer = $item['customer'];
-				$performer = $item['performer'];
-				$source = $item['source'];
+		public function setUrl(string $url): void {
+			$this->url = $url;
+		}
 
-				$method = '*';
-				preg_match('/:\[(get|post|put|delete|patch|\*)]/', $customer, $matches);
-				if ($matches) {
-					$method = $matches[1];
-					$customer = str_replace($matches[0], '', $customer);
-				}
-				if (!in_array($method, ['*', request()->methodVirtual()])) continue;
-				if (request()->methodVirtual() != 'get' && !csrfValidate()) app()->error(new Exception('Invalid csrf token'));
+		/**
+		 * Регистрирует промежуточные программные обеспечения в маршруте
+		 * @param string $middlewares - Перечень промежуточных программных обеспечений
+		 * @return $this
+		 */
+		public function middleware(string $middlewares): self {
+			$middlewares = explode(' ', $middlewares);
 
-				$customer = parse_url($customer, PHP_URL_PATH);
-				$customer = explode('/', $customer);
-
-				$url = parse_url(request()->url(), PHP_URL_PATH);
-				$url = explode('/', $url);
-
-				$params = [];
-
-				$isAll = false;
-				foreach ($customer as $key => $value) {
-					if ($value == ':(all)') { $isAll = true; break; }
-					if (!isset($url[$key])) continue 2;
-
-					switch ($value) {
-						case ':(num)': $params[] = (int)$url[$key]; if (!is_numeric($url[$key])) continue 3; break;
-						case ':(str)': $params[] = $url[$key]; if (!is_string($url[$key])) continue 3; break;
-						case ':(any)': $params[] = $url[$key]; break;
-						default: if ($value != $url[$key]) continue 3;
-					}
-				}
-
-				if (!$isAll && (count($customer) != count($url))) continue;
-
-				$parts = explode('::', $performer);
-				$controller = $parts[0];
-				$call = $parts[1] ?? '';
-
-				app()->controllers->run($source, $controller, $call, $params);
+			foreach ($middlewares as $middleware) {
+				$this->middlewares[] = $middleware;
 			}
+
+			return $this;
 		}
 
 	}

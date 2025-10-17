@@ -110,7 +110,7 @@
 		 * Сохраняет данные от предыдущего запроса
 		 */
 		public function saveOld(): void {
-			$_SESSION['__old'] = $this->defined->all();
+			session()->set($this->defined->all(), '__old');
 		}
 
 	}

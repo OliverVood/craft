@@ -15,6 +15,7 @@
 	const DIR_PROJ_PARAMS					= DIR_PROJ . 'params/';
 	const DIR_PROJ_FEATURES					= DIR_PROJ . 'features/';
 	const DIR_PROJ_CONTROLLERS				= DIR_PROJ . 'controllers/';
+	const DIR_PROJ_MIDDLEWARES				= DIR_PROJ . 'middlewares/';
 	const DIR_PROJ_MODELS					= DIR_PROJ . 'models/';
 	const DIR_PROJ_EDITORS					= DIR_PROJ . 'editors/';
 	const DIR_PROJ_EDITORS_CONTROLLERS		= DIR_PROJ_EDITORS . 'controllers/';
@@ -32,3 +33,6 @@
 
 	const DIR_RESOURCE						= DIR_PROJ . 'resource/';
 	const DIR_RESOURCE_IMAGE				= DIR_RESOURCE . 'image/';
+
+	const DIR_RELATIVE_RESOURCE				= '/proj/resource/';
+	const DIR_RELATIVE_IMAGE				= DIR_RELATIVE_RESOURCE . 'image/';

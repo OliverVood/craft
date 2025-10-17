@@ -7,7 +7,7 @@
 	use Base\DB\DB;
 
 	/**
-	 * Класс работы с базами данных
+	 * Базы данных
 	 * @property DB[] $dbs;
 	 */
 	class DBs {

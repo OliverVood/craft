@@ -49,7 +49,7 @@
 		 * @param string $keywords - Ключевые слова
 		 * @return void
 		 */
-		public function setKeyword(string $keywords): void {
+		public function setKeywords(string $keywords): void {
 			$this->keywords = $keywords;
 		}
 

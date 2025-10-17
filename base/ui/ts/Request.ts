@@ -55,6 +55,16 @@ namespace Base {
 		}
 
 		/**
+		 *
+		 * Отправляет запрос GET по адресу
+		 * @param address - Адрес запроса
+		 * @param data - Объект данных
+		 */
+		public static post(address: string, data: Object = ''): Promise<Response> {
+			return Request.data(address, data, {method: 'post'});
+		}
+
+		/**
 		 * Отправляет запрос DELETE по адресу
 		 * @param address - Адрес запроса
 		 * @param data - Объект данных

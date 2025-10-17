@@ -1,7 +1,7 @@
 <div class = "view craft component create">
 	<h1><?= __('Создание компонента'); ?></h1>
 	<form action = "<?= linkRight('craft_run')->path(['entity' => 'component', 'action' => 'create']); ?>">
-		<?php echo csrf(); ?>
+		<?= csrfInput(); ?>
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним компонента'); ?>">
 			<div class = "errors"></div>
 		</div>

@@ -13,32 +13,41 @@
 
 	require DIR_BASE . 'Request.php';
 	require DIR_BASE . 'Config.php';
+	require DIR_BASE . 'Routes.php';
 	require DIR_BASE . 'Route.php';
+	require DIR_BASE . 'RouteGroup.php';
 	require DIR_BASE . 'Controllers.php';
+	require DIR_BASE . 'Controller.php';
+	require DIR_BASE . 'Middlewares.php';
+	require DIR_BASE . 'Middleware.php';
 	require DIR_BASE . 'Models.php';
+	require DIR_BASE . 'Model.php';
+	require DIR_BASE . 'Session.php';
+	require DIR_BASE . 'Cookie.php';
 	require DIR_BASE . 'DBs.php';
 	require DIR_BASE . 'Access.php';//todo ?
 	require DIR_BASE . 'data/Set.php';
 
-	require DIR_BASE . 'Templates.php';
+	require DIR_BASE_DB . 'DB.php';
 
+	require DIR_BASE . 'link/Fundamental.php';
+	require DIR_BASE . 'link/Internal.php';
+
+	require DIR_BASE . 'Templates.php';
+	require DIR_BASE_UI . 'Template.php';
+	require DIR_BASE_UI . 'Layout.php';
+	require DIR_BASE_UI . 'Section.php';
+	require DIR_BASE_UI . 'SEO.php';
+	require DIR_BASE_UI . 'CSS.php';
+	require DIR_BASE_UI . 'JS.php';
+	require DIR_BASE_UI . 'View.php';
+	require DIR_BASE_UI . 'Buffer.php';
+
+	require DIR_BASE_HELPER . 'Translation.php';
 	require DIR_BASE_HELPER . 'Response.php';
-//
-//	require_once DIR_BASE . 'Debugger.php';
-//
-//	require_once DIR_BASE . 'data/set/Input.php';
-//
-//	require_once DIR_BASE_TEMPLATE . 'Buffer.php';
-//
-//	require_once DIR_BASE . 'Route.php';
-//	require_once DIR_BASE . 'Controller.php';
-//	require_once DIR_BASE . 'Model.php';
-//
-//	require_once DIR_BASE_TEMPLATE . 'Template.php';
-//	require_once DIR_BASE_TEMPLATE . 'Layout.php';
-//	require_once DIR_BASE_TEMPLATE . 'Section.php';
-//	require_once DIR_BASE_TEMPLATE . 'JS.php';
-//	require_once DIR_BASE_TEMPLATE . 'CSS.php';
-//	require_once DIR_BASE_TEMPLATE . 'SEO.php';
-//
-//	require_once DIR_BASE . 'View.php';
+	require DIR_BASE_HELPER . 'Validator.php';
+	require DIR_BASE_HELPER . 'Cryptography.php';
+	require DIR_BASE_HELPER . 'Security.php';
+	require DIR_BASE_HELPER . 'Timestamp.php';
+	require DIR_BASE_HELPER . 'Debugger.php';
+	require DIR_BASE_HELPER . 'Redirect.php';

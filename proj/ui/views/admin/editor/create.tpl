@@ -13,7 +13,7 @@
 	<h1><?= $title; ?></h1>
 	<form action = "<?= $action->path((array)$editor->params); ?>">
 		<?php
-			echo csrf();
+			echo csrfInput();
 			foreach ($fields->each() as /** @var Base\Editor\Skins\Skin $field */ $field) if ($field->isHide()) echo $field->format($item[$field->getName()] ?? '');
 		?>
 		<table class = "create">

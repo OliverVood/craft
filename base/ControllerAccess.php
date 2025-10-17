@@ -7,7 +7,7 @@
 	use Base\Access\Feature;
 
 	/**
-	 * Базовый класс для работы с контроллерами с учётом прав доступа
+	 * Контроллер с правами доступа
 	 */
 	abstract class ControllerAccess extends Controller {
 		protected Feature $feature;

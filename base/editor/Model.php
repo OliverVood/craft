@@ -74,7 +74,7 @@
 			if ($page_entries) {
 				$start = ($page_current - 1) * $page_entries;
 				$response = $this->db->query("SELECT COUNT(*) AS `count` FROM ({$query->get()}) AS `table`");
-				$page_records = $response->getOneField('count');
+				$page_records = $response->field('count');
 
 				$ext['page'] = [
 					'records' => $page_records,
@@ -100,7 +100,7 @@
 			$query = $this->getQueryBrowse($id, ...$fields);
 			$response = $this->db->query($query->get());
 
-			return $response->getOne();
+			return $response->get();
 		}
 
 		/**
@@ -219,7 +219,7 @@
 		protected function getState(int $id): int {
 			$query = $this->getQueryState($id);
 			$response = $this->db->query($query->get());
-			return (int)$response->getOneField('state');
+			return (int)$response->field('state');
 		}
 
 		/**

@@ -36,10 +36,22 @@
 		}
 
 		/**
+		 * Возвращает все записи
+		 * @return array
+		 */
+		public function all(): array {
+			$data = [];
+
+			while ($row = $this->result->fetch_assoc()) $data[] = $row;
+
+			return $data;
+		}
+
+		/**
 		 * Возвращает одну запись
 		 * @return array|null
 		 */
-		public function getOne(): ?array {
+		public function get(): ?array {
 			return $this->result->fetch_assoc();
 		}
 
@@ -48,7 +60,7 @@
 		 * @param string $name - Наименование поля, по умолчанию возьмёт первое
 		 * @return string|null
 		 */
-		public function getOneField(string $name = ''): ?string {
+		public function field(string $name = ''): ?string {
 			$row = $this->result->fetch_array();
 			return ($name === '') ? $row[0] : $row[$name];
 		}

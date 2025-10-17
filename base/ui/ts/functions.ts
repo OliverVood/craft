@@ -5,10 +5,10 @@
 function getContent(route: string = ''): void {
 	let url = new URL(window.location.href);
 
-	let pathname = url.pathname.slice(route.length + 1);
+	let pathname = url.pathname.slice(route.length);
 	let params = url.search;
 
-	Base.Request.address(`${pathname}${params}`, {method: 'get'}).then(result => Base.Response.execute(result));
+	Base.Request.get(`${pathname}${params}`).then(result => Base.Response.execute(result));
 }
 
 type CookieOptionsKeys = 'path' | 'secure' | 'expires';

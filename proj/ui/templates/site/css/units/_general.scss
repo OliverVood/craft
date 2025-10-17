@@ -1,0 +1,280 @@
+@use "sass:map";
+@use "sass:color";
+
+@use "../variables" as *;
+@use "../functions" as *;
+
+.view.general.header {
+
+	@mixin ViewGeneralHeader($params: null) {
+		$lateral_spacing : auto;
+
+		> .agency {
+			display: flex; align-items: center; margin: 0 GetParam($params, lateral_spacing, $lateral_spacing); padding: GetParam($params, agency_padding, 3rem) 0; max-width: 1200px;
+			> .logo > a { display: inline-block; width: GetParam($params, logo_size, 6rem); height: GetParam($params, logo_size, 6rem); background-image: GetImage('logo/logo.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+			> .info {
+				margin-left: GetParam($params, info_margin, 2rem);
+				> .name { font-size: GetParam($params, name_size, 3rem); }
+				> .slogan { margin-left: 3px; font-size: GetParam($params, slogan_size, 1.2rem); }
+			}
+			//> .more { display: none;
+			//	flex: none; margin: auto;
+			//	> div {
+			//		position: relative; width: 40px; height: 40px; overflow: hidden; cursor: pointer;
+			//		> div {
+			//			position: absolute; left: 0; width: 40px; height: 4px; background-color: $color-neutral;
+			//			&:nth-child(1) { top: 6px; }
+			//			&:nth-child(2) { top: 18px; }
+			//			&:nth-child(3) { top: 30px; }
+			//		}
+			//		&:hover > div { background-color: $color-neutral-black; }
+			//	}
+			//}
+		}
+		> .menu {
+			box-shadow: $shadow_small;
+			> div {
+				display: grid; grid-template-columns: repeat(3, 1fr); gap: GetParam($params, menu_gap, 1rem); margin: 0 GetParam($params, lateral_spacing, $lateral_spacing); max-width: 1200px;
+				> div > a {
+					display: inline-block; padding: GetParam($params, menu_padding, 1rem);
+					&:hover { text-decoration: underline; }
+				}
+			}
+		}
+	}
+
+	html[data-page="main"] & {
+		@include MixScreen($size5XL) { @include ViewGeneralHeader(); }
+		@include MixScreen($size2XL, $size5XL) { @include ViewGeneralHeader((lateral_spacing: 2rem)); }
+		@include MixScreen($sizeX, $size2XL) { @include ViewGeneralHeader((lateral_spacing: 2rem, name_size: 2.5rem, slogan_size: 1rem, agency_padding: 2rem)); }
+	}
+	html:not([data-page="main"]) & {
+		@include MixScreen($size5XL) { @include ViewGeneralHeader((name_size: 2.3rem, slogan_size: 1rem, agency_padding: 1.5rem, logo_size: 5rem, info_margin: 1.5rem)); }
+		@include MixScreen($sizeX, $size5XL) { @include ViewGeneralHeader((lateral_spacing: 1.5rem, name_size: 2.3rem, slogan_size: 1rem, agency_padding: 1.5rem, logo_size: 5rem, info_margin: 1.5rem)); }
+	}
+	@include MixScreen($sizeM, $sizeX) { @include ViewGeneralHeader((lateral_spacing: 1.5rem, name_size: 2.3rem, slogan_size: 1rem, agency_padding: 1.5rem, logo_size: 5rem, info_margin: 1.5rem)); }
+	@include MixScreen($sizeS, $sizeM) { @include ViewGeneralHeader((lateral_spacing: 1rem, name_size: 2rem, slogan_size: 0.9rem, agency_padding: 1rem, logo_size: 4rem, info_margin: 1rem)); }
+	@include MixScreen(null, $sizeS) { @include ViewGeneralHeader((lateral_spacing: 1rem, name_size: 2rem, slogan_size: 0.9rem, agency_padding: 1rem, logo_size: 4rem, info_margin: 1rem, menu_gap: 0, menu_padding: 0.5rem)); }
+}
+
+.view.general.footer {
+
+	@mixin ViewGeneralFooter($params: null) {
+		$lateral_spacing: auto;
+		> div {
+			display: flex; flex-direction: GetParam($params, wrap_gap, column); gap: 1.5rem; margin: 0 GetParam($params, lateral_spacing, $lateral_spacing); padding: GetParam($params, agency_padding, 1.5rem) 0; max-width: 1200px; border-top: 1px solid $color-neutral; align-items: center;
+			> .agency {
+				display: flex; flex: auto; flex-direction: GetParam($params, agency_gap, column); justify-content: center; align-items: center;
+				> .logo > a { display: inline-block; width: GetParam($params, logo_size, 5rem); height: GetParam($params, logo_size, 5rem); background-image: GetImage('logo/logo.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+				> .info {
+					> .name { font-size: GetParam($params, name_size, 2.3rem); }
+					> .slogan { margin-left: 3px; font-size: GetParam($params, slogan_size, 1rem); }
+				}
+			}
+			> .menu {
+				flex: auto; display: flex; flex-direction: column; gap: 0.5rem;
+				> div {
+					text-align: center;
+					a:hover { text-decoration: underline; }
+				}
+			}
+		}
+	}
+
+	@include MixScreen($size5XL) { @include ViewGeneralFooter((agency_gap: row, wrap_gap: row)); }
+	@include MixScreen($sizeX, $size5XL) { @include ViewGeneralFooter((lateral_spacing: 1.5rem, agency_gap: row, wrap_gap: row)); }
+	@include MixScreen($sizeM, $sizeX) { @include ViewGeneralFooter((lateral_spacing: 1.5rem, wrap_gap: row)); }
+	@include MixScreen($sizeS, $sizeM) { @include ViewGeneralFooter((lateral_spacing: 1rem, name_size: 2rem, slogan_size: 0.9rem, agency_padding: 1rem, logo_size: 4rem)); }
+	@include MixScreen(null, $sizeS) { @include ViewGeneralFooter((lateral_spacing: 1rem, name_size: 2rem, slogan_size: 0.9rem, agency_padding: 1rem, logo_size: 4rem)); }
+}
+
+.view.general.contacts {
+
+	@mixin ViewGeneralContacts($params: null) {
+		p:not(:first-child) { padding-top: 1rem; }
+	}
+
+	@include MixScreen() { @include ViewGeneralContacts(); }
+}
+
+.view.general.about {
+
+	@mixin ViewGeneralAbout($params: null) {
+		p:not(:first-child) { padding-top: 1rem; }
+	}
+
+	@include MixScreen() { @include ViewGeneralAbout(); }
+}
+
+.view.general.donations {
+
+	@mixin ViewGeneralDonations($params: null) {
+		width: min-content;
+		> div {
+			> .description {
+				text-align: justify;
+				> div:not(:first-child) { margin-top: 0.5rem; }
+			}
+			> .card {
+				display: flex; gap: GetParam($params, -card-number-gap, 2px); margin-top: 2rem;
+				> span {
+					padding: GetParam($params, -card-number-padding, 0.5rem);
+					&.number { background-color: $color-neutral-extra-light; }
+				}
+			}
+			> .name {
+				display: flex; gap: 1px; margin-top: 0.5rem; font-size: 1rem;
+				> span {
+					padding: 0.2rem;
+					&.symbol { background-color: $color-neutral-extra-light; }
+				}
+			}
+		}
+	}
+
+	@include MixScreen($sizeM) { @include ViewGeneralDonations(); }
+	@include MixScreen($sizeS, $sizeM) { @include ViewGeneralDonations((-card-number-padding: 0.2rem)); }
+	@include MixScreen(null, $sizeS) { @include ViewGeneralDonations((-card-number-gap: 0, -card-number-padding: 0.2rem)); }
+}
+
+.view.general.windows {
+	> .instance {
+		display: flex; align-items: center; justify-content: center; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: $z-window;
+		> .space { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+		> .window {
+			position: relative; background-color: $color-light; box-shadow: $shadow;
+			> .header {
+				position: relative; padding: 1rem 4rem 1rem 2rem; min-height: 48px;
+				> .close { position: absolute; top: 10px; right: 1rem; width: 2rem; height: 2rem; background-size: 20px; background-position: center; background-repeat: no-repeat; cursor: pointer; }
+			}
+			> .footer {  }
+			&.fill_title {
+				> .header {
+					color: $color-text-primary; background-color: $color-primary;
+					> .close { background-image: GetImageUIWhite('close.svg'); }
+				}
+				> .main { padding: 2rem; }
+			}
+			&.empty_title {
+				> .header > .close {
+					background-image: GetImageUIPrimary('close.svg');
+					&:hover { background-image: GetImageUIPrimaryLight('close.svg'); }
+				}
+				> .main { padding: 0 2rem 2rem; }
+			}
+		}
+		&:last-child { background-color: color.adjust($color-neutral, $alpha: -0.3); }
+	}
+}
+
+.view.general.interactive {
+	> .btns {
+		margin-top: 1rem;
+		> *:not(:last-child) { margin-right: 0.5rem; }
+	}
+	> .contain > .message { text-align: center; }
+}
+
+.view.general.notices {
+	position: fixed; top: 1rem; right: 1rem; z-index: $z-notice; display: grid; gap: 1rem;
+	> .instance {
+		display: flex; border-width: 1px; border-style: solid; border-color: $color-light; background-color: $color-light;
+		&.ok {
+			border-color: $color-primary;
+			> .type { background-image: GetImageUI('notice/ok.svg'); }
+		}
+		&.info { border-color: $color-neutral;
+			> .type { background-image: GetImageUI('notice/info.svg'); }
+		}
+		&.error { border-color: $color-negative;
+			> .type { background-image: GetImageUI('notice/error.svg'); }
+		}
+		> .type { width: 3rem; background-size: 1.5rem; background-position: 1rem 1rem; background-repeat: no-repeat; }
+		> .notice { flex: auto; padding: 1rem; }
+		> .close > div {
+			width: 2rem; height: 2rem; background-image: GetImageUIPrimary('close.svg'); background-size: 1rem; background-position: center; background-repeat: no-repeat; cursor: pointer;
+			&:hover { background-image: GetImageUIPrimaryLight('close.svg'); }
+		}
+	}
+}
+
+//.view.site.full_menu {
+//	position: absolute;
+//	top: 0;
+//	right: 0;
+//	bottom: 0;
+//	left: 0;
+//	background-color: #ffffff; background-image: url("img/bg1.png"); background-position: center;
+//	background-size: contain;
+//	background-repeat: no-repeat;
+//	&:before { content: ""; position: absolute; top: 10px; right: 10px; bottom: 10px; left: 10px; background-image: url("img/fill.png"); background-color: #0000009e; opacity: 0.5; }
+//	> .close { position: absolute; top: 60px; right: 60px; width: 40px; height: 40px; background-color: #7e7e7e; }
+//	> .menu {
+//		&.m1 { top: 5rem;
+//			left: 5rem;
+//			position: absolute;
+//			border-left: 2px solid #777;
+//			padding-left: 30px;
+//			bottom: 5rem;
+//			> div {
+//				> div:first-child {     position: absolute;
+//					transform: rotate(-90deg);
+//					bottom: 5rem;
+//					left: -62px; }
+//				> div:last-child {
+//					> div {
+//						font-size: 1.5rem;
+//						position: relative;
+//						&:not(:first-child) { margin-top: 1rem; }
+//						> span {
+//							position: absolute;
+//							top: 0;
+//							left: -42px;
+//							width: 21px;
+//							height: 21px;
+//							border: 1px solid #ababab;
+//							border-radius: 50%;
+//							> span {
+//								position: absolute;
+//								top: 5px;
+//								left: 6px;
+//								width: 8px;
+//								height: 8px;
+//								background-color: #777;
+//								border-radius: 50%;
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		&.m3 {
+//			position: absolute;
+//			right: 4rem;
+//			top: 10rem;
+//			border-right: 2px solid #777;
+//			text-align: right;
+//			> div {
+//				> div:first-child { display: none; }
+//				> div:last-child {
+//					padding-right: 20px;
+//					padding-bottom: 5rem;
+//					> div {
+//						font-size: 1.2rem;
+//						position: relative;
+//						&:not(:first-child) { margin-bottom: 0.5rem; }
+//						> span {
+//							position: absolute;
+//							top: 7px;
+//							right: -25px;
+//							width: 8px;
+//							height: 8px;
+//							background-color: #777;
+//							border-radius: 50%;
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
+//}

@@ -129,7 +129,7 @@
 				->limit(1)
 				->query();
 
-			if (!$row = $response->getOne()) return;
+			if (!$row = $response->get()) return;
 
 			$old_file = "{$row['hash']}.{$row['id']}.{$row['ext']}";
 

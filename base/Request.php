@@ -7,7 +7,7 @@
 	use Base\Data\Set;
 
 	/**
-	 * Класс для работы с запросом
+	 * Запросы
 	 */
 	class Request {
 		private string $protocol;
@@ -17,8 +17,9 @@
 		private string $method;
 		private string $methodVirtual;
 
-		private ?string $timezone;
+		private ?string $clientTimezone;
 		private string $clientIP;
+		private string $clientCSRF;
 
 		private string $html;
 		private string $xhr;
@@ -32,13 +33,14 @@
 			$this->urlBase = explode('?', $this->url)[0];
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 
-			$this->timezone = $_COOKIE['timezone'] ?? null;
+			$this->data = new Set();
+
+			$this->clientTimezone = $_COOKIE['timezone'] ?? null;
 			$this->clientIP = $this->getClientIP();
+			$this->clientCSRF = $this->data()->defined('__csrf')->string('');
 
 			$this->html = $html;
 			$this->xhr = $xhr;
-
-			$this->data = new Set();
 
 			$__method = $this->data->defined('__method')->string('-');
 			$this->methodVirtual = in_array($__method, ['get', 'post', 'put', 'patch', 'delete']) ? $__method : $this->method;
@@ -96,8 +98,8 @@
 		 * Возвращает часовой пояс клиента
 		 * @return string|null
 		 */
-		public function timezone(): ?string {
-			return $this->timezone;
+		public function clientTimezone(): ?string {
+			return $this->clientTimezone;
 		}
 
 		/**
@@ -106,6 +108,14 @@
 		 */
 		public function clientIP(): string {
 			return $this->clientIP;
+		}
+
+		/**
+		 * Возвращает CSRF клиента
+		 * @return string
+		 */
+		public function clientCSRF(): string {
+			return $this->clientCSRF;
 		}
 
 		/**

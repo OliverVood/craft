@@ -32,7 +32,7 @@
 //				->where('field', 'value')
 //				->query();
 //
-//			$data = $response->getOne();
+//			$data = $response->get();
 //
 //			if (!$data) return false;
 //

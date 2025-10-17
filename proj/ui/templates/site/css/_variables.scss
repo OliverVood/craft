@@ -1,0 +1,83 @@
+/* Sizes */
+//$size3XS    : 240;
+//$size2XS    : 360;
+$sizeXS     : 420;
+$sizeS      : 480;
+$sizeM      : 560;
+$sizeL      : 680;
+$sizeX      : 760;
+//$sizeXL     : 860;
+$size2XL    : 980;
+//$size3XL    : 1080;
+//$size4XL    : 1200;
+$size5XL    : 1280;
+//$size6XL    : 1920;
+
+$base: 1rem;
+$base2: $base * 2;
+$base3: $base * 3;
+$base4: $base * 4;
+
+/* Palette */
+$color-light							: #FFFFFF;
+$color-primary							: #428192;
+$color-primary-light					: #4C97AB;
+
+$color-text								: #000000;
+$color-text-primary						: $color-light;
+
+$color-secondary						: #CBDCE1;
+
+$color-negative							: #A6574A;
+$color-negative-light					: #AD675B;
+
+$color-neutral-black					: #565656;
+$color-neutral							: #A5A5A5;
+$color-neutral-light					: #C5C5C5;
+$color-neutral-extra-light				: #EAEAEA;
+
+/* Color elements */
+$color-btn-text 						: $color-text-primary;
+
+$items_margin							: 0.5rem;
+$items_margin_cut						: 0.2rem;
+
+$color_running_title					: $color-neutral-black;
+
+/* button */
+$color-btn-bg 							: $color-primary;
+$color-btn-bg-hover 					: $color-primary-light;
+$color-btn-bg-active 					: $color-primary-light;
+
+$color-btn-border 						: $color-primary;
+$color-btn-border-hover 				: $color-primary-light;
+$color-btn-border-active 				: $color-primary;
+
+$color-negative-btn-bg					: $color-negative;
+$color-negative-btn-bg-hover			: $color-negative-light;
+$color-negative-btn-bg-active			: $color-negative-light;
+
+$color-negative-btn-border				: $color-negative;
+$color-negative-btn-border-hover		: $color-negative-light;
+$color-negative-btn-border-active		: $color-negative;
+
+/* Select */
+$color-select-border 					: $color-primary;
+$color-select-border-hover				: $color-primary-light;
+$color-select-border-active				: $color-primary-light;
+$color-select_fill						: $color-light;
+
+$color-text-border 						: $color-primary;
+$color-text-border-hover 				: $color-primary-light;
+$color-text-border-active 				: $color-primary-light;
+
+/* Shadow */
+$shadow: 2px 2px 6px 0 #00000055;
+$shadow_small: 0 0 0.2rem $color-neutral;
+
+$z-top							: 1;
+$z-extra-top					: 2;
+$z-menu							: 10;
+$z-debugger						: 20;
+$z-window						: 200;
+$z-notice						: 300;

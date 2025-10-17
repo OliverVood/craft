@@ -5,7 +5,7 @@
 	namespace Base;
 
 	/**
-	 * Базовый класс моделей
+	 * Модель
 	 */
 	abstract class Model {
 		protected function __construct() { }

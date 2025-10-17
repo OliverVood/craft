@@ -45,6 +45,7 @@
 						case 'string':case 'text': $value = self::string($key, $value, $name, $errors); break;
 						case 'in': $value = self::in($key, $value, $name, $arguments, $errors); break;
 						case 'same': $value = self::same($key, $value, $name, $data[$arguments[0]] ?? null, $names[$arguments[0]] ?? $arguments[0], $errors); break;
+						case 'len': if (in_array('required', $rules) || $value) $value = self::len($key, $value, $name, (int)$arguments[0], $errors); break;
 						case 'min': if (in_array('required', $rules) || $value) $value = self::min($key, $value, $name, (int)$arguments[0], $errors); break;
 						case 'max': if (in_array('required', $rules) || $value) $value = self::max($key, $value, $name, (int)$arguments[0], $errors); break;
 						case 'contains': if (in_array('required', $rules) || $value) $value = self::contains($key, $value, $name, $arguments, $errors); break;
@@ -56,6 +57,7 @@
 						case 'unique': $value = self::unique($key, $value, $name, $arguments, $errors); break;
 						case 'datetime': $value = self::datetime($key, $value, $name, $errors); break;
 						case 'utc': $value = self::datetimeUTC($key, $value, $name, $errors); break;
+						case 'json': $value = self::json($value); break;
 						default: app()->error(new ErrorException("Validation rule '{$rule}' not found"));
 					}
 
@@ -194,9 +196,9 @@
 		 * @param string $valueOriginal - Оригинальное значение
 		 * @param string $nameOriginal - Оригинальное имя
 		 * @param $errors - Ошибки
-		 * @return mixed
+		 * @return ?string
 		 */
-		private static function same(string $key, string $value, string $name, string $valueOriginal, string $nameOriginal, & $errors): mixed {
+		private static function same(string $key, string $value, string $name, string $valueOriginal, string $nameOriginal, & $errors): ?string {
 			if ($value === $valueOriginal) return $value;
 
 			$errors[$key][] = __('Значение поля «:[name]» не совпадает cо значением поля «:[name_original]»', ['name' => $name, 'name_original' => $nameOriginal]);
@@ -217,6 +219,23 @@
 			if (mb_strlen($value) >= $min) return $value;
 
 			$errors[$key][] = __('Длина поля «:[name]» не может быть меньше :[min]', ['name' => $name, 'min' => $min]);
+
+			return null;
+		}
+
+		/**
+		 * Проверяет значение на длину символов
+		 * @param string $key - Ключ
+		 * @param mixed $value - Значение
+		 * @param string $name - Имя
+		 * @param int $len - Длина
+		 * @param $errors - Ошибки
+		 * @return mixed
+		 */
+		private static function len(string $key, mixed $value, string $name, int $len, & $errors): mixed {
+			if (mb_strlen($value) != $len) return $value;
+
+			$errors[$key][] = __('Длина поля «:[name]» не может быть отличной :[len]', ['name' => $name, 'len' => $len]);
 
 			return null;
 		}
@@ -295,6 +314,15 @@
 		}
 
 		/**
+		 * Преобразует в json или возвращает json "null"
+		 * @param mixed $value - Значение
+		 * @return string
+		 */
+		private static function json(mixed $value): string {
+			return json_encode($value, JSON_UNESCAPED_UNICODE);
+		}
+
+		/**
 		 * Проверяет значение на вхождение в таблицу
 		 * @param string $key - Ключ
 		 * @param int|float|string|null $value - Значение
@@ -312,7 +340,7 @@
 				->limit(1)
 				->query();
 
-			if (!$response->getOne()) {
+			if (!$response->get()) {
 				$errors[$key][] = __('Значение поля «:[name]» отсутствует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
 				return null;
 			}
@@ -320,6 +348,15 @@
 			return $value;
 		}
 
+		/**
+		 * Проверяет значение на уникальность в таблице
+		 * @param string $key - Ключ
+		 * @param int|float|string|null $value - Значение
+		 * @param string $name - Имя
+		 * @param array $arguments - Параметры запроса
+		 * @param $errors - Ошибки
+		 * @return int|float|string|null
+		 */
 		private static function unique(string $key, int|float|string|null $value, string $name, array $arguments, & $errors): int|float|string|null {
 			$response = db($arguments[0])
 				->select()
@@ -329,7 +366,7 @@
 				->limit(1)
 				->query();
 
-			if ($response->getOne()) {
+			if ($response->get()) {
 				$errors[$key][] = __('Значение поля «:[name]» уже существует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
 				return null;
 			}

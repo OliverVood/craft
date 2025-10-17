@@ -7,19 +7,19 @@
 	require_once DIR_ROOT . 'consts/dirs.php';
 
 	require_once DIR_ENTRY_ADMIN . 'require.php';
-	require_once DIR_ENTRY_ADMIN . 'route.xhr.php';
 
-	app('/admin', '/admin/xhr');
+	config()->load('app');
+	config()->load('db');
 
-	app()->config()->load('app');
-	app()->config()->load('db');
+	app('/admin/', '/admin/xhr/');
+
+	require_once DIR_ENTRY_ADMIN . 'route.php';
+	require_once DIR_ENTRY_ADMIN . 'features.php';
+	require_once DIR_ENTRY_ADMIN . 'links.php';
 
 	app()->params->name = 'docroom.pro';
 
 	access()->regSuperUsers([]);
-
-	require_once DIR_ENTRY_ADMIN . 'features.php';
-	require_once DIR_ENTRY_ADMIN . 'links.php';
 
 	route()->run();
 

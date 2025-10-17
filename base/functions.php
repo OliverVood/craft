@@ -4,6 +4,8 @@
 
 	use Base\Access;
 	use Base\App;
+	use Base\Config;
+	use Base\Cookie;
 	use Base\Data\Defined;
 	use Base\Data\Get;
 	use Base\Data\Old;
@@ -11,8 +13,8 @@
 	use Base\DB\DB;
 	use Base\Helper\Cryptography;
 	use Base\Helper\Debugger;
+	use Base\Helper\Redirect;
 	use Base\Helper\Response;
-	use Base\Helper\Security;
 	use Base\Helper\Timestamp;
 	use Base\Helper\Translation;
 	use Base\Helper\Validator;
@@ -22,14 +24,14 @@
 	use Base\Model;
 	use Base\Models;
 	use Base\Request;
-	use Base\Route;
+	use Base\Routes;
+	use Base\Session;
 	use Base\Templates;
 	use Base\UI\Buffer;
 	use Base\UI\Component;
 	use Base\UI\Template;
 	use Base\UI\View;
 	use JetBrains\PhpStorm\NoReturn;
-	use Proj\Models\Users;
 
 	/**
 	 * Возвращает / инициализирует экземпляр приложения
@@ -43,10 +45,10 @@
 
 	/**
 	 * Возвращает / инициализирует экземпляр маршрутизатора
-	 * @return Route
+	 * @return Routes
 	 */
-	function route(): Route {
-		return Route::instance();
+	function route(): Routes {
+		return Routes::instance();
 	}
 
 	/**
@@ -104,13 +106,37 @@
 	}
 
 	/**
+	 * Возвращает конфигуратор
+	 * @return mixed
+	 */
+	function config(): Config {
+		return Config::instance();
+	}
+
+	/**
 	 * Возвращает переменную окружения
 	 * @param $key - Ключ
 	 * @param $default - Значение по умолчанию
 	 * @return mixed
 	 */
 	function env($key, $default = null): mixed {
-		return app()->config()->get($key, $default);
+		return Config::instance()->get($key, $default);
+	}
+
+	/**
+	 * Возвращает экземпляр сессии
+	 * @return Session
+	 */
+	function session(): Session {
+		return Session::instance();
+	}
+
+	/**
+	 * Возвращает экземпляр кук
+	 * @return Cookie
+	 */
+	function cookie(): Cookie {
+		return Cookie::instance();
 	}
 
 	/**
@@ -347,9 +373,16 @@
 	 * @return string
 	 */
 	function csrf(): string {
-		/** @var Users $user */ $user = model('users');
+		return app()->csrf();
+	}
+
+	/**
+	 * Возвращает поле input с CSRF
+	 * @return string
+	 */
+	function csrfInput(): string {
 		buffer()->start();
-		?><input type = "hidden" name = "__csrf" value = "<?= $user->hash(); ?>"><?php
+		?><input type = "hidden" name = "__csrf" value = "<?= app()->csrf(); ?>"><?php
 		return buffer()->read();
 	}
 
@@ -358,20 +391,13 @@
 	 * @return bool
 	 */
 	function csrfValidate(): bool {
-		/** @var Users $user */ $user = model('users');
-
-		if (!$user->isAuth()) return true;
-		if (!$hash = $user->hash()) return false;
-		if (!$csrf = request()->data()->defined('__csrf')->string('')) return false;
-
-		return $hash == $csrf;
+		return app()->csrf() === request()->clientCSRF();
 	}
 
 	/**
-	 * Возвращает хеш пользователя
-	 * @return string
+	 * Возвращает экземпляр редиректа
+	 * @return Redirect
 	 */
-	function getUserHash(): string {
-		/** @var Users $user */ $user = model('users');
-		return $user->hash();
+	function redirect(): Redirect {
+		return Redirect::instance();
 	}

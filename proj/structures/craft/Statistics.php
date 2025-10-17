@@ -21,8 +21,9 @@
 			$this->table_ip->timestamp('datecr', false, __('Дата создания'));
 			$this->table_ip->uint32('ip', __('IP адрес'));
 			$this->table_ip->uint32('cid', __('ID клиента'));
-			$this->table_ip->string('path', 255, __('Путь'));
-			$this->table_ip->string('params', 255, __('Параметры'));
+			$this->table_ip->string('url', 1000, __('URL'));
+			$this->table_ip->string('method', 10, __('Метод'));
+			$this->table_ip->string('method_virtual', 10, __('Виртуальный метод'));
 			$this->table_ip->AddForeign('foreign', ['cid'], 'clients', ['id']);
 
 			$this->table_act = $structure->table('statistics_act', __('Статистика действий'));

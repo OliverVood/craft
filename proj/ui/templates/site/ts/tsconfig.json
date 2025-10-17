@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "none",
+    "target": "esnext",
+    "lib" : ["ESNext", "DOM"],
+    "rootDirs": ["./"],
+    "outFile": "../js/main.js",
+    "declaration": true,
+    "sourceMap": true,
+    "alwaysStrict": true,
+    "removeComments": true,
+    "noEmitOnError": true,
+    "declarationMap": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFactory": "PragmaJSX.createElement"
+//    "jsxFragment": "createElement",
+  },
+  "include": [ "**/*.ts", "../../../../../base/ui/js/base.d.ts"],
+  "exclude": ["node_module"]
+}

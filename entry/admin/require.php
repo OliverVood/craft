@@ -16,12 +16,18 @@
 
 	require DIR_BASE . 'Request.php';
 	require DIR_BASE . 'Config.php';
+	require DIR_BASE . 'Routes.php';
 	require DIR_BASE . 'Route.php';
+	require DIR_BASE . 'RouteGroup.php';
 	require DIR_BASE . 'Controllers.php';
 	require DIR_BASE . 'Controller.php';
 	require DIR_BASE . 'ControllerAccess.php';
+	require DIR_BASE . 'Middlewares.php';
+	require DIR_BASE . 'Middleware.php';
 	require DIR_BASE . 'Models.php';
 	require DIR_BASE . 'Model.php';
+	require DIR_BASE . 'Session.php';
+	require DIR_BASE . 'Cookie.php';
 	require DIR_BASE . 'DBs.php';
 	require DIR_BASE . 'data/Set.php';
 	require DIR_BASE . 'Access.php';

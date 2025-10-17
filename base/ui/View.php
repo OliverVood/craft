@@ -4,6 +4,8 @@
 
 	namespace Base\UI;
 
+	use Exception;
+
 	/**
 	 * Базовый класс для работы с отображениями
 	 */
@@ -29,6 +31,7 @@
 			$view = function (string $___name___, $___data___) {
 				extract($___data___, EXTR_SKIP);
 
+				if (!file_exists(DIR_PROJ_VIEWS . "{$___name___}.tpl")) app()->error(new Exception('View not found'));
 				require DIR_PROJ_VIEWS . "{$___name___}.tpl";
 			};
 

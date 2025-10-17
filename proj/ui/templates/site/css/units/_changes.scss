@@ -1,0 +1,57 @@
+@use "../variables" as *;
+@use "../functions" as *;
+
+.view.changes.all {
+
+	@mixin ViewNewsLastItems($params: null) {
+		> .all { margin-top: 1rem; text-align: left; }
+	}
+
+	@include MixScreen() { @include ViewNewsLastItems(); }
+}
+
+.view.changes.last {
+
+	@mixin ViewNewsLastItems($params: null) {
+		margin-top: 4rem;
+		> .all { margin-top: 1rem; text-align: left; }
+	}
+
+	@include MixScreen() { @include ViewNewsLastItems(); }
+}
+
+.view.changes.item {
+
+	@mixin ViewNewsLastItem($params: null) {
+		&:not(:last-child) { margin-bottom: 4px; }
+	}
+
+	@include MixScreen() { @include ViewNewsLastItem(); }
+}
+
+.view.changes.show {
+
+	@mixin ViewChangesShow($params: null) {
+		> .data { margin-top: 1rem; text-align: right; font-size: 1rem; color: $color_running_title; }
+	}
+
+	@include MixScreen() { @include ViewChangesShow(); }
+}
+
+.view.change.item {
+
+	@mixin ViewChangeItem($params: null) {
+		display: grid; grid-template-columns: repeat(3, 1fr); gap: $base2;
+		> .cover { grid-area: a; height: 180px; background-size: cover; background-position: center; }
+		> .wrap {
+			grid-area: b; padding-right: $base2;
+			> .header { font-weight: 700; font-size: 1.4rem; }
+			> .content { margin-top: 1rem; text-align: justify; }
+		}
+		&:nth-child(odd) { grid-template-areas: 'a b b'; }
+		&:nth-child(even) { grid-template-areas: 'b b a'; }
+		&:not(:first-child) { margin-top: $base2; }
+	}
+
+	@include MixScreen() { @include ViewChangeItem(); }
+}

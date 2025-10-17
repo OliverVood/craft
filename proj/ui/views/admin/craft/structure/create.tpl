@@ -1,7 +1,7 @@
 <div class = "view craft structure create">
 	<h1><?= __('Создание структуры'); ?></h1>
 	<form action = "<?= linkRight('craft_run')->path(['entity' => 'structure', 'action' => 'create']); ?>">
-		<?php echo csrf(); ?>
+		<?= csrfInput(); ?>
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним структуры'); ?>">
 			<div class = "errors"></div>
 		</div>

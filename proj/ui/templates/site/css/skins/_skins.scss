@@ -1,0 +1,5 @@
+@use "select" as *;
+
+.skin {
+	@include Select;
+}

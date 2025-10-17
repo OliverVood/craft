@@ -81,6 +81,19 @@
 		}
 
 		/**
+		 * Задаёт условие с полем и значением без экранирования
+		 * @param string $field - Первое поле
+		 * @param string $value - Значение
+		 * @param string $operator - Оператор
+		 * @return $this
+		 */
+		public function compareFunc(string $field, string $value, string $operator = '='): self {
+			$this->addConditions('compare_func', 'AND', ['field' => $field, 'value' => $value, 'operator' => $operator]);
+
+			return $this;
+		}
+
+		/**
 		 * Добавляет условия
 		 * @param string $type - Тип условия
 		 * @param string $connection - Соединение условий
@@ -107,11 +120,13 @@
 
 		/**
 		 * Задаёт ограничения
-		 * @param int $count - Количество записей
+		 * @param int|null $count - Количество записей
 		 * @param int|null $skip - Сдвиг
 		 * @return $this
 		 */
-		public function limit(int $count, int $skip = null): self {
+		public function limit(int $count = null, int $skip = null): self {
+			if ($count === null) return $this;
+
 			$this->limit = [$count, $skip];
 
 			return $this;

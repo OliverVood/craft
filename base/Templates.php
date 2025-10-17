@@ -6,6 +6,9 @@
 
 	use Base\UI\Template;
 
+	/**
+	 * Шаблоны
+	 */
 	class Templates {
 		use Singleton;
 		private array $templates = [];

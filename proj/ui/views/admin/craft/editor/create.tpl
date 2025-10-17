@@ -1,7 +1,7 @@
 <div class = "view craft editor create">
 	<h1><?= __('Создание редактора'); ?></h1>
 	<form action = "<?= linkRight('craft_run')->path(['entity' => 'editor', 'action' => 'create']); ?>">
-		<?php echo csrf(); ?>
+		<?= csrfInput(); ?>
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним редактора'); ?>">
 			<div class = "errors"></div>
 		</div>

@@ -7,21 +7,19 @@
 	require_once DIR_ROOT . 'consts/dirs.php';
 
 	require_once DIR_ENTRY_ADMIN . 'require.php';
-	require_once DIR_ENTRY_ADMIN . 'route.html.php';
 
-	app('/admin', '/admin/xhr');
+	config()->load('app');
+	config()->load('db');
 
-	app()->config()->load('app');
-	app()->config()->load('db');
+	app('/admin/', '/admin/xhr/');
 
-	app()->params->name = 'docroom.pro';
-	app()->params->defaultTemplate = 'admin.template';
-
-	access()->regSuperUsers([]);
-
+	require_once DIR_ENTRY_ADMIN . 'route.php';
 	require_once DIR_ENTRY_ADMIN . 'features.php';
 	require_once DIR_ENTRY_ADMIN . 'links.php';
 
-	route()->run();
+	app()->params->name = 'docroom.pro';
+	app()->params->defaultTemplate = 'admin.template';//todo из конфига
 
-	template()->browse();
+	access()->regSuperUsers([]);
+
+	route()->run();

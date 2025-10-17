@@ -1,0 +1,42 @@
+@use "../variables" as *;
+@use "../functions" as *;
+
+.view.news.last {
+
+	@mixin ViewNewsLastItems($params: null) {
+		margin-top: 4rem;
+		> .all { margin-top: 1rem; text-align: left; }
+	}
+
+	@include MixScreen() { @include ViewNewsLastItems(); }
+}
+
+.view.news.item {
+
+	@mixin ViewNewsLastItem($params: null) {
+		border: 1px solid $color-secondary;
+		> .cover { height: 140px; background-color: $color-neutral-light; background-size: cover; background-position: center; }
+		> .header { margin: 1rem 1rem 0.5rem; }
+		> .content { margin: 0 1rem; overflow: hidden; -webkit-line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; text-align: justify; }
+		> .links { margin: 1rem; text-align: right; }
+	}
+
+	@include MixScreen() { @include ViewNewsLastItem(); }
+}
+
+.view.news.show {
+
+	@mixin ViewNewsShow($params: null) {
+		> .cover {
+			position: relative; background-position: center; background-size: cover;
+			> div {
+				&:first-child { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(transparent, #eaeaea 80%); }
+				h1 { padding-top: 10rem; position: relative; /*padding-bottom: 2rem; margin: 0;*/ }
+			}
+		}
+		> .content { text-align: justify; }
+		> .data { margin-top: 1rem; text-align: right; font-size: 1rem; color: $color_running_title; }
+	}
+
+	@include MixScreen() { @include ViewNewsShow(); }
+}
