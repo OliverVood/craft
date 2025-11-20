@@ -5,6 +5,7 @@
 	namespace Base;
 
 	use Base\UI\Template;
+	use Exception;
 
 	/**
 	 * Шаблоны
@@ -30,7 +31,11 @@
 		 */
 		public function load(string $name): void {
 			$path = str_replace('.', '/', $name);
-			require_once DIR_PROJ_TEMPLATES . $path . '.php';
+			$file = DIR_PROJ_TEMPLATES . $path . '.php';
+
+			if (!file_exists($file)) app()->error(new Exception('Template not found'));
+
+			require_once $file;
 		}
 
 		/**
@@ -41,6 +46,9 @@
 		private function init(string $name): void {
 			$path = str_replace('.', '\\', $name);
 			$class = "\\Proj\\UI\\Templates\\{$path}";
+
+			if (!class_exists($class)) app()->error(new Exception('Template not found'));
+
 			$this->templates[$name] = new $class();
 		}
 

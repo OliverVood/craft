@@ -34,5 +34,10 @@
 	const DIR_RESOURCE						= DIR_PROJ . 'resource/';
 	const DIR_RESOURCE_IMAGE				= DIR_RESOURCE . 'image/';
 
-	const DIR_RELATIVE_RESOURCE				= '/proj/resource/';
+	const DIR_RELATIVE_ROOT					= '/';
+
+	const DIR_RELATIVE_RESOURCE				= DIR_RELATIVE_ROOT . '/proj/resource/';
 	const DIR_RELATIVE_IMAGE				= DIR_RELATIVE_RESOURCE . 'image/';
+
+	const DIR_RELATIVE_PUBLIC				= DIR_RELATIVE_ROOT . 'public/';
+	const DIR_RELATIVE_PUBLIC_IMAGES		= DIR_RELATIVE_PUBLIC . 'images/';

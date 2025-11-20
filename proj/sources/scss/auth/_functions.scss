@@ -1,0 +1,43 @@
+@mixin mixScreen($min: null, $max: null, $screen: false, $print: false) {
+	@if ($min != null or $max != null or $screen or $print) {
+
+		$media: '';
+		$fill: false;
+
+		@if ($screen) { $media: 'screen'; $fill: true; }
+		@if ($print) { @if ($fill) { $media: $media + ' AND '; } $media: $media + 'print'; $fill: true; }
+		@if ($min) { @if ($fill) { $media: $media + ' AND '; } $media: $media + '(min-width: ' + ($min + 1) + 'px)'; $fill: true; }
+		@if ($max) { @if ($fill) { $media: $media + ' AND '; } $media: $media + '(max-width: ' + $max + 'px)'; }
+
+		@media #{$media} {
+			@content;
+		}
+
+	} @else {
+		@content;
+	}
+}
+
+@function getImage($file) {
+	@return url('../img/' + $file);
+}
+
+@function getImageUI($file) {
+	@return getImage('ui/' + $file);
+}
+
+@function getImageUIWhite($file) {
+	@return getImageUI('white/' + $file);
+}
+
+@function getImageUIPrimary($file) {
+	@return getImageUI('primary/' + $file);
+}
+
+@function getImageUIPrimaryLight($file) {
+	@return getImageUI('primary_light/' + $file);
+}
+
+@function getFont($file) {
+	@return url('../fonts/' + $file);
+}

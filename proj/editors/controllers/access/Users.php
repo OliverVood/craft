@@ -14,7 +14,7 @@
 	 */
 	class Users extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('users'), 'access.users');
+			parent::__construct(feature('users'), 'access.users');
 
 			$this->access = new Access($this);
 			$this->access->fnGetLinksNavigate = fn () => $this->getLinksNavigate();

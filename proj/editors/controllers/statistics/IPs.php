@@ -14,7 +14,7 @@
 	 */
 	class IPs extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('statistics_ips'), 'statistics.ips');
+			parent::__construct(feature('statistics_ips'), 'statistics.ips');
 
 			$this->names = [
 				'datecr' => __('Дата'),

@@ -1,0 +1,86 @@
+//@use "sass:map";
+
+@use "site/variables" as *;
+@use "site/functions" as *;
+
+@use "site/fonts" as *;
+
+@use "site/template" as *;
+@use "site/grid" as *;
+@use "site/skins/skins" as *;
+@use "site/units/general" as *;
+@use "site/units/catalogs" as *;
+@use "site/units/news" as *;
+@use "site/units/feedback" as *;
+@use "site/units/documents" as *;
+@use "site/units/changes" as *;
+
+a {
+	cursor: pointer; color: $color-text; text-decoration: none;
+	&:hover { text-decoration: underline; }
+	&.link {
+		color: $color-primary-light;
+		&:hover { color: $color-primary; }
+	}
+}
+h1 { margin: 0 0 3rem; font-size: 2.2rem; font-weight: normal; text-align: center; }
+h2 { margin: 0 0 1rem; font-weight: normal; }
+h3 { margin: 0 0 0.5rem; }
+p, ol { margin: 0; }
+input { @include MixText; font-family: PetersburgC, sans-serif; font-size: 1.2rem; }
+input[type="button"], input[type="submit"], a.button {
+	@include MixBtn; outline: none; text-decoration: none;
+	&.hover { text-decoration: none; }
+}
+textarea { @include MixTextarea; font-family: PetersburgC, sans-serif; font-size: 1.2rem; }
+.hide { display: none; }
+.items_margin_bottom > *:not(:last-child) { margin-bottom: $items_margin; }
+.items_margin_bottom_cut > *:not(:last-child) { margin-bottom: $items_margin_cut; }
+label .required:after { content: "*"; margin-left: 4px; color: $color_negative; }
+.document {
+	font-family: Monitorica, sans-serif;
+	input { font-family: Monitorica, sans-serif; font-size: 1.2rem; }
+}
+
+.view.base.notices {
+	position: fixed; top: 1rem; right: 1rem; z-index: $z-notice; display: grid; gap: 1rem;
+	> .instance {
+		display: flex; border-width: 1px; border-style: solid; border-color: $color-light; background-color: $color-light;
+		&.ok {
+			border-color: $color-primary;
+			> .type { background-image: getImageUI('notice/ok.svg'); }
+		}
+		&.info { border-color: $color-neutral;
+			> .type { background-image: getImageUI('notice/info.svg'); }
+		}
+		&.error { border-color: $color-negative;
+			> .type { background-image: getImageUI('notice/error.svg'); }
+		}
+		> .type { width: 3rem; background-size: 1.5rem; background-position: 1rem 1rem; background-repeat: no-repeat; }
+		> .notice { flex: auto; padding: 1.2rem; }
+		> .close > div {
+			width: 2rem; height: 2rem; background-image: getImageUIPrimary('close.svg'); background-size: 1rem; background-position: center; background-repeat: no-repeat; cursor: pointer;
+			&:hover { background-image: getImageUIPrimaryLight('close.svg'); }
+		}
+	}
+}
+
+[data-field].error {
+	input, select { border-color: $color-negative; }
+	> .errors {
+		display: flex; flex-direction: column;
+		&:not(:empty) { margin-top: 0.5rem; }
+		> span {
+			color: $color-negative;
+			&:not(:first-child) { margin-top: 0.4rem; }
+		}
+	}
+}
+
+@mixin MixMain($params: null) {
+	.glob_print { display: GetParam($params, -display-print, none); }
+	.glob_print_tabu { display: GetParam($params, -display-print-tabu, null); }
+}
+
+@include MixScreen() { @include MixMain(); }
+@include MixPrint() { @include MixMain((-display-print: revert !important, -display-print-tabu: none !important)); }

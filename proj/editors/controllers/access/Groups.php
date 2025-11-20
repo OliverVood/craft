@@ -14,7 +14,7 @@
 	 */
 	class Groups extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('groups'), 'access.groups');
+			parent::__construct(feature('groups'), 'access.groups');
 
 			$this->access = new Access($this);
 			$this->access->fnGetLinksNavigate = fn () => $this->getLinksNavigate();

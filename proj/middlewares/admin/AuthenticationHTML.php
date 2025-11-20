@@ -6,7 +6,7 @@
 
 	use Base\Middleware;
 	use Proj\Models;
-	use Proj\UI\Templates\Auth\Template as Template;
+	use Proj\UI\Templates\Auth as Template;
 
 	/**
 	 * Аутентификация пользователя по HTML
@@ -22,7 +22,7 @@
 
 			if ($users->isAuth()) return;
 
-			/** @var Template $template */ $template = template('auth.template');
+			/** @var Template $template */ $template = template('auth');
 
 			$template->layout->header->push(__('Вход в систему'));
 			$template->layout->main->push(view('admin.users.form_authorization'));

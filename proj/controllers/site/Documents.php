@@ -5,8 +5,8 @@
 	namespace Proj\Controllers\Site;
 
 	use Base\Controller;
-	use Proj\UI\Templates\Site\Template;
 	use JetBrains\PhpStorm\NoReturn;
+	use Proj\UI\Templates\Site;
 
 	/**
 	 * Отвечает за обработку запросов к документам
@@ -23,7 +23,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function estimates(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Сметы');
 			$template->seo->setDescription('Составление сметы на оказание услуг и продажу товаров');
@@ -38,7 +38,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function certificates(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Акты выполненных работ');
 			$template->seo->setDescription('Составление актов выполненных работ');
@@ -53,7 +53,7 @@
 		 * @return void
 		 */
 		#[NoReturn] public function priceLists(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Прайс-листы');
 			$template->seo->setDescription('Составление прайс-листа на оказание услуг, проведение работ и продажу товаров');

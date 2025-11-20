@@ -6,8 +6,8 @@
 
 	use Base\Middleware;
 	use Base\UI\Section;
-	use Proj\UI\Templates\Admin\Template;
 	use Proj\Models;
+	use Proj\UI\Templates\Admin;
 
 	/**
 	 * Вывод в шаблон
@@ -25,7 +25,7 @@
 		 * @return void
 		 */
 		public function outlet(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Admin $template */ $template = template();
 
 			$this->setHead($template->layout->header);
 			$this->setMenu($template->layout->menu);

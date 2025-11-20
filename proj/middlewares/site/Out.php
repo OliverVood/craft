@@ -6,7 +6,7 @@
 
 	use Base\Middleware;
 	use Base\UI\Section;
-	use Proj\UI\Templates\Site\Template;
+	use Proj\UI\Templates\Site;
 
 	/**
 	 * Вывод в шаблон
@@ -23,7 +23,7 @@
 		 * @return void
 		 */
 		public function outlet(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$this->setHead($template->layout->header);
 			$this->setFooter($template->layout->footer);

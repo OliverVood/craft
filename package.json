@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "archive": "node scripts/archive.js",
+    "prod": "npm run build:prod && npm run archive"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.33",
+    "clean-webpack-plugin": "^4.0.0",
+    "compression-webpack-plugin": "^11.1.0",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "glob": "^11.0.3",
+    "mini-css-extract-plugin": "^2.9.4",
+    "sass": "^1.93.2",
+    "sass-loader": "^16.0.6",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-merge": "^6.0.1",
+    "webpack-remove-empty-scripts": "^1.1.1"
+  }
+}

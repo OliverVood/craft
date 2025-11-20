@@ -30,4 +30,13 @@
 			response()->ok();
 		}
 
+		/**
+		 * Страница не найдена
+		 * @controllerMethod
+		 * @return void
+		 */
+		#[NoReturn] public function error404(): void {
+			response()->notFound(__('Страница не найдена'));
+		}
+
 	}

@@ -4,6 +4,7 @@
 
 	namespace Base\Access;
 
+	use Base\Singleton;
 	use Exception;
 	use Generator;
 
@@ -12,6 +13,8 @@
 	 * @property Feature[] $features
 	 */
 	class Features {
+		use Singleton;
+
 		private array $features = [];
 
 		/**

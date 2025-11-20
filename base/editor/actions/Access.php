@@ -59,7 +59,7 @@
 			/** @var Model $model */ $model = $this->controller->model();
 
 			$title = $this->__('title') . " #{$id}";
-			$features = app()->features;
+			$features = features();
 			$items = [];
 			foreach ($model->access($id, ['feature', 'right', 'permission'])->each() as $item) {
 				$items[$item['feature']][$item['right']] = $item['permission'];

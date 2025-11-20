@@ -19,7 +19,7 @@
 	 */
 	class Changes extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('changes'), 'site.changes');
+			parent::__construct(feature('changes'), 'site.changes');
 
 			$this->names = [
 				'state'			=> __('Состояние'),

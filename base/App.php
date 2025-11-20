@@ -4,14 +4,13 @@
 
 	namespace Base;
 
-	use Base\Access\Features;
-	use Base\Access\Feature;
 	use Base\Access\Links;
 	use Base\DB\DB;
 	use Base\Helper\Response;
 	use Base\Helper\Security;
 	use Exception;
 	use JetBrains\PhpStorm\NoReturn;
+	use Proj\UI\Templates;
 	use stdClass;
 
 	/**
@@ -27,15 +26,12 @@
 		public Middlewares $middlewares;
 		public Models $models;
 
-		public Access $access;
-		public Features $features;
-
 		public DBs $dbs;
-		public Links $links;
 
 		public stdClass $params;
 
 		private string $csrf;
+		private string $versionDevelopment;
 
 		/**
 		 * @param string $html - Путь HTML
@@ -45,6 +41,7 @@
 			session()->start();
 
 			$this->csrf = Security::csrf();
+			$this->versionDevelopment = 'dev_' . time();
 
 			$this->request = new Request($html, $xhr);
 			$this->response = new Response();
@@ -53,11 +50,7 @@
 			$this->middlewares = new Middlewares();
 			$this->models = new Models();
 
-			$this->access = Access::instance();
-			$this->features = new Features();
-
 			$this->dbs = new DBs();
-			$this->links = new Links();
 
 			$this->params = new stdClass();
 		}
@@ -97,29 +90,12 @@
 		}
 
 		/**
-		 * Возвращает права пользователя
-		 * @return Access
-		 */
-		public function access(): Access {
-			return $this->access;
-		}
-
-		/**
 		 * Возвращает базу данных
 		 * @param string $alias - Псевдоним базы данных
 		 * @return DB
 		 */
 		public function db(string $alias): DB {
 			return $this->dbs->registrationAndGet($alias);
-		}
-
-		/**
-		 * Возвращает признак по имени
-		 * @param string $name - Наименование признака
-		 * @return Feature
-		 */
-		public function features(string $name): Feature {
-			return $this->features->get($name);
 		}
 
 		/**
@@ -135,6 +111,8 @@
 		 * @return string
 		 */
 		public function version(): string {
+			if (env('APP_ASSEMBLY', 'production') == 'development') return $this->versionDevelopment;
+
 			return env('APP_VERSION', '1.0.0');
 		}
 
@@ -143,9 +121,14 @@
 		 * @param Exception $e - Исключение
 		 * @return void
 		 */
-		#[NoReturn] public function error(Exception $e): void {//todo
-			echo $e->getMessage();
-			exit;
+		#[NoReturn] public function error(Exception $e): void {
+			/** @var Templates\Error $template */ $template = template('error');
+
+			$template->layout->main->push('<h1>The <b>Craft</b> app has encountered a critical error.</h1>');
+			$template->layout->main->push('<h3>Message:</h3>');
+			$template->layout->main->push('<div class = "error">' . $e->getMessage(). '</div>');
+
+			$template->browse(true);
 		}
 
 	}

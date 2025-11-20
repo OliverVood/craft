@@ -1,6 +1,6 @@
 <?php
 
-	declare(strict_types=1);//todo 404 site & admin
+	declare(strict_types=1);
 
 	route()->group('/xhr', [
 		route()->group('/feedback', [
@@ -37,11 +37,9 @@
 			route()->get('/certificates', 'site.documents::certificates'),
 			route()->get('/price_lists', 'site.documents::priceLists'),
 		]),
+
+		route()->all('/:(all)', 'site.pages::error404'),
 	])
 		->middleware('clients')
 		->middleware('statistics')
 		->middleware('site.out');
-
-	route()->empty('/:(all)')
-		->middleware('clients')
-		->middleware('statistics');

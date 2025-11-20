@@ -5,7 +5,7 @@
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним контроллера'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<?= componentSolution()->checkbox(__('Создать модель'), ['name' => 'params[model]', 'value' => '', 'onchange' => /** @lang JavaScript */ "Base.Craft.Controller.addModel(this);"]); ?>
+		<?= componentSolution()->checkbox(__('Создать модель'), ['name' => 'params[model]', 'value' => '', 'onchange' => /** @lang JavaScript */ "globalThis.Craft.Controller.addModel(this);"]); ?>
 		<div><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
 	</form>
 </div>

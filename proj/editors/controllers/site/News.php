@@ -18,7 +18,7 @@
 	 */
 	class News extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('news'), 'site.news');
+			parent::__construct(feature('news'), 'site.news');
 
 			$this->names = [
 				'state' => __('Состояние'),

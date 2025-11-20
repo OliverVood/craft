@@ -92,9 +92,12 @@
 				route()->delete('/:(num)', 'site.feedback::doDelete', Controllers::SOURCE_EDITORS),
 				route()->patch('/:(num)/status/:(num)', 'site.feedback::setState', Controllers::SOURCE_EDITORS),
 			]),
-
-			route()->empty('/:(all)'),
 		])
+			->middleware('clients')
+			->middleware('statistics')
+			->middleware('admin.authenticationXHR'),
+
+		route()->all('/xhr/:(all)', 'admin.out::error404')
 			->middleware('clients')
 			->middleware('statistics')
 			->middleware('admin.authenticationXHR'),

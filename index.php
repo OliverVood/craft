@@ -10,6 +10,7 @@
 
 	config()->load('app');
 	config()->load('db');
+	config()->load('site');
 
 	app('/', '/xhr/');
 
@@ -19,6 +20,5 @@
 	app()->params->name = 'DocRoom.site';
 	app()->params->slogan = 'управляй своими документами';
 	app()->params->email = 'support@docroom.pro';
-	app()->params->defaultTemplate = 'site.template';//todo из конфига
 
 	route()->run();

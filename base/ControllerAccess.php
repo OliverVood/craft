@@ -28,7 +28,7 @@
 		 * @return bool
 		 */
 		final public function allow(string $right, int $id = 0): bool {
-			return app()->access->allow($this->feature->id(), $this->feature->rights($right)->id(), $id);
+			return access()->allow($this->feature->id(), $this->feature->rights($right)->id(), $id);
 		}
 
 	}

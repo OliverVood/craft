@@ -19,7 +19,7 @@
 	 */
 	class Users extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('users'), 'users');
+			parent::__construct(feature('users'), 'users');
 
 			$this->names = [
 				'login' => __('Логин'),

@@ -12,7 +12,7 @@
 	 */
 	class Actions extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('statistics_actions'), 'statistics.actions');
+			parent::__construct(feature('statistics_actions'), 'statistics.actions');
 
 			$this->names = [
 				'datecr' => __('Дата'),

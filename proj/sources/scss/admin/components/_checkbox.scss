@@ -1,0 +1,37 @@
+@use "../variables" as *;
+
+@mixin componentCheckbox($width: 50px, $height: 20px, $gap: 2px, $border: 1px) {
+	$runnerSize: $height - ($gap * 2);
+
+	div.component.checkbox {
+		> label {
+			display: flex; align-items: center; cursor: pointer;
+			> input {
+				display: none;
+				&:checked + div {
+					justify-content: end;
+				}
+			}
+			> div {
+				width: $width;
+				height: $height;
+				border-radius: $width * 0.5;
+				display: flex;
+				align-items: center;
+				padding: $gap;
+				border: $border solid $palette-secondary-dark;
+				&:after {
+					content: "";
+					width: $runnerSize;
+					height: $runnerSize;
+					background-color: $palette-secondary-dark;
+					border-radius: 50%;
+				}
+			}
+			> span {
+				padding-left: 20px;
+			}
+		}
+	}
+
+}

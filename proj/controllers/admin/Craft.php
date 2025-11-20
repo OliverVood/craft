@@ -15,7 +15,7 @@
 	class Craft extends ControllerAccess {
 
 		public function __construct() {
-			parent::__construct(app()->features('craft'));
+			parent::__construct(feature('craft'));
 		}
 
 		public function index(): void {//todo

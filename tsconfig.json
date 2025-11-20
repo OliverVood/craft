@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ES6",
+    "moduleResolution": "node",
+    "lib": ["ES6", "DOM"],
+    "outDir": "./public/js",
+    "rootDir": "./proj/sources/ts",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  },
+  "include": [
+    "proj/sources/ts/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -8,9 +8,6 @@
 
 	require DIR_BASE . 'App.php';
 
-	require DIR_BASE . 'access/Features.php'; // todo ?
-	require DIR_BASE . 'access/Links.php'; // todo ?
-
 	require DIR_BASE . 'Request.php';
 	require DIR_BASE . 'Config.php';
 	require DIR_BASE . 'Routes.php';
@@ -22,10 +19,10 @@
 	require DIR_BASE . 'Middleware.php';
 	require DIR_BASE . 'Models.php';
 	require DIR_BASE . 'Model.php';
+	require DIR_BASE . 'Links.php';
 	require DIR_BASE . 'Session.php';
 	require DIR_BASE . 'Cookie.php';
 	require DIR_BASE . 'DBs.php';
-	require DIR_BASE . 'Access.php';//todo ?
 	require DIR_BASE . 'data/Set.php';
 
 	require DIR_BASE_DB . 'DB.php';

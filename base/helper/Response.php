@@ -156,12 +156,11 @@
 		 * Добавляет историю в стек ответов
 		 * @param Internal $action - Действие
 		 * @param array $data - Данные
-//		 * @param string|null $handler - Обработчик
 		 * @return void
 		 */
-		public function history(Internal $action, array $data = []/*, string $handler = null*/): void {
-			if (input('no_history')) return;
-			$this->set(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->path($data)/*, 'handler' => $handler*/]);
+		public function history(Internal $action, array $data = []): void {
+			if (get('no_history')->bool(false)) return;
+			$this->set(self::TYPE_HISTORY, ['address' => $action->href($data), 'xhr' => $action->path($data)]);
 		}
 
 		/**

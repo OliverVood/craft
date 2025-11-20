@@ -3,6 +3,8 @@
 	declare(strict_types=1);
 
 	use Base\Access;
+	use Base\Access\Feature;
+	use Base\Access\Features;
 	use Base\App;
 	use Base\Config;
 	use Base\Cookie;
@@ -21,6 +23,7 @@
 	use Base\Link\External;
 	use Base\Link\Internal;
 	use Base\Link\Right;
+	use Base\Links;
 	use Base\Model;
 	use Base\Models;
 	use Base\Request;
@@ -87,11 +90,11 @@
 	}
 
 	/**
-	 * Возвращает объект доступа
+	 * Возвращает фабрику прав доступа
 	 * @return Access
 	 */
 	function access(): Access {
-		return app()->access();
+		return Access::instance();
 	}
 
 	/**
@@ -102,7 +105,7 @@
 	 * @return bool
 	 */
 	function allow(string $feature, string $right, int $id = 0): bool {
-		return app()->access->allow(app()->features($feature)->id(), app()->features($feature)->rights($right)->id(), $id);
+		return access()->allow(feature($feature)->id(), feature($feature)->rights($right)->id(), $id);
 	}
 
 	/**
@@ -111,6 +114,23 @@
 	 */
 	function config(): Config {
 		return Config::instance();
+	}
+
+	/**
+	 * Возвращает фабрику признаков
+	 * @return Features
+	 */
+	function features(): Features {
+		return Features::instance();
+	}
+
+	/**
+	 * Возвращает экземпляр признака
+	 * @param string $name - Наименование признака
+	 * @return Feature
+	 */
+	function feature(string $name): Feature {
+		return Features::instance()->get($name);
 	}
 
 	/**
@@ -140,12 +160,55 @@
 	}
 
 	/**
+	 * Возвращает фабрику ссылок
+	 * @return Links
+	 */
+	function links(): Links {
+		return Links::instance();
+	}
+
+	/**
+	 * Регистрирует внутреннюю ссылку
+	 * @param string $alias - Псевдоним ссылки
+	 * @param string $address - Адрес
+	 * @param string $click - Обработчик
+	 * @return void
+	 */
+	function linkRegInternal(string $alias, string $address = '', string $click = ''): void {
+		links()->registration($alias, new Internal($address, $click));
+	}
+
+	/**
+	 * Регистрирует внешнюю ссылку
+	 * @param string $alias - Псевдоним ссылки
+	 * @param string $address - Адрес
+	 * @param string $click - Обработчик
+	 * @return void
+	 */
+	function linkRegExternal(string $alias, string $address = '', string $click = ''): void {
+		links()->registration($alias, new External($address, $click));
+	}
+
+	/**
+	 * Регистрирует внутреннюю ссылку
+	 * @param string $alias - Псевдоним ссылки
+	 * @param string $feature - Наименование признака
+	 * @param string $right - Наименование права
+	 * @param string $address - Адрес
+	 * @param string $click - Обработчик
+	 * @return void
+	 */
+	function linkRegRight(string $alias, string $feature, string $right, string $address = '', string $click = ''): void {
+		links()->registration($alias, new Right(feature($feature)->id(), feature($feature)->rights($right)->id(), $address, $click));
+	}
+
+	/**
 	 * Возвращает внешнюю ссылку по псевдониму
 	 * @param string $alias - Псевдоним
 	 * @return External
 	 */
 	function linkExternal(string $alias): External {
-		return app()->links->getExternal($alias);
+		return links()->get($alias);
 	}
 
 	/**
@@ -154,17 +217,16 @@
 	 * @return Internal
 	 */
 	function linkInternal(string $alias): Internal {
-		return app()->links->getInternal($alias);
+		return links()->get($alias);
 	}
 
 	/**
 	 * Возвращает ссылку с правами по псевдониму
 	 * @param string $alias - Псевдоним
-	 * @param bool $exp - Вызывать ли исключение
-	 * @return Right|null
+	 * @return Right
 	 */
-	function linkRight(string $alias, bool $exp = true): ?Right {
-		return app()->links->getRight($alias, $exp);
+	function linkRight(string $alias): Right {
+		return links()->get($alias);
 	}
 
 	/**
@@ -173,7 +235,7 @@
 	 * @return Template
 	 */
 	function template(string $name = ''): Template {
-		return Templates::instance()->registrationAndGet($name ?: app()->params->defaultTemplate);
+		return Templates::instance()->registrationAndGet($name ?: env('TEMPLATE_DEFAULT', ''));
 	}
 
 	/**

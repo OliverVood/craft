@@ -21,7 +21,7 @@
 	 */
 	class Change extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('changes'), 'site.change');
+			parent::__construct(feature('changes'), 'site.change');
 
 			$this->names = [
 				'state' =>  __('Состояние'),
@@ -168,17 +168,17 @@
 		 * @return void
 		 */
 		protected function links(): void {
-			$this->linkAccess = linkRight('change_access', false);
-			$this->linkSelect = linkRight('change_select', false);
-			$this->linkBrowse = linkRight('change_browse', false);
-			$this->linkCreate = linkRight('change_create', false);
-			$this->linkUpdate = linkRight('change_update', false);
+			$this->linkAccess = linkRight('change_access');
+			$this->linkSelect = linkRight('change_select');
+			$this->linkBrowse = linkRight('change_browse');
+			$this->linkCreate = linkRight('change_create');
+			$this->linkUpdate = linkRight('change_update');
 
-			$this->linkDoAccess = linkRight('change_do_access', false);
-			$this->linkDoCreate = linkRight('change_do_create', false);
-			$this->linkDoUpdate = linkRight('change_do_update', false);
-			$this->linkDoDelete = linkRight('change_do_delete', false);
-			$this->linkSetState = linkRight('change_set_state', false);
+			$this->linkDoAccess = linkRight('change_do_access');
+			$this->linkDoCreate = linkRight('change_do_create');
+			$this->linkDoUpdate = linkRight('change_do_update');
+			$this->linkDoDelete = linkRight('change_do_delete');
+			$this->linkSetState = linkRight('change_set_state');
 		}
 
 		/**

@@ -8,7 +8,7 @@
 	use Base\Data\Set;
 	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models\News as Model;
-	use Proj\UI\Templates\Site\Template;
+	use Proj\UI\Templates\Site;
 
 	/**
 	 * Отвечает за обработку запросов к новостям
@@ -27,7 +27,7 @@
 		#[NoReturn] public function index(): void {
 			/** @var Model $news */ $news = model('news');
 
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 			$template->layout->main->push(view('site.news.all', [
 				'title' => __('Все новости'),
 				'items' => $news->all(),
@@ -44,7 +44,7 @@
 		#[NoReturn] public function show(Set $data, int $id): void {
 			/** @var Model $changes */ $changes = model('changes');
 
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 			if (!$item = $changes->get($id)) redirect()->page404();
 			$template->layout->main->push(view('site.changes.show', $item));
 		}

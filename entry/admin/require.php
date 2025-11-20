@@ -26,6 +26,7 @@
 	require DIR_BASE . 'Middleware.php';
 	require DIR_BASE . 'Models.php';
 	require DIR_BASE . 'Model.php';
+	require DIR_BASE . 'Links.php';
 	require DIR_BASE . 'Session.php';
 	require DIR_BASE . 'Cookie.php';
 	require DIR_BASE . 'DBs.php';

@@ -5,8 +5,8 @@
 	namespace Proj\Controllers\Site;
 
 	use Base\Controller;
-	use Proj\UI\Templates\Site\Template;
 	use Proj\Models as Models;
+	use Proj\UI\Templates\Site;
 
 	/**
 	 * Отвечает за простые страницы
@@ -23,7 +23,7 @@
 		 * @return void
 		 */
 		public function home(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Главная');
 			$template->seo->setDescription(app()->params->name . ' - ресурс в помощь ИП, самозанятым с документами и отчётами');
@@ -52,7 +52,7 @@
 		 * @return void
 		 */
 		public function about(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | О проекте');
 			$template->seo->setDescription('О проекте ' . app()->params->name);
@@ -67,7 +67,7 @@
 		 * @return void
 		 */
 		public function contacts(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Контакты');
 			$template->seo->setDescription('Контакты');
@@ -82,7 +82,7 @@
 		 * @return void
 		 */
 		public function privacyPolicy(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Политика конфиденциальности');
 			$template->seo->setDescription('Политика конфиденциальности ' . app()->params->name);
@@ -97,7 +97,7 @@
 		 * @return void
 		 */
 		public function termsUse(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->seo->setTitle(app()->params->name . ' | Пользовательское соглашение');
 			$template->seo->setDescription('Пользовательское соглашение ' . app()->params->name);
@@ -112,7 +112,7 @@
 		 * @return void
 		 */
 		public function error404(): void {
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 
 			$template->layout->main->push('<h1>Страница не найдена!<h1>');
 		}

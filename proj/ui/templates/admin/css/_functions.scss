@@ -1,7 +1,0 @@
-@function getImageTemplate($file) {
-	@return url('img/' + $file);
-}
-
-@function getImageTemplateUI($file) {
-	@return getImageTemplate('ui/' + $file);
-}

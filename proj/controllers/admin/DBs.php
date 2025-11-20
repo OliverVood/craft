@@ -15,7 +15,7 @@
 	 */
 	class DBs extends ControllerAccess {
 		public function __construct() {
-			parent::__construct(app()->features('dbs'));
+			parent::__construct(feature('dbs'));
 		}
 
 		/**

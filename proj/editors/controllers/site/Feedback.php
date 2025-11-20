@@ -18,7 +18,7 @@
 	 */
 	class Feedback extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('feedback'), 'site.feedback');
+			parent::__construct(feature('feedback'), 'site.feedback');
 
 			$this->names = [
 				'state' => __('Состояние'),

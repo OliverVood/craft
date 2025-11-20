@@ -10,7 +10,7 @@
 		</div>
 		<div>
 			<div class = "items"></div>
-			<a onclick = "Base.Craft.Structure.addTable(this);">+ <?= __('Добавить таблицу'); ?></a>
+			<a onclick = "globalThis.Craft.Structure.addTable(this);">+ <?= __('Добавить таблицу'); ?></a>
 		</div>
 		<div><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
 	</form>

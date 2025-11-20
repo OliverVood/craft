@@ -1,0 +1,23 @@
+@use "../variables" as *;
+@use '../functions' as *;
+
+@mixin styles {
+
+	&.out {
+
+		&.head {
+			display: flex;
+			> div { flex: auto; padding: 1rem 0.6rem 1rem 3.5rem; }
+			> .logout {
+				flex: none; width: 40px; background-image: getImageUI("exit.svg"); background-size: 19px;
+				&:hover { background-color: $color-primary; }
+			}
+		}
+
+		&.footer {
+			.small { margin-top: 0.4rem; padding-top: 0.4rem; font-size: 0.8rem; }
+		}
+
+	}
+
+}

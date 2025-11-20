@@ -19,7 +19,7 @@
 	 */
 	class Groups extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('groups'), 'groups');
+			parent::__construct(feature('groups'), 'groups');
 
 			$this->names = [
 				'name' => __('Наименование'),

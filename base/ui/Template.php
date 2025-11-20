@@ -13,6 +13,7 @@
 		public CSS $css;
 		public JS $js;
 		public SEO $seo;
+		private string $favicon = '';
 
 		public function __construct() {
 			$this->seo = new SEO();
@@ -38,6 +39,21 @@
 			$this->js->browse();
 			$this->css->browse();
 			$this->seo->browse();
+			if ($this->favicon) { ?><link rel = "icon" href = "<?= $this->favicon; ?>" type = "image/x-icon"><?php };
+		}
+
+		/**
+		 * Устанавливает / возвращает картинку ресурса
+		 * @param string $favicon
+		 * @return ?string
+		 */
+		public function favicon(string $favicon = ''): ?string {
+			if ($favicon) {
+				$this->favicon = $favicon;
+				return null;
+			}
+
+			return $this->favicon;
 		}
 
 	}

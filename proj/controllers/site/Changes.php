@@ -8,7 +8,7 @@
 	use Base\Data\Set;
 	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models\Changes as Model;
-	use Proj\UI\Templates\Site\Template;
+	use Proj\UI\Templates\Site;
 
 	/**
 	 * Отвечает за обработку запросов к изменениям на сайте
@@ -27,7 +27,7 @@
 		#[NoReturn] public function index(): void {
 			/** @var Model $changes */ $changes = model('changes');
 
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 			$template->layout->main->push(view('site.changes.all', [
 				'title' => __('Все изменения'),
 				'items' => $changes->all(),
@@ -44,7 +44,7 @@
 		#[NoReturn] public function show(Set $data, int $id): void {
 			/** @var Model $changes */ $changes = model('changes');
 
-			/** @var Template $template */ $template = template();
+			/** @var Site $template */ $template = template();
 			if (!$item = $changes->get($id)) redirect()->page404();
 			$item['content'] = $changes->content($id);
 			$template->layout->main->push(view('site.changes.show', $item));

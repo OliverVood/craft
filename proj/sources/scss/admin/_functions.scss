@@ -1,0 +1,11 @@
+@function getImage($file) {
+	@return url('../img/' + $file);
+}
+
+@function getImageUI($file) {
+	@return getImage('ui/' + $file);
+}
+
+@function getFont($file) {
+	@return url('../fonts/' + $file);
+}
