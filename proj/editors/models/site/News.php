@@ -12,7 +12,7 @@
 	 * Модель новостей
 	 */
 	class News extends Model {
-		const PATH_COVER = DIR_RESOURCE_IMAGE . 'news/';
+		const PATH_COVER = DIR_RESOURCES_IMAGES . 'news/';
 
 		private array $statesView;
 

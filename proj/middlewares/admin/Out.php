@@ -8,8 +8,10 @@
 	use Base\UI\Section;
 	use Proj\Models;
 	use Proj\UI\Templates\Admin;
+    use stdClass;
 
-	/**
+    /**
+     * @middleware
 	 * Вывод в шаблон
 	 */
 	class Out extends Middleware {
@@ -28,6 +30,7 @@
 			/** @var Admin $template */ $template = template();
 
 			$this->setHead($template->layout->header);
+			$this->setManager($template->layout->manager);
 			$this->setMenu($template->layout->menu);
 			$this->setFooter($template->layout->footer);
 
@@ -40,29 +43,22 @@
 		 * @return void
 		 */
 		private function setHead(Section $section): void {
-			/** @var Models\Users $users */ $users = model('users');
-
-			$data = [
-				'user' => $users->getAlias(),
-				'links' => [
-					'logout' => linkInternal('users_exit'),
-				],
-			];
-
 			$section->push(
-				view('admin.out.head', $data)
+				view('admin.out.head')
 			);
 		}
 
 		/**
-		 * Заполнение подвала
+		 * Заполнение секции управления
 		 * @param Section $section - Секция
 		 * @return void
 		 */
-		private function setFooter(Section $section): void {
-			$data = ['siteName' => app()->params->name];
+		private function setManager(Section $section): void {
+			/** @var Models\Users $users */ $users = model('users');
 
-			$section->push(view('admin.out.footer', $data));
+			$user = $users->getCurrent();
+
+			$section->push(view('admin.out.manager', compact('user')));
 		}
 
 		/**
@@ -71,173 +67,241 @@
 		 * @return void
 		 */
 		private function setMenu(Section $section): void {
-			$this->setMainToMenu($section);
-			$this->setDevelopmentToMenu($section);
-			$this->setAccessToMenu($section);
-			$this->setSiteToMenu($section);
+			$menu = new stdClass();
+
+            $menu->items = [];
+
+			$this->setMainToMenu($menu);
+			$this->setDevelopmentToMenu($menu);
+			$this->setAccessToMenu($menu);
+			$this->setSiteToMenu($menu);
+
+			$section->push(view('admin.out.menu', compact('menu')));
 		}
 
 		/**
-		 * Построение меню главного раздела
+		 * Заполнение подвала
 		 * @param Section $section - Секция
 		 * @return void
 		 */
-		private function setMainToMenu(Section $section): void {
-			$section->push(
-				linkExternal('site')->hyperlink(__('Открыть сайт'), [], ['target' => '_blank']),
-				$this->separator(),
-				linkInternal('home')->hyperlink(__('Главная'))
-			);
+		private function setFooter(Section $section): void {
+			$section->push(view('admin.out.footer'));
 		}
 
 		/**
-		 * Построение меню раздела разработчика
-		 * @param Section $section - Секция
+		 * Построение меню: главный раздел
+		 * @param stdClass $menu - меню
 		 * @return void
 		 */
-		private function setDevelopmentToMenu(Section $section): void {
-			$menu = [];
+		private function setMainToMenu(stdClass $menu): void {
+			$menu->items[] = $this->link('external', 'site', __('Открыть сайт'), [], ['target' => '_blank']);
+			$menu->items[] = $this->link('internal', 'home', __('Главная'), [], ['target' => '_blank']);
+		}
+
+		/**
+		 * Построение меню: раздел разработчика
+		 * @param stdClass $menu - меню
+		 * @return void
+		 */
+		private function setDevelopmentToMenu(stdClass $menu): void {
+			$items = [];
 
 			/* Раздел Craft */
-			if (linkRight('craft')->allow()) {
-				$menu['craft'][] = linkRight('craft')->hyperlink(__('Описание'));
-				$menu['craft'][] = linkRight('craft_help')->hyperlink(__('Помощь'));
+			if (linkRight('craft')->allow() || linkRight('craft_action')->allow()) {
+				$items['craft'] = $this->group(__('Ремесло'), 'cr');
+
+				if (linkRight('craft')->allow()) {
+					$items['craft']->data->items[] = $this->link('right', 'craft', __('Документация'));
+					$items['craft']->data->items[] = $this->link('right', 'craft_help', __('Помощь'));
+				}
 
 				if (linkRight('craft_action')->allow()) {
-					$menu['craft'][] = $this->separator();
-					$menu['craft'][] = $this->group(__('Создать'), [
-						linkRight('craft_action')->hyperlink(__('Признак'), ['entity' => 'feature', 'action' => 'create']),
-						$this->separator(),
-						linkRight('craft_action')->hyperlink(__('Контроллер'), ['entity' => 'controller', 'action' => 'create']),
-						linkRight('craft_action')->hyperlink(__('Модель'), ['entity' => 'model', 'action' => 'create']),
-						linkRight('craft_action')->hyperlink(__('Редактор'), ['entity' => 'editor', 'action' => 'create']),
-						$this->separator(),
-						linkRight('craft_action')->hyperlink(__('Отображение'), ['entity' => 'view', 'action' => 'create']),
-						linkRight('craft_action')->hyperlink(__('Компонент'), ['entity' => 'component', 'action' => 'create']),
-						$this->separator(),
-						linkRight('craft_action')->hyperlink(__('Структуру'), ['entity' => 'structure', 'action' => 'create']),
-					]);
+					$group = $this->group(__('Создать'), 'create');
+					$group->data->items[] = $this->link('right', 'craft_action', __('Признак'), ['entity' => 'feature', 'action' => 'create']);
+					$group->data->items[] = $this->separator();
+					$group->data->items[] = $this->link('right', 'craft_action', __('Контроллер'), ['entity' => 'controller', 'action' => 'create']);
+					$group->data->items[] = $this->link('right', 'craft_action', __('Модель'), ['entity' => 'model', 'action' => 'create']);
+					$group->data->items[] = $this->link('right', 'craft_action', __('Редактор'), ['entity' => 'editor', 'action' => 'create']);
+					$group->data->items[] = $this->separator();
+					$group->data->items[] = $this->link('right', 'craft_action', __('Отображение'), ['entity' => 'view', 'action' => 'create']);
+					$group->data->items[] = $this->link('right', 'craft_action', __('Компонент'), ['entity' => 'component', 'action' => 'create']);
+					$group->data->items[] = $this->separator();
+					$group->data->items[] = $this->link('right', 'craft_action', __('Структуру'), ['entity' => 'structure', 'action' => 'create']);
+
+					$items['craft']->data->items[] = $group;
 				}
 			}
 
 			/* Раздел работы с базой данных */
-			if (linkRight('dbs_check')->allow()) $menu['dbs'][] = linkRight('dbs_check')->hyperlink(__('Проверить'));
-			if (linkRight('dbs_structure')->allow()) $menu['dbs'][] = linkRight('dbs_structure')->hyperlink(__('Структура'));
+			if (linkRight('dbs_check')->allow() || linkRight('dbs_structure')->allow()) {
+				$items['dbs'] = $this->group(__('База данных'), 'database');
+
+				if (linkRight('dbs_check')->allow()) $items['dbs']->data->items[] = $this->link('right', 'dbs_check', __('Проверить'));
+				if (linkRight('dbs_structure')->allow()) $items['dbs']->data->items[] = $this->link('right', 'dbs_structure', __('Структура'));
+			}
 
 			/* Раздел статистики */
-			if (linkRight('statistics_ips_select')->allow()) $menu['statistics'][] = linkRight('statistics_ips_select')->hyperlink(__('Запросы к серверу'), ['page' => 1]);
-			if (linkRight('statistics_actions_select')->allow()) $menu['statistics'][] = linkRight('statistics_actions_select')->hyperlink(__('Действия клиента'), ['page' => 1]);
+			if (linkRight('statistics_ips_select')->allow() || linkRight('statistics_actions_select')->allow()) {
+				$items['statistics'] = $this->group(__('Статистика'), 'statistic');
 
-			if (!$menu) return;
+				if (linkRight('statistics_ips_select')->allow()) $items['statistics']->data->items[] = $this->link('right', 'statistics_ips_select', __('Запросы к серверу'), ['page' => 1]);
+				if (linkRight('statistics_actions_select')->allow()) $items['statistics']->data->items[] = $this->link('right', 'statistics_actions_select', __('Действия клиента'), ['page' => 1]);
+			}
 
-			/* Построение меню */
-			$section->push($this->separator());
-			$section->push($this->head(__('Разработка')));
+			if (!$items) return;
 
-			if (isset($menu['craft'])) $section->push($this->group(__('Ремесло'), $menu['craft']));
-			if (isset($menu['dbs'])) $section->push($this->group(__('База данных'), $menu['dbs']));
-			if (isset($menu['statistics'])) $section->push($this->group(__('Статистика'), $menu['statistics']));
+			$block = $this->block(__('Разработка'));
+
+			if (isset($items['craft'])) $block->data->items[] = $items['craft'];
+			if (isset($items['dbs'])) $block->data->items[] = $items['dbs'];
+			if (isset($items['statistics'])) $block->data->items[] = $items['statistics'];
+
+			$menu->items[] = $block;
 		}
 
 		/**
-		 * Построение меню раздела безопасности
-		 * @param Section $section - Секция
+		 * Построение меню: раздел безопасности
+		 * @param stdClass $menu - меню
 		 * @return void
 		 */
-		private function setAccessToMenu(Section $section): void {
-			$menu = [];
+		private function setAccessToMenu(stdClass $menu): void {
+			$items = [];
 
 			/* Раздел пользовательских групп */
-			if (linkRight('groups_select')->allow()) $menu['groups'][] = linkRight('groups_select')->hyperlink(__('Список групп'), ['page' => 1]);
-			if (linkRight('groups_create')->allow()) $menu['groups'][] = linkRight('groups_create')->hyperlink(__('Добавить группу'));
+			if (linkRight('groups_select')->allow() || linkRight('groups_create')->allow()) {
+				$items['groups'] = $this->group(__('Группы'), 'groups');
+
+				if (linkRight('groups_select')->allow()) $items['groups']->data->items[] = $this->link('right', 'groups_select', __('Список'), ['page' => 1]);
+				if (linkRight('groups_create')->allow()) $items['groups']->data->items[] = $this->link('right', 'groups_create', __('Добавить'));
+			}
 
 			/* Раздел пользователей */
-			if (linkRight('users_select')->allow()) $menu['users'][] = linkRight('users_select')->hyperlink(__('Список пользователей'), ['page' => 1]);
-			if (linkRight('users_create')->allow()) $menu['users'][] = linkRight('users_create')->hyperlink(__('Добавить пользователя'));
+			if (linkRight('users_select')->allow() || linkRight('users_create')->allow()) {
+				$items['users'] = $this->group(__('Пользователи'), 'users');
 
-			if (!$menu) return;
+				if (linkRight('users_select')->allow()) $items['users']->data->items[] = $this->link('right', 'users_select', __('Список'), ['page' => 1]);
+				if (linkRight('users_create')->allow()) $items['users']->data->items[] = $this->link('right', 'users_create', __('Добавить'));
+			}
 
-			/* Построение меню */
-			$section->push($this->separator());
-			$section->push($this->head(__('Безопасность')));
-			if (isset($menu['groups'])) $section->push($this->group(__('Группы'), $menu['groups']));
-			if (isset($menu['users'])) $section->push(self::group(__('Пользователи'), $menu['users']));
+			if (!$items) return;
+
+			$block = $this->block(__('Безопасность'));
+
+			if (isset($items['groups'])) $block->data->items[] = $items['groups'];
+			if (isset($items['users'])) $block->data->items[] = $items['users'];
+
+			$menu->items[] = $block;
 		}
 
 		/**
-		 * Построение меню сайта
-		 * @param Section $section - Секция
+		 * Построение меню: Раздел сайта
+		 * @param stdClass $menu - меню
 		 * @return void
 		 */
-		private function setSiteToMenu(Section $section): void {
-			$menu = [];
+		private function setSiteToMenu(stdClass $menu): void {
+			$items = [];
 
 			/* Раздел новостей */
-			if (linkRight('news_select')->allow()) $menu['news'][] =  linkRight('news_select')->hyperlink(__('Список новостей'), ['page' => 1]);
-			if (linkRight('news_create')->allow()) $menu['news'][] = linkRight('news_create')->hyperlink(__('Добавить новость'));
+			if (linkRight('news_select')->allow() || linkRight('news_create')->allow()) {
+				$items['news'] = $this->group(__('Новости'), 'news');
+
+				if (linkRight('news_select')->allow()) $items['news']->data->items[] = $this->link('right', 'news_select', __('Список'), ['page' => 1]);
+				if (linkRight('news_create')->allow()) $items['news']->data->items[] = $this->link('right', 'news_create', __('Добавить'));
+			}
 
 			/* Раздел изменений */
-			if (linkRight('changes_select')->allow()) $menu['changes'][] =  linkRight('changes_select')->hyperlink(__('Список изменений'), ['page' => 1]);
-			if (linkRight('changes_create')->allow()) $menu['changes'][] = linkRight('changes_create')->hyperlink(__('Добавить изменения'));
+			if (linkRight('changes_select')->allow() || linkRight('changes_create')->allow()) {
+				$items['changes'] = $this->group(__('Изменения'), 'changes');
+
+				if (linkRight('changes_select')->allow()) $items['changes']->data->items[] = $this->link('right', 'changes_select', __('Список'), ['page' => 1]);
+				if (linkRight('changes_create')->allow()) $items['changes']->data->items[] = $this->link('right', 'changes_create', __('Добавить'));
+			}
 
 			/* Раздел обратной связи */
-			if (linkRight('feedback_select')->allow()) $menu['feedback'][] = linkRight('feedback_select')->hyperlink(__('Список'), ['page' => 1]);
+			if (linkRight('feedback_select')->allow()) {
+				$items['feedback'] = $this->group(__('Обратная связь'), 'feedback');
 
-			if (!$menu) return;
+				if (linkRight('feedback_select')->allow()) $items['feedback']->data->items[] = $this->link('right', 'feedback_select', __('Список'), ['page' => 1]);
+			}
 
-			/* Построение меню */
-			$section->push($this->separator());
-			$section->push($this->head(__('Сайт')));
-			if (isset($menu['news'])) $section->push($this->group(__('Новости'), $menu['news']));
-			if (isset($menu['changes'])) $section->push($this->group(__('Изменения'), $menu['changes']));
-			if (isset($menu['feedback'])) $section->push($this->group(__('Обратная связь'), $menu['feedback']));
+			if (!$items) return;
+
+			$block = $this->block(__('Сайт'));
+
+			if (isset($items['news'])) $block->data->items[] = $items['news'];
+			if (isset($items['changes'])) $block->data->items[] = $items['changes'];
+			if (isset($items['feedback'])) $block->data->items[] = $items['feedback'];
+
+			$menu->items[] = $block;
 		}
 
 		/**
-		 * Возвращает заголовок
-		 * @param string $text - Текст заголовка
-		 * @return string
+		 * Возвращает блок меню
+		 * @param string $head - Заголовок блока
+		 * @return stdClass
 		 */
-		private function head(string $text): string {
-			return "<div class = 'head'>{$text}</div>";
-		}
+		private function block(string $head): stdClass {
+			$data = new stdClass();
+			$data->head = $head;
+			$data->items = [];
 
-		/**
-		 * Возвращает элемент меню
-		 * @param $link - Ссылка
-		 * @return string
-		 */
-		private function item($link): string {
-			return "<li>{$link}</li>";
+			return $this->get('block', $data);
 		}
 
 		/**
 		 * Возвращает группу меню
-		 * @param string $title - Заголовок
-		 * @param array $items - Элементы меню
-		 * @return string
+		 * @param string $head - Заголовок группы
+		 * @param string $icon - Класс иконки
+		 * @return stdClass
 		 */
-		private function group(string $title, array $items): string {
-			buffer()->start();
-			?>
-			<li>
-				<span>
-					<?= $title; ?>
-					<ul>
-						<?php foreach ($items as $item) { echo $this->item($item); } ?>
-					</ul>
-				</span>
-			</li>
-			<?php
-			return buffer()->read();
+		private function group(string $head, string $icon = ''): stdClass {
+			$data = new stdClass();
+			$data->head = $head;
+			$data->icon = $icon;
+			$data->items = [];
+
+			return $this->get('group', $data);
 		}
 
 		/**
-		 * Возвращает разделитель
-		 * @return string
+		 * Возвращает ссылку меню
+		 * @param string $type - Тип ссылки
+		 * @param string $name - Псевдоним ссылки
+		 * @param string $text - Текст ссылки
+		 * @param array $data - Данные
+		 * @param array $params - Параметры
+		 * @return stdClass
 		 */
-		private function separator(): string {
-			return '<hr>';
+		private function link(string $type, string $name, string $text, array $data = [], array $params = []): stdClass {
+			$link = new stdClass();
+			$link->type = $type;
+			$link->name = $name;
+			$link->text = $text;
+			$link->data = $data;
+			$link->params = $params;
+
+			return $this->get('link', $link);
+		}
+
+		/**
+		 * Возвращает разделитель меню
+		 * @return stdClass
+		 */
+		private function separator(): stdClass {
+			return $this->get('separator');
+		}
+
+		/**
+		 * Возвращает элемент меню
+		 * @param string $type - Тип
+		 * @param stdClass $data - Данные
+		 * @return stdClass
+		 */
+		private function get(string $type, stdClass $data = new stdClass()): stdClass {
+			$r = new stdClass;
+			$r->type = $type;
+			$r->data = $data;
+			return $r;
 		}
 
 	}

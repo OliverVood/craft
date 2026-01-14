@@ -68,5 +68,6 @@
 
 	linkRegRight('feedback_select', 'feedback', 'select', 'feedback?page=:[page]', /* @lang JavaScript */"Base.Request.get('feedback?page=:[page]').then(result => Base.Response.execute(result)); return false;");
 	linkRegRight('feedback_browse', 'feedback', 'browse', 'feedback/:[id]', /* @lang JavaScript */"Base.Request.get('feedback/:[id]').then(result => Base.Response.execute(result)); return false;");
-	linkRegRight('feedback_do_delete', 'feedback', 'delete', 'feedback/:[id]', /* @lang JavaScript */ "if (confirm(__('Удалить запись?'))) Base.Request.delete('feedback/:[id]', {__csrf: '{$csrf}'}).then(result => Base.Response.execute(result)); return false;");
+//	linkRegRight('feedback_do_delete', 'feedback', 'delete', 'feedback/:[id]', /* @lang JavaScript */ "if (confirm(__('Удалить запись?'))) Base.Request.delete('feedback/:[id]', {__csrf: '{$csrf}'}).then(result => Base.Response.execute(result)); return false;");
+	linkRegRight('feedback_do_delete', 'feedback', 'delete', 'feedback/:[id]', /* @lang JavaScript */ "new Base.UI.Window('head', 'text'); return false;");
 	linkRegRight('feedback_set_state', 'feedback', 'status', 'feedback/:[id]/status/:[status]', /* @lang JavaScript */ "if (confirm(__('Проверить запись?'))) Base.Request.data('feedback/:[id]/status/:[status]', {__csrf: '{$csrf}'}, {method: 'patch'}).then(result => Base.Response.execute(result)); return false;");

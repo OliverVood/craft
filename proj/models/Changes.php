@@ -20,7 +20,7 @@
 		const STATE_DRAFT = 5;
 		const STATE_DELETE = 100;
 
-		const PATH_COVER_RELATIVE = DIR_RELATIVE_IMAGE . 'changes/';
+		const PATH_COVER_RELATIVE = DIR_RELATIVE_IMAGES . 'changes/';
 
 		private DB $db;
 

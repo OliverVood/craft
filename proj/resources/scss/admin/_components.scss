@@ -1,0 +1,19 @@
+@use "variables" as *;
+
+@use "components/button" as buttons;
+
+@use "components/checkbox" as checkbox;
+
+@use "components/window" as window;
+@use "components/notice" as notice;
+@use "components/report" as report;
+
+div.component {
+	@include checkbox.MixComponentCheckbox;
+
+	@include window.MixComponentWindow;
+	@include notice.MixComponentNotice;
+	@include report.MixComponentReport;
+}
+
+table.select th div.component { @include checkbox.MixComponentCheckbox($color: $color-inverse) }

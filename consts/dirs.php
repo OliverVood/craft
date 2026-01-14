@@ -31,13 +31,13 @@
 	const DIR_ENTRY_ADMIN					= DIR_ENTRY . 'admin/';
 	const DIR_ENTRY_SITE					= DIR_ENTRY . 'site/';
 
-	const DIR_RESOURCE						= DIR_PROJ . 'resource/';
-	const DIR_RESOURCE_IMAGE				= DIR_RESOURCE . 'image/';
+	const DIR_RESOURCES						= DIR_PROJ . 'resources/';
+	const DIR_RESOURCES_IMAGES				= DIR_RESOURCES . 'image/';
 
 	const DIR_RELATIVE_ROOT					= '/';
 
-	const DIR_RELATIVE_RESOURCE				= DIR_RELATIVE_ROOT . '/proj/resource/';
-	const DIR_RELATIVE_IMAGE				= DIR_RELATIVE_RESOURCE . 'image/';
+	const DIR_RELATIVE_RESOURCES			= DIR_RELATIVE_ROOT . 'proj/resources/';
+	const DIR_RELATIVE_IMAGES				= DIR_RELATIVE_RESOURCES . 'images/';
 
 	const DIR_RELATIVE_PUBLIC				= DIR_RELATIVE_ROOT . 'public/';
 	const DIR_RELATIVE_PUBLIC_IMAGES		= DIR_RELATIVE_PUBLIC . 'images/';

@@ -1,0 +1,15 @@
+@use "../variables" as *;
+
+//	&[type="text"], &[type="password"] { @include SampleText; }
+
+@mixin MixText {
+  //padding: $elem-padding; border: $elem-border; font-size: 16px; outline: none; color: $color-inverse; background-color: $elem-background; cursor: pointer; border-radius: $elem-border-radius;
+  //&:hover { border-color: $elem-hover-background; background-color: $elem-hover-border-color; }
+  //&:focus-visible, &:active { border-color: $elem-active-border-color; background-color: $elem-active-background; }
+}
+
+//@mixin SampleText {
+//  padding: 0.6rem 1.6rem; border: 1px solid $color-secondary; border-radius: 0.4rem;
+//}
+
+

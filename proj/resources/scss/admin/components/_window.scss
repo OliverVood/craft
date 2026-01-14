@@ -1,0 +1,52 @@
+@use "../variables" as *;
+
+@mixin MixComponentWindow {
+	&.window {
+		@include MixComponentWindowContainer;
+		@include MixComponentWindowInstance;
+		@include MixComponentWindowWindow;
+	}
+}
+
+@mixin MixComponentWindowContainer {
+	&.container {
+
+	}
+}
+
+@mixin MixComponentWindowInstance {
+	&.instance {
+		position: fixed; display: flex; top: 0; left: 0; bottom: 0; right: 0; z-index: $z-windows; align-items: center; justify-content: center;
+		> .space {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #d2d2d2e8;
+		}
+	}
+}
+
+@mixin MixComponentWindowWindow {
+	&.window {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		border-radius: 6px;
+		overflow: hidden;
+		> div {
+			&.header {
+				background-color: red;
+				padding: 12px;
+			}
+			&.main {
+				padding: 12px;
+				background-color: #fff;
+			}
+			&.footer {
+
+			}
+		}
+	}
+}

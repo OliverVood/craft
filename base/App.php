@@ -111,9 +111,9 @@
 		 * @return string
 		 */
 		public function version(): string {
-			if (env('APP_ASSEMBLY', 'production') == 'development') return $this->versionDevelopment;
+			if (env('ASSEMBLY_MODE', 'production') == 'development') return $this->versionDevelopment;
 
-			return env('APP_VERSION', '1.0.0');
+			return env('ASSEMBLY_VERSION', '1.0.0');
 		}
 
 		/**

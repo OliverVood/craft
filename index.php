@@ -11,6 +11,7 @@
 	config()->load('app');
 	config()->load('db');
 	config()->load('site');
+	config()->load('assembly');
 
 	app('/', '/xhr/');
 

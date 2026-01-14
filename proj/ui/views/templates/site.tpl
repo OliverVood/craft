@@ -16,7 +16,7 @@
 		<main><?php $template->layout->main->browse(); ?></main>
 		<footer><?php $template->layout->footer->browse(); ?></footer>
 		<script>
-			$(function() {
+			document.addEventListener('DOMContentLoaded', function() {
 				Base.GlobalParams.set('request', '<?= request()->html(); ?>');
 				Base.GlobalParams.set('xhr', '<?= request()->xhr(); ?>');
 			});

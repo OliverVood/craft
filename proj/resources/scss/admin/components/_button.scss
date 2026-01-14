@@ -1,0 +1,11 @@
+@use "../variables" as *;
+
+@mixin MixComponentButton {
+	padding: $elem-padding; border: $elem-border; font-size: 16px; outline: none; color: $color-inverse; background-color: $elem-background; cursor: pointer; border-radius: $elem-border-radius;
+	&:hover { border-color: $elem-hover-background; background-color: $elem-hover-border-color; }
+	&:focus-visible, &:active { border-color: $elem-active-border-color; background-color: $elem-active-background; }
+}
+
+input {
+	&[type="button"], &[type="submit"] { @include MixComponentButton; }
+}

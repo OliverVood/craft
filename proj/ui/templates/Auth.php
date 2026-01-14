@@ -37,7 +37,6 @@
 		 * @return void
 		 */
 		private function setJS():  void {
-			$this->js->add('https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js');
 			$this->js->add('/public/js/base.js', app()->version());
 		}
 

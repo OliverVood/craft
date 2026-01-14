@@ -1,0 +1,12 @@
+@use "../variables" as *;
+@use '../functions' as *;
+
+@mixin MixComponentReport {
+	&.report {
+		padding: 1px 3px 1px 48px; border-radius: 3px; overflow: hidden; background: $color-neutral-dark;
+		> div {
+			padding: 24px; background-color: $color-inverse;
+		}
+		&.ok { background-color: $color-primary-extra-light; background-image: getImage('craft/ok_inverse.svg'); background-position: 12px 21px; background-size: 22px; background-repeat: no-repeat; }
+	}
+}

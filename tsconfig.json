@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ESNext",
     "module": "ES6",
     "moduleResolution": "node",
     "lib": ["ES6", "DOM"],
     "outDir": "./public/js",
-    "rootDir": "./proj/sources/ts",
+    "rootDir": "./proj/resources/ts",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,7 +13,7 @@
     "sourceMap": true
   },
   "include": [
-    "proj/sources/ts/**/*"
+    "proj/resources/ts/**/*"
   ],
   "exclude": [
     "node_modules"

@@ -1,0 +1,35 @@
+@use "../variables" as *;
+@use '../functions' as *;
+
+$box-shadow						: 0 0 7px #00000026;
+
+@mixin MixComponentNotice {
+	&.notice {
+		@include MixComponentNoticeContainer;
+		@include MixComponentNoticeInstance;
+	}
+}
+
+@mixin MixComponentNoticeContainer {
+	&.container { position: fixed; top: 24px; right: 24px; display: flex; flex-direction: column; align-items: end; gap: 1rem; z-index: $z-notices; }
+}
+
+@mixin MixComponentNoticeInstance {
+	&.instance {
+		position: relative; padding: 1px 3px 1px 3px; display: flex; border-radius: 3px; background-color: $color-neutral-dark; box-shadow: $box-shadow; transition: padding-right 0.5s ease;
+		> .notice { padding: 24px; border-radius: 3px; background: $color-background; }
+		> .manager {
+			position: absolute; top: 0; right: 0; width: 24px; display: none;
+			> .close {
+				width: 24px; height: 24px; cursor: pointer; background-size: 50%; background-image: getImage('craft/close_inverse.svg');
+			}
+		}
+		&.ok { background-color: $color-primary-extra-light; }
+		&.info { background-color: $color-neutral-dark; }
+		&.error { background-color: $color-negative; }
+		&:hover {
+			padding-right: 24px;
+			.manager { display: block; }
+		}
+	}
+}

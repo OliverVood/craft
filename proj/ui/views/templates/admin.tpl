@@ -13,13 +13,16 @@
 	</head>
 	<body>
 		<header class = "section header"><?php $template->layout->header->browse(); ?></header>
-		<div>
-			<menu class = "section menu"><?php $template->layout->menu->browse(); ?></menu>
+		<div class = "middle">
+			<div class = "static">
+				<div class = "section manager"><?php $template->layout->manager->browse(); ?></div>
+				<div class = "section menu"><?php $template->layout->menu->browse(); ?></div>
+			</div>
 			<main class = "section content"><?php $template->layout->content->browse(); ?></main>
 		</div>
 		<footer class = "section footer"><?php $template->layout->footer->browse(); ?></footer>
 		<script>
-			$(function() {
+			document.addEventListener('DOMContentLoaded', function() {
 				Base.GlobalParams.set('request', '<?= request()->html(); ?>');
 				Base.GlobalParams.set('xhr', '<?= request()->xhr(); ?>');
 				Base.Debugger.getInstance();

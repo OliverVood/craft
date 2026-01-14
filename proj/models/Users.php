@@ -154,7 +154,7 @@
 		}
 
 		/**
-		 * Возвращает идентификатора пользователя
+		 * Возвращает идентификатор пользователя
 		 * @return int|null
 		 */
 		public function getId(): ?int {
@@ -167,6 +167,30 @@
 		 */
 		public function getAlias(): string {
 			return self::$alias ?? '';
+		}
+
+		/**
+		 * Возвращает данные пользователя по идентификатору
+		 * @param int $id - Идентификатор пользователя
+		 * @return array
+		 */
+		public function get(int $id): array {
+			$response = $this->db
+				->select()
+				->table(self::TABLE_USERS)
+				->fields('*')
+				->where('id', $id)
+				->query();
+
+			return $response->get();
+		}
+
+		/**
+		 * Возвращает данные текущего пользователя
+		 * @return array
+		 */
+		public function getCurrent(): array {
+			return $this->get(self::$id);
 		}
 
 	}

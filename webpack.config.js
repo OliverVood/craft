@@ -5,16 +5,16 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const SCSS_ENTRIES = {
-	site: './proj/sources/scss/site.scss',
-	admin: './proj/sources/scss/admin.scss',
-	auth: './proj/sources/scss/auth.scss'
+	site: './proj/resources/scss/site.scss',
+	admin: './proj/resources/scss/admin.scss',
+	auth: './proj/resources/scss/auth.scss'
 };
 
 const TS_ENTRIES = {
-	base: '/proj/sources/ts/base.ts',
-	admin: '/proj/sources/ts/admin.ts',
-	site: '/proj/sources/ts/site.ts',
-	db: '/proj/sources/ts/db.ts'
+	base: '/proj/resources/ts/base.ts',
+	admin: '/proj/resources/ts/admin.ts',
+	site: '/proj/resources/ts/site.ts',
+	db: '/proj/resources/ts/db.ts'
 };
 
 module.exports = (env, argv) => {
@@ -49,7 +49,7 @@ module.exports = (env, argv) => {
 				// Убираем префиксы из имен файлов
 				const chunkName = pathData.chunk.name;
 				const cleanName = chunkName.replace(/^(js-)/, '');
-				return isProduction ? `js/${cleanName}.min.js` : `js/${cleanName}.js`;
+				return `js/${cleanName}.js`;
 			},
 			// Добавляем настройку для asset modules
 			assetModuleFilename: (pathData) => {
@@ -81,7 +81,7 @@ module.exports = (env, argv) => {
 							options: {
 								sassOptions: {
 									// Настройки для корректной обработки путей
-									includePaths: [path.resolve(__dirname, 'proj/sources')]
+									includePaths: [path.resolve(__dirname, 'proj/resources')]
 								}
 							}
 						}
@@ -142,7 +142,7 @@ module.exports = (env, argv) => {
 					// Убираем префиксы из имен CSS файлов
 					const chunkName = pathData.chunk.name;
 					const cleanName = chunkName.replace(/^(css-|js-)/, '');
-					return isProduction ? `css/${cleanName}.min.css` : `css/${cleanName}.css`;
+					return `css/${cleanName}.css`;
 				}
 			})
 		]

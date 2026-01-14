@@ -24,6 +24,7 @@
 	require DIR_BASE . 'Cookie.php';
 	require DIR_BASE . 'DBs.php';
 	require DIR_BASE . 'data/Set.php';
+	require DIR_BASE . 'Access.php';
 
 	require DIR_BASE_DB . 'DB.php';
 

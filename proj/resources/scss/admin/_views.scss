@@ -1,0 +1,7 @@
+@use "views/out" as out;
+@use "views/db" as db;
+
+div.view {
+	@include out.MixViewsOut;
+	@include db.MixViewsBD;
+}

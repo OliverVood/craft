@@ -12,7 +12,7 @@
 	 * Модель изменения
 	 */
 	class Change extends Model {
-		const PATH_COVER = DIR_RESOURCE_IMAGE . 'changes/';
+		const PATH_COVER = DIR_RESOURCES_IMAGES . 'changes/';
 
 		private array $statesView;
 

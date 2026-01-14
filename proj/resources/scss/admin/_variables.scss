@@ -1,0 +1,143 @@
+/* Палитра */
+
+
+$color-background				: #FFFFFF;
+$color-text						: #000000;
+
+// Основной цвет: #25695C #284F47 #0C4439 #5DB4A3 #74B4A7
+$color-primary					: #25695C;
+$color-primary-dark				: #284F47;
+$color-primary-extra-dark		: #0C4439;
+$color-primary-light			: #5DB4A3;
+$color-primary-extra-light		: #74B4A7;
+
+// Дополнительный цвет: #A4643A #7B573F #6B3513 #D2946C #D2A487
+$color-secondary				: #A4643A;
+$color-secondary-dark			: #7B573F;
+
+//
+$color-negative					: $color-secondary;
+
+// Оттенки серого: #EAEEEDFF
+$color-neutral					: #EAEEED;
+$color-neutral-dark				: #CCD2D0;
+
+// Другие цвета
+$color-inverse					: $color-background;
+
+
+/* Порядок */
+
+
+$z-top							: 1;
+$z-extra-top					: 2;
+$z-windows						: 200;
+$z-notices						: 300;
+
+
+/* Элементы */
+
+
+$elem-padding: 8px 16px;
+
+$elem-border-radius				: 6px;
+$elem-background				: $color-primary-light;
+$elem-border-color				: $color-primary-light;
+$elem-border					: 1px solid $color-primary-light;
+
+$elem-hover-background			: $color-primary;
+$elem-hover-border-color		: $color-primary;
+
+$elem-active-background			: $color-primary-extra-dark;
+$elem-active-border-color		: $color-primary-extra-dark;
+
+///* Палитра */
+//$palette-main					: #FFFFFF;
+//
+//$palette-opposite				: #000000;
+//
+//$palette-primary				: #3E4246;
+//$palette-primary-super-light	: #C3C3C3;
+//$palette-primary-dark			: #23282C;
+//
+//$palette-secondary				: #006E95;
+//$palette-secondary-light		: #007fAD;
+//$palette-secondary-dark			: #00506C;
+//
+//$palette-tertiary-light			: #68909F;
+//
+//$palette-neutral				: $palette-primary-super-light;
+//$palette-neutral-light			: #d9d9d9;
+//
+//$palette-negative				: #950000;
+//
+///* Цвета */
+//$color-text						: $palette-opposite;
+//$color-text-primary				: $palette-main;
+//
+//$color-light					: $palette-main;
+//
+//$color-primary					: $palette-primary;
+////$color-primary-light			: #76797C;
+//$color-primary-super-light		: $palette-neutral;
+//$color-primary-dark				: $palette-primary-dark;
+//
+//$color-secondary				: $palette-secondary;
+//$color-secondary-dark			: $palette-secondary-dark;
+//$color-secondary-light			: $palette-secondary-light;
+//
+//$color-tertiary-light			: $palette-tertiary-light;
+//
+//$color-negative					: $palette-negative;
+//////$color-negative-light			: #AD675B;
+////
+//$color-neutral					: $color-primary-super-light;
+//$color-neutral-light			: $palette-neutral-light;
+////$color-neutral-extra-light		: #efefef;
+//$color-neutral-black			: $color-primary;
+////
+//$color-link						: $color-secondary-light;
+////$color-link-primary				: $color-light;
+////
+//$color-bg						: $color-light;
+////
+////$z-top							: 1;
+//$z-extra-top					: 2;
+//$z-menu							: 10;
+//$z-debugger						: 20;
+//
+////$color-light					: #FFFFFF;
+////
+////$color-text						: #000000;
+////$color-text-primary				: $color-light;
+////
+////$color-primary					: #3E4246;
+////$color-primary-light			: #76797C;
+////$color-primary-super-light		: #C3C3C3;
+////$color-primary-dark				: #23282C;
+////
+////$color-secondary				: #006E95;
+////$color-secondary-light			: #007fAD;
+////$color-secondary-dark			: #00506C;
+////
+////$color-tertiary-light			: #68909F;
+////
+////$color-negative					: #950000;
+//////$color-negative-light			: #AD675B;
+////
+////$color-neutral					: $color-primary-super-light;
+////$color-neutral-light			: #d9d9d9;
+////$color-neutral-extra-light		: #efefef;
+////$color-neutral-black			: $color-primary;
+////
+////$color-link						: $color-secondary-light;
+////$color-link-primary				: $color-light;
+////
+////$color-bg						: $color-light;
+////
+////$z-top							: 1;
+////$z-extra-top					: 2;
+////$z-menu							: 10;
+////$z-debugger						: 20;
+////$z-window						: 200;
+////$z-notice						: 300;

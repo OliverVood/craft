@@ -11,6 +11,7 @@
 	config()->load('app');
 	config()->load('db');
 	config()->load('admin');
+	config()->load('assembly');
 
 	app('/admin/', '/admin/xhr/');
 
@@ -18,7 +19,7 @@
 	require_once DIR_ENTRY_ADMIN . 'features.php';
 	require_once DIR_ENTRY_ADMIN . 'links.php';
 
-	app()->params->name = 'docroom.pro';
+	app()->params->name = 'Craft';
 
 	access()->regSuperUsers(explode(',', config()->get('ADMIN_SUPPER_USERS', '')) ?: []);
 

@@ -1,5 +1,5 @@
 <?php /** @var array $structure */ ?>
-<div class = "view dbs structure">
+<div class = "view db structure">
 	<h1><?= __('Структура базы данных') ?></h1>
 	<div></div>
 	<script>
