@@ -1,0 +1,11 @@
+@use "../variables" as *;
+
+@mixin MixComponentInput {
+	padding: $elem-padding; border: $elem-border; font-size: 16px; outline: none; border-radius: $elem-border-radius;
+	&:hover { border-color: $elem-hover-background; }
+	&:focus-visible, &:active { border-color: $elem-active-border-color; }
+}
+
+input {
+	&[type="text"], &[type="password"] { @include MixComponentInput; }
+}

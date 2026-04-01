@@ -1,0 +1,66 @@
+@use '../variables' as *;
+@use '../functions' as *;
+
+@mixin MixViewsCraft {
+	&.craft {
+		@include MixViewsCraftAbout;
+		@include MixViewsCraftHelp;
+		@include MixViewsCraftStructure;
+	}
+}
+
+@mixin MixViewsCraftAbout {
+	&.about {
+		> .logo { height: 300px; width: auto; background-size: 50%; }
+		> .list {
+			> h3 { margin-top: 0; }
+			ul {
+				margin: 0; padding: 0; list-style: none;
+				> li {
+					&:before { content: ""; display: inline-block; width: 15px; height: 15px; margin-right: 6px; background-image: getImage("craft/check.svg"); background-size: contain; background-position: center; background-repeat: no-repeat; }
+					&:not(:first-child) { margin-top: 12px; }
+				}
+			}
+			> .stack > div > div {
+				display: flex; gap: 8px;
+				> span { display: inline-block; padding: 6px; color: $color-inverse; background-color: $color-primary-extra-light; }
+			}
+		}
+	}
+}
+
+@mixin MixViewsCraftHelp {
+	&.help {
+		> .title {
+			border-radius: 3px; overflow: hidden;
+			> pre { margin: 0; text-align: center; background-color: $color-neutral; }
+		}
+		.code {
+			> code {
+				display: block;
+				> .command { display: block; }
+				> .flags {
+					display: block; margin-top: 6px; padding-top: 6px; border-top: 1px solid $color-neutral-dark;
+					> span { display: block; }
+				}
+			}
+			&:before { content: "code"; display: block; padding: 6px; font-size: 10px; text-transform: uppercase; background-color: $color-neutral-dark; color: $color-inverse; }
+			&.php:before { content: "php"; }
+		}
+	}
+}
+
+@mixin MixViewsCraftStructure {
+	&.craft.structure {
+		@include MixViewsCraftStructureCreate;
+	}
+}
+
+@mixin MixViewsCraftStructureCreate {
+	&.create {
+		.table {
+			display: flex;
+			> .delete { flex: none; width: 36px; background-image: getImage("craft/close_negative.svg"); background-size: 30%; cursor: pointer; }
+		}
+	}
+}

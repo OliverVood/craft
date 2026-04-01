@@ -1,0 +1,9 @@
+@use "../variables" as *;
+
+@mixin MixComponentSelect {
+	padding: $elem-padding; border: $elem-border; font-size: 16px; outline: none; border-radius: $elem-border-radius;
+	&:hover { border-color: $elem-hover-background; }
+	&:focus-visible, &:active { border-color: $elem-active-border-color; }
+}
+
+select { @include MixComponentSelect; }

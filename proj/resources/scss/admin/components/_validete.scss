@@ -1,0 +1,17 @@
+@use "../variables" as *;
+
+@mixin MixComponentValidate {
+		input, select { border-color: $color-negative; }
+		> .errors {
+			display: flex; flex-direction: column;
+			&:not(:empty) { margin-top: 4px; }
+			> span {
+				color: $color-negative;
+				&:not(:first-child) { margin-top: 4px; }
+			}
+		}
+}
+
+[data-field].error {
+	@include MixComponentValidate;
+}
