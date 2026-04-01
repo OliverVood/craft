@@ -14,21 +14,25 @@
 	class Out extends Middleware {
 
 		/**
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {  }
+		public function inlet(): bool {
+			return true;
+		}
 
 		/**
 		 * Выводит шапку и подвал
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {
+		public function outlet(): bool {
 			/** @var Site $template */ $template = template();
 
 			$this->setHead($template->layout->header);
 			$this->setFooter($template->layout->footer);
 
 			template()->browse();
+
+			return true;
 		}
 
 		/**

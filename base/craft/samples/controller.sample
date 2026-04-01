@@ -6,10 +6,9 @@
 
 	use Base\Controller;
 //	use Base\Data\Set;
-//	use JetBrains\PhpStorm\NoReturn;
 
 	/**
-	 * Отвечает за обработку запросов
+	 * Controller
 	 * @controller
 	 */
 	class <CLASS> extends Controller {
@@ -18,16 +17,19 @@
 		}
 
 //		/**
-//		 * Пользовательский метод
+//		 * Method
 //		 * @controllerMethod
-//		 * @param Set $data - Пользовательские данные
+//		 * @param Set $data - User data
 //		 * @return void
 //		 */
-//		#[NoReturn] public function example(Set $data): void {
+//		public function example(Set $data): void {
 //			$data = $data->defined()->all();
 //
 //			$errors = [];
-//			if (!$validated = validation($data, [], [], $errors)) response()->unprocessableEntity(__('Error validation'), $errors);
+//			if (!$validated = validation($data, [], [], $errors)) {
+//				response()->unprocessableEntity(__('Error validation'), $errors);
+//				return;
+//			}
 //
 //			response()->ok();
 //		}

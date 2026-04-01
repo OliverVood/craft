@@ -15,6 +15,7 @@
 		public ?Right $linkBrowse = null;
 		public ?Right $linkCreate = null;
 		public ?Right $linkUpdate = null;
+		public ?Right $linkDelete = null;
 
 		public ?Right $linkDoAccess = null;
 		public ?Right $linkDoCreate = null;
@@ -32,6 +33,7 @@
 			if (links()->check("{$this->feature->name()}_browse")) $this->linkBrowse = linkRight("{$this->feature->name()}_browse");
 			if (links()->check("{$this->feature->name()}_create")) $this->linkCreate = linkRight("{$this->feature->name()}_create");
 			if (links()->check("{$this->feature->name()}_update")) $this->linkUpdate = linkRight("{$this->feature->name()}_update");
+			if (links()->check("{$this->feature->name()}_delete")) $this->linkDelete = linkRight("{$this->feature->name()}_delete");
 
 			if (links()->check("{$this->feature->name()}_do_access")) $this->linkDoAccess = linkRight("{$this->feature->name()}_do_access");
 			if (links()->check("{$this->feature->name()}_do_create")) $this->linkDoCreate = linkRight("{$this->feature->name()}_do_create");

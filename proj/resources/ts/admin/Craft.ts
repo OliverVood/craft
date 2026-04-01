@@ -10,11 +10,11 @@ namespace Craft {
 		 */
 		public static addTable($th: HTMLElement): void {
 			let $btn = el($th);
-			let $items = $btn.previous();
+			let $items = $btn.parent()?.previous();
 
-			let $item = el('<div/>', {class: 'table'});
+			let $item = el('<div/>', {class: 'table m-t-8'});
 			let $input = el('<input/>', {type: 'text', name: 'params[table][]', placeholder: __('Название таблицы')});
-			let $delete = el('<span/>', {text: 'X', class: 'delete'}).on('click', () => { $item.remove(); });
+			let $delete = el('<span/>', {class: 'delete icon'}).on('click', () => { $item.remove(); });
 
 			($items as Base.UI.Element).append(
 				$item.append(
@@ -44,7 +44,7 @@ namespace Craft {
 			}
 
 			let $wrap = el('<div/>');
-			let $checkboxBD = checkbox(__('Использовать базу данных'));
+			let $checkboxBD = checkbox(__('Использовать базу данных'), {class: 'm-t-8'});
 
 			$checkboxBD.change((state: boolean) => {
 				state ? this.addDatabase($checkboxBD) : this.removeDatabase($checkboxBD);
@@ -62,7 +62,7 @@ namespace Craft {
 		 * @param $checkboxBD
 		 */
 		public static addDatabase($checkboxBD: UICheckboxElement): void {
-			let $wrap = el('<div/>');
+			let $wrap = el('<div/>', {class: 'm-t-24'});
 			let $input = el('<input/>', {type: 'text', name: 'params[database]', placeholder: __('База данных')});
 
 			$checkboxBD.insertAfter(
@@ -85,7 +85,7 @@ namespace Craft {
 				return;
 			}
 
-			let $wrap = el('<div/>');
+			let $wrap = el('<div/>', {class: 'm-t-24'});
 			let $input = el('<input/>', {type: 'text', name: 'params[database]', placeholder: __('База данных')});
 
 			$checkboxBD.insertAfter(

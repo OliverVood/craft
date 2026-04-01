@@ -6,7 +6,6 @@
 
 	use Base\Controller;
 	use Base\Data\Set;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models;
 
 	/**
@@ -23,7 +22,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function index(): void {
+		public function index(): void {
 			response()->ok(
 				['html' => view('site.feedback.form')]
 			);
@@ -35,7 +34,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function create(Set $data): void {
+		public function create(Set $data): void {
 			$data = $data->defined()->all();
 
 			$errors = [];
@@ -44,7 +43,10 @@
 				'contacts' => ['string', 'max:255'],
 				'letter' => ['string', 'max:255'],
 				'content' => ['string', 'trim', 'required'],
-			], [], $errors)) response()->unprocessableEntity(__('Error validation'), $errors);
+			], [], $errors)) {
+				response()->unprocessableEntity(__('Error validation'), $errors);
+				return;
+			}
 
 			/** @var Models\Feedback $feedback */ $feedback = model('feedback');
 

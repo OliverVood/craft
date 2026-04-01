@@ -7,10 +7,10 @@
 	use Base\Access\Feature;
 
 	/**
-	 * Пользовательский признак
-	 * @param int $id - Идентификатор
-	 * @param string $name - Наименование
-	 * @param string $title - Заголовок
+	 * Feature
+	 * @param int $id - Identifier
+	 * @param string $name - Name
+	 * @param string $title - Title
 	 */
 	class <CLASS> extends Feature {
 

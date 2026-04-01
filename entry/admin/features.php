@@ -10,6 +10,10 @@
 	require_once DIR_PROJ_FEATURES . 'Craft.php';
 	require_once DIR_PROJ_FEATURES . 'statistics/IPs.php';
 	require_once DIR_PROJ_FEATURES . 'statistics/Actions.php';
+	require_once DIR_PROJ_FEATURES . 'locales/Languages.php';
+	require_once DIR_PROJ_FEATURES . 'locales/Contexts.php';
+	require_once DIR_PROJ_FEATURES . 'locales/Aliases.php';
+	require_once DIR_PROJ_FEATURES . 'locales/Translations.php';
 	require_once DIR_PROJ_FEATURES . 'site/News.php';
 	require_once DIR_PROJ_FEATURES . 'site/Changes.php';
 	require_once DIR_PROJ_FEATURES . 'site/Feedback.php';
@@ -25,3 +29,7 @@
 	features()->registration(Proj\Features\Site\News::class, 20, 'news', 'Новости');
 	features()->registration(Proj\Features\Site\Changes::class, 21, 'changes', 'Изменения');
 	features()->registration(Proj\Features\Site\Feedback::class, 22, 'feedback', 'Обратная связь');
+	features()->registration(Proj\Features\Locales\Languages::class, 30, 'languages', 'Локализация (языки)');
+	features()->registration(Proj\Features\Locales\Contexts::class, 31, 'contexts', 'Локализация (контексты)');
+	features()->registration(Proj\Features\Locales\Aliases::class, 32, 'aliases', 'Локализация (Псевдонимы)');
+	features()->registration(Proj\Features\Locales\Translations::class, 33, 'translations', 'Локализация (Переводы)');

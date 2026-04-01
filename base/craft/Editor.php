@@ -45,7 +45,7 @@
 			[$path, $namespace, $class, $namespaceSuffix] = Helper::generateClassInfo('Proj\Editors\Controllers', DIR_PROJ_EDITORS_CONTROLLERS, $name);
 			if (!self::createController($path, $namespace, $class, $namespaceSuffix, $feature)) return false;
 
-			Message::success("Редактор '{$namespace}\\{$class}' создан");
+			Message::success(__('Редактор \':[name]\' создан', ['name' => "{$namespace}\\{$class}"]));
 
 			return true;
 		}
@@ -73,7 +73,7 @@
 
 			$file = "{$path}{$class}.php";
 
-			if (file_exists($file)) { Message::error("Контроллер редактора '{$namespace}\\{$class}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error(__('Контроллер редактора \':[name]\' уже существует', ['name' => "{$namespace}\\{$class}"])); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 
@@ -101,7 +101,7 @@
 
 			$file = "{$path}{$class}.php";
 
-			if (file_exists($file)) { Message::error("Модель редактора '{$namespace}\\{$class}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error(__('Модель редактора \':[name]\' уже существует', ['name' => "{$namespace}\\{$class}"])); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 

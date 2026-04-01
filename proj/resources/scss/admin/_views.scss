@@ -1,7 +1,25 @@
 @use "views/out" as out;
 @use "views/db" as db;
+@use "views/craft" as craft;
+
+.view.editor {
+	> .navigate { margin-bottom: 24px; }
+	table {
+		&.browse, &.create, &.update {
+			> tbody > tr > th { padding: 10px; text-align: left; font-weight: 700; vertical-align: top; }
+		}
+	}
+	&.delete {
+		> .text { margin-bottom: 24px; }
+		> .manager {
+			text-align: right;
+			> *:not(:first-child) { margin-left: 12px; }
+		}
+	}
+}
 
 div.view {
 	@include out.MixViewsOut;
 	@include db.MixViewsBD;
+	@include craft.MixViewsCraft;
 }

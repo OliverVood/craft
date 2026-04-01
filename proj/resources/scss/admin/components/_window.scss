@@ -1,10 +1,11 @@
 @use "../variables" as *;
+@use "../functions" as *;
 
 @mixin MixComponentWindow {
 	&.window {
 		@include MixComponentWindowContainer;
 		@include MixComponentWindowInstance;
-		@include MixComponentWindowWindow;
+		@include MixComponentWindowContent;
 	}
 }
 
@@ -17,36 +18,21 @@
 @mixin MixComponentWindowInstance {
 	&.instance {
 		position: fixed; display: flex; top: 0; left: 0; bottom: 0; right: 0; z-index: $z-windows; align-items: center; justify-content: center;
-		> .space {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background-color: #d2d2d2e8;
-		}
+		> .space { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba($color-neutral, 0.8); }
 	}
 }
 
-@mixin MixComponentWindowWindow {
-	&.window {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		border-radius: 6px;
-		overflow: hidden;
+@mixin MixComponentWindowContent {
+	&.content {
+		position: relative; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden;
 		> div {
 			&.header {
-				background-color: red;
-				padding: 12px;
+				padding: 12px 52px 12px 12px; color: $color-inverse; background-color: $color-primary;
+				> .close { position: absolute; right: 12px; top: 10px; width: 24px; height: 24px; background-image: getImage('craft/close_inverse.svg'); background-position: center; background-repeat: no-repeat; background-size: 50%; cursor: pointer; }
 			}
-			&.main {
-				padding: 12px;
-				background-color: #fff;
-			}
-			&.footer {
-
-			}
+			&.main { padding: 12px; background-color: $color-inverse; }
+			&.footer {  }
 		}
+		&.empty_title > div.header { height: 44px; }
 	}
 }

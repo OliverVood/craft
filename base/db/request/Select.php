@@ -68,6 +68,20 @@
 		}
 
 		/**
+		 * Задаёт условие с полем и значением
+		 * @param string $field - Поле
+		 * @param $enum - Перечисление
+		 * @return $this
+		 */
+		public function whereIn(string $field, array $enum): self {
+			if (!$enum) return $this;
+
+			$this->addConditions('where_in', 'AND', ['field' => $field, 'enum' => $enum]);
+
+			return $this;
+		}
+
+		/**
 		 * Задаёт условие с двумя полями
 		 * @param string $field1 - Первое поле
 		 * @param string $field2 - Второе поле

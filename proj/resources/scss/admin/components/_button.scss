@@ -9,3 +9,10 @@
 input {
 	&[type="button"], &[type="submit"] { @include MixComponentButton; }
 }
+
+button { @include MixComponentButton; }
+
+a.btn {
+	@include MixComponentButton; display: inline-block;
+	&:hover { color: $color-inverse; }
+}

@@ -5,6 +5,6 @@
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним отображения'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<div><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
+		<div class = "m-t-24"><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
 	</form>
 </div>

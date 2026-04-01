@@ -1,12 +1,17 @@
 @use "variables" as *;
 
-@use "components/button" as buttons;
+@use "components/button" as button;
+@use "components/input" as input;
+@use "components/select" as select;
 
 @use "components/checkbox" as checkbox;
+
+@use "components/validete" as validete;
 
 @use "components/window" as window;
 @use "components/notice" as notice;
 @use "components/report" as report;
+@use "components/pagination" as pagination;
 
 div.component {
 	@include checkbox.MixComponentCheckbox;
@@ -14,6 +19,7 @@ div.component {
 	@include window.MixComponentWindow;
 	@include notice.MixComponentNotice;
 	@include report.MixComponentReport;
+	@include pagination.MixComponentPagination;
 }
 
 table.select th div.component { @include checkbox.MixComponentCheckbox($color: $color-inverse) }

@@ -20,8 +20,9 @@
 				'datecr' => __('Дата'),
 				'cid' => __('ID Клиента'),
 				'ip' => __('IP адрес'),
-				'path' => __('Путь'),
-				'params' => __('Параметры'),
+				'url' => __('URL'),
+				'method' => __('Метод'),
+				'method_virtual' => __('Виртуальный метод'),
 			];
 
 			$this->select = new Select($this);
@@ -29,13 +30,14 @@
 			$this->select->fields()->browse->datetime('datecr', $this->names['datecr']);
 			$this->select->fields()->browse->text('cid', $this->names['cid']);
 			$this->select->fields()->browse->int2IP('ip', $this->names['ip']);
-			$this->select->fields()->browse->text('path', $this->names['path']);
-			$this->select->fields()->browse->text('params', $this->names['params']);
-			$this->select->text('title', 'Статистика запросов к серверу');
+			$this->select->fields()->browse->text('url', $this->names['url']);
+			$this->select->fields()->browse->text('method', $this->names['method']);
+			$this->select->fields()->browse->text('method_virtual', $this->names['method_virtual']);
+			$this->select->text('title', __('Статистика запросов к серверу'));
 		}
 
 		/**
-		 * Возвращает ссылки для управления
+		 * Возвращает ссылки управления
 		 * @param array $item - Данные
 		 * @return Accumulator
 		 */

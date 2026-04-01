@@ -10,7 +10,6 @@
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Контроллер-редактор состояния
@@ -31,15 +30,15 @@
 
 			$this->access = 'status';
 
-			$this->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
-
 			$this->text('do', 'Изменить состояние');
 			$this->text('confirm', 'Изменить состояние?');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorAccess', 'Недостаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
 			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseErrorState', 'Ошибка установки состояния');
 			$this->text('responseOk', 'Изменено состояние');
+
+			$this->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
 		}
 
 		/**
@@ -49,20 +48,35 @@
 		 * @param int $state - Состояние
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data, int $id, int $state): void {
-			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
-			if ($state < 1) response()->unprocessableEntity($this->text('responseErrorValidate'));
+		public function set(Set $data, int $id, int $state): void {
+			if ($id < 1) {
+				response()->notFound($this->__('responseErrorNotFound'));
+				return;
+			}
+			if ($state < 1) {
+				response()->unprocessableEntity($this->text('responseErrorValidate'));
+				return;
+			}
 
-			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
+			if (!$this->allow($id)) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
+			if (!$model->browse($id, ['*'])) {
+				response()->unprocessableEntity($this->__('responseErrorNotFound'));
+				return;
+			}
 
 			$prepareData = $this->fnPrepareData;
 			$prepareData($id, $state);
 
-			if (!$model->setState($id, $state)) response()->unprocessableEntity($this->__('responseErrorState'));
+			if (!$model->setState($id, $state)) {
+				response()->unprocessableEntity($this->__('responseErrorState'));
+				return;
+			}
 
 			$this->controller->select->inside(old('page')->int(1));
 			response()->ok(null, $this->text('responseOk'));

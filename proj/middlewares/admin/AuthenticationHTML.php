@@ -15,12 +15,12 @@
 
 		/**
 		 * Before
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {
+		public function inlet(): bool {
 			/** @var Models\Users $users */ $users = model('users');
 
-			if ($users->isAuth()) return;
+			if ($users->isAuth()) return true;
 
 			/** @var Template $template */ $template = template('auth');
 
@@ -28,13 +28,17 @@
 			$template->layout->main->push(view('admin.users.form_authorization'));
 			$template->layout->footer->push(__('Разработан в © Craft'));
 
-			$template->browse(true);
+			$template->browse();
+
+			return false;
 		}
 
 		/**
 		 * After
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {  }
+		public function outlet(): bool {
+			return true;
+		}
 
 	}

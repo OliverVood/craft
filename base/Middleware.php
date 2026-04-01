@@ -10,14 +10,14 @@
 	abstract class Middleware {
 		/**
 		 * Выполняется перед выполнением контроллера
-		 * @return void
+		 * @return bool
 		 */
-		abstract public function inlet(): void;
+		abstract public function inlet(): bool;
 
 		/**
 		 * Выполняется после выполнения контроллера
-		 * @return void
+		 * @return bool
 		 */
-		abstract public function outlet(): void;
+		abstract public function outlet(): bool;
 
 	}

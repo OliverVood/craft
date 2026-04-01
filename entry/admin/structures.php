@@ -5,3 +5,4 @@
 	require_once DIR_PROJ_STRUCTURES . 'craft\News.php';
 	require_once DIR_PROJ_STRUCTURES . 'craft\Changes.php';
 	require_once DIR_PROJ_STRUCTURES . 'craft\Feedback.php';
+	require_once DIR_PROJ_STRUCTURES . 'craft\Translations.php';

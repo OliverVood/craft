@@ -4,7 +4,6 @@
 
 	namespace Base;
 
-	use Base\Access\Links;
 	use Base\DB\DB;
 	use Base\Helper\Response;
 	use Base\Helper\Security;
@@ -123,6 +122,10 @@
 		 */
 		#[NoReturn] public function error(Exception $e): void {
 			/** @var Templates\Error $template */ $template = template('error');
+
+			buffer()->clear();
+
+			$template->layout->main->clear();
 
 			$template->layout->main->push('<h1>The <b>Craft</b> app has encountered a critical error.</h1>');
 			$template->layout->main->push('<h3>Message:</h3>');

@@ -6,7 +6,6 @@
 
 	use Base\Controller;
 	use Base\Data\Set;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models;
 
 	/**
@@ -24,10 +23,13 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function auth(Set $data): void {
+		public function auth(Set $data): void {
 			/** @var Models\Users $users */ $users = model('users');
 
-			if ($users->isAuth()) response()->notFound(__('Вы уже вошли систему'));
+			if ($users->isAuth()) {
+				response()->notFound(__('Вы уже вошли систему'));
+				return;
+			}
 
 			$errors = [];
 			$validated = validation($data->defined()->all(), [
@@ -35,9 +37,15 @@
 				'password' => ['string', 'required', 'encryption'],
 			], [], $errors);
 
-			if ($errors) response()->unprocessableEntity(__('Ошибка валидации'), $errors);
+			if ($errors) {
+				response()->unprocessableEntity(__('Ошибка валидации'), $errors);
+				return;
+			}
 
-			if (!$users->auth($validated['login'], $validated['password'])) response()->unauthorized(__('Не правильный логин или пароль'));
+			if (!$users->auth($validated['login'], $validated['password'])) {
+				response()->unauthorized(__('Не правильный логин или пароль'));
+				return;
+			}
 
 			response()->ok();
 		}
@@ -47,7 +55,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function exit(): void {
+		public function exit(): void {
 			/** @var Models\Users $users */ $users = model('users');
 
 			$users->logout();

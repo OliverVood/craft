@@ -4,7 +4,6 @@
 
 	namespace <NAMESPACE>;
 
-	use Base\DB\Response;
 	use Base\Editor\Actions\Access;
 	use Base\Editor\Actions\Browse;
 	use Base\Editor\Actions\Create;
@@ -18,16 +17,16 @@
 	use Proj\Editors\Models;
 
 	/**
-	 * Пользовательский контроллер-редактор
+	 * Controller-editor
 	 * @controller
 	 */
 	class <CLASS> extends Controller {
 		public function __construct() {
-			parent::__construct(app()->features('<FEATURE_NAME>'), '<MODEL_NAME>');
+			parent::__construct(feature('<FEATURE_NAME>'), '<MODEL_NAME>');
 
 //			$this->names = [];
 
-//			/** @var Models<MODEL_NAMESPACE_PREFIX>\<MODEL_CLASS> $model */ $model = $this->model();
+//			/** @var \<MODEL_NAMESPACE_PREFIX>\<MODEL_CLASS> $model */ $model = $this->model();
 
 //			$this->initAccess();
 //			$this->initSelect();
@@ -41,111 +40,112 @@
 //		private function initAccess(): void {
 //			$this->access = new Access($this);
 //
-//			$this->access->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
-//
 //			$this->access->validate([]);
 //
-//			$this->access->text('title', 'Права доступа');
-//			$this->access->text('do', 'Установить права доступа');
-//			$this->access->text('btn', 'Изменить');
-//			$this->access->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->access->text('responseErrorNotFound', 'Элемент не найден');
-//			$this->access->text('responseErrorValidate', 'Ошибка валидации данных');
-//			$this->access->text('responseOkSet', 'Права доступа установлены');
+//			$this->access->text('title', 'Access permissions');
+//			$this->access->text('do', 'Set access permissions');
+//			$this->access->text('btn', 'Change');
+//			$this->access->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->access->text('responseErrorNotFound', 'Element not found');
+//			$this->access->text('responseErrorValidate', 'Data validation error');
+//			$this->access->text('responseOkSet', 'Access permissions have been set');
+//
+//			$this->access->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 //		}
 
 //		private function initSelect(): void {
 //			$this->select = new Select($this);
 //
-//			$this->select->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
-//			$this->select->fnPrepareView = fn (Response & $item) => $this->prepareView($item);
-//			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
-//
 //			$this->select->fields()->browse->
 //
-//			$this->select->text('title', 'Выборка');
-//			$this->select->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->select->text('responseErrorNotFound', 'Элемент не найден');
+//			$this->select->text('title', 'Selection');
+//			$this->select->text('responseErrorAccess', 'Insufficient permissions');
+//
+//			$this->select->fnPrepareView = fn (Response & $item) => $this->prepareView($item);
+//			$this->select->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
+//			$this->select->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 //		}
 
 //		private function initBrowse(): void {
 //			$this->browse = new Browse($this);
 //
-//			$this->browse->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
-//			$this->browse->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
-//
 //			$this->browse->fields()->browse->
 //
-//			$this->browse->text('title', 'Просмотр');
-//			$this->browse->text('do', 'Просмотреть');
-//			$this->browse->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->browse->text('responseErrorNotFound', 'Элемент не найден');
+//			$this->browse->text('title', 'Browse');
+//			$this->browse->text('do', 'View');
+//			$this->browse->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->browse->text('responseErrorNotFound', 'Element not found');
+//
+//			$this->browse->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
+//			$this->browse->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
 //		}
 
 //		private function initCreate(): void {
 //			$this->create = new Create($this);
 //
-//			$this->create->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
-//			$this->create->fnPrepareView = fn (array & $item) => $this->prepareView($item);
-//			$this->create->fnPrepareData = fn (array & $item) => $this->prepareData($item);
-//
 //			$this->create->fields()->edit->
+//
 //			$this->create->validate([]);
 //
-//			$this->create->text('title', 'Создание');
-//			$this->create->text('do', 'Создать');
-//			$this->create->text('btn', 'Создать');
-//			$this->create->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->create->text('responseErrorValidate', 'Ошибка валидации данных');
-//			$this->create->text('responseErrorCreate', 'Ошибка сохранения');
-//			$this->create->text('responseOk', 'Создано');
+//			$this->create->text('title', 'Creation');
+//			$this->create->text('do', 'Create');
+//			$this->create->text('btn', 'Create');
+//			$this->create->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->create->text('responseErrorValidate', 'Data validation error');
+//			$this->create->text('responseErrorCreate', 'Saving error');
+//			$this->create->text('responseOk', 'Created');
+//
+//			$this->create->fnPrepareView = fn (array & $item) => $this->prepareView($item);
+//			$this->create->fnPrepareData = fn (array & $item) => $this->prepareData($item);
+//			$this->create->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 //		}
 
 //		private function initUpdate(): void {
 //			$this->update = new Update($this);
 //
-//			$this->update->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
-//			$this->update->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
-//			$this->update->fnPrepareData = fn (int $id, array & $item) => $this->prepareData($id, $item);
-//
 //			$this->update->fields()->edit->
+//
 //			$this->update->validate([]);
 //
-//			$this->update->text('title', 'Редактирование');
-//			$this->update->text('btn', 'Изменить');
-//			$this->update->text('do', 'Изменить');
-//			$this->update->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->update->text('responseErrorNotFound', 'Элемент не найден');
-//			$this->update->text('responseErrorValidate', 'Ошибка валидации данных');
-//			$this->update->text('responseErrorUpdate', 'Ошибка обновления');
-//			$this->update->text('responseOk', 'Изменено');
+//			$this->update->text('title', 'Editing');
+//			$this->update->text('btn', 'Edit');
+//			$this->update->text('do', 'Edit');
+//			$this->update->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->update->text('responseErrorNotFound', 'Element not found');
+//			$this->update->text('responseErrorValidate', 'Data validation error');
+//			$this->update->text('responseErrorUpdate', 'Editing error');
+//			$this->update->text('responseOk', 'Edited');
+//
+//			$this->update->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
+//			$this->update->fnPrepareData = fn (int $id, array & $item) => $this->prepareData($id, $item);
+//			$this->update->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
 //		}
 
 //		private function initDelete(): void {
 //			$this->delete = new Delete($this);
 //
-//			$this->delete->fnPrepareData = fn (int $id) => $this->prepareData($id);
+//			$this->delete->text('do', 'Delete');
+//			$this->delete->text('confirm', 'Delete?');
+//			$this->delete->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->delete->text('responseErrorNotFound', 'Element not found');
+//			$this->delete->text('responseErrorDelete', 'Error deleting');
+//			$this->delete->text('responseOk', 'Deleted');
 //
-//			$this->delete->text('do', 'Удалить');
-//			$this->delete->text('confirm', 'Удалить?');
-//			$this->delete->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->delete->text('responseErrorNotFound', 'Элемент не найден');
-//			$this->delete->text('responseErrorDelete', 'Ошибка удаления');
-//			$this->delete->text('responseOk', 'Удалено');
+//			$this->delete->fnPrepareData = fn (int $id) => $this->prepareData($id);
 //		}
 
 //		private function initStatus(): void {
 //			$this->status = new Status($this);
 //
-//			$this->status->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
+//			$this->status->text('do', 'Change status');
+//			$this->status->text('confirm', 'Change status?');
+//			$this->status->text('responseErrorAccess', 'Insufficient permissions');
+//			$this->status->text('responseErrorNotFound', 'Element not found');
+//			$this->status->text('responseErrorValidate', 'Data validation error');
+//			$this->status->text('responseErrorState', 'Error setting status');
+//			$this->status->text('responseOk', 'Status changed');
 //
-//			$this->status->text('do', 'Изменить состояние');
-//			$this->status->text('confirm', 'Изменить состояние?');
-//			$this->status->text('responseErrorAccess', 'Не достаточно прав');
-//			$this->status->text('responseErrorNotFound', 'Элемент не найден');
-//			$this->status->text('responseErrorValidate', 'Ошибка валидации данных');
-//			$this->status->text('responseErrorState', 'Ошибка установки состояния');
-//			$this->status->text('responseOk', 'Изменено состояние');
+//			$this->status->fnPrepareData = fn (int $id, int $state) => $this->prepareData($id, $state);
 //		}
 
 	}

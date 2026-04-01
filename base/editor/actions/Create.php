@@ -10,10 +10,10 @@
 	use Base\Editor\Model;
 	use Base\Helper\Accumulator;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
+	use Exception;
 
 	/**
-	 * Контроллер-редактор создания
+	 * Action create
 	 */
 	class Create {
 		use Traits\Entree;
@@ -23,41 +23,44 @@
 
 		private Controller $controller;
 
-		public Closure $fnGetLinksNavigate;
 		public Closure $fnPrepareView;
 		public Closure $fnPrepareData;
+		public Closure $fnGetLinksNavigate;
 
 		private string $tpl = 'admin.editor.create';
 
 		/**
-		 * @param Controller $controller - Контроллер
+		 * @param Controller $controller - Controller
 		 */
 		public function __construct(Controller $controller) {
 			$this->controller = $controller;
 
 			$this->access = 'create';
 
+			$this->fields = new Fields();
+
+			$this->text('title', 'Creation');
+			$this->text('do', 'Create');
+			$this->text('btn', 'Create');
+			$this->text('responseErrorAccess', 'Insufficient permissions');
+			$this->text('responseErrorValidate', 'Data validation error');
+			$this->text('responseErrorCreate', 'Saving error');
+			$this->text('responseOk', 'Created');
+
 			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 			$this->fnPrepareView = fn (array & $item) => $this->prepareView($item);
 			$this->fnPrepareData = fn (array & $item) => $this->prepareData($item);
-
-			$this->fields = new Fields();
-
-			$this->text('title', 'Создание');
-			$this->text('do', 'Создать');
-			$this->text('btn', 'Создать');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
-			$this->text('responseErrorValidate', 'Ошибка валидации данных');
-			$this->text('responseErrorCreate', 'Ошибка сохранения');
-			$this->text('responseOk', 'Создано');
 		}
 
 		/**
-		 * Возвращает блок создания
+		 * Returns the created block
 		 * @return void
 		 */
-		#[NoReturn] public function get(): void {
-			if (!$this->allow()) response()->forbidden($this->__('responseErrorAccess'));
+		public function get(): void {
+			if (!$this->allow()) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			$prepareView = $this->fnPrepareView;
 			$item = [];
@@ -75,31 +78,15 @@
 		}
 
 		/**
-		 * Возвращает ссылки навигации
-		 * @return Accumulator
-		 */
-		public function getLinksNavigate(): Accumulator {
-			$links = new Accumulator();
-
-			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . $this->controller->select->__('title'), array_merge(['page' => old('page')->int(1)], (array)$this->controller->params)));
-
-			return $links;
-		}
-
-		/**
-		 * Подготовка данных для блока создания
-		 * @param array $item - Данные
+		 * Creation
+		 * @param Set $data - User data
 		 * @return void
 		 */
-		private function prepareView(array & $item): void {  }
-
-		/**
-		 * Создание
-		 * @param Set $data - Пользовательские данные
-		 * @return void
-		 */
-		#[NoReturn] public function set(Set $data): void {
-			if (!$this->allow()) response()->forbidden($this->__('responseErrorAccess'));
+		public function set(Set $data): void {
+			if (!$this->allow()) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
@@ -108,19 +95,48 @@
 			$prepareData($data);
 
 			$errors = [];
-			if (!$validated = $this->validation($data, $errors)) response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
-			if (!$id = $model->create($validated)) response()->unprocessableEntity($this->__('responseErrorCreate'));
+			if (!$validated = $this->validation($data, $errors)) {
+				response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
+				return;
+			}
+			if (!$id = $model->create($validated)) {
+				response()->unprocessableEntity($this->__('responseErrorCreate'));
+				return;
+			}
 
-			$this->controller->browse->inside($id);
+			if (!$this->controller->browse->inside($id)) return;
 
 			response()->created(null, $this->__('responseOk'));
 		}
 
 		/**
-		 * Подготовка данных перед созданием
-		 * @param array $data - Данные
+		 * Prepare data for view
+		 * @param array $item - Data
+		 * @return void
+		 */
+		private function prepareView(array & $item): void {  }
+
+		/**
+		 * Prepare data for creation
+		 * @param array $data - Data
 		 * @return void
 		 */
 		private function prepareData(array & $data): void {  }
+
+		/**
+		 * Returns navigate links
+		 * @return Accumulator
+		 */
+		public function getLinksNavigate(): Accumulator {
+			$links = new Accumulator();
+
+			if (!$this->controller->select) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'select'])));
+
+			if (!$this->controller->linkSelect) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'select'])));
+
+			if ($this->controller->linkSelect->allow()) $links->push($this->controller->linkSelect->hyperlink('<< ' . $this->controller->select->__('title'), array_merge(['page' => old('page')->int(1)], (array)$this->controller->params)));
+
+			return $links;
+		}
 
 	}

@@ -27,7 +27,12 @@
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^admin/?(.*)$ admin.php [QSA,NC,L]
+	RewriteRule ^admin/?$ admin.php [QSA,NC,L]
+
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^admin/(.+)$ admin.php [QSA,NC,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

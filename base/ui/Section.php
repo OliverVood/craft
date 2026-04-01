@@ -25,4 +25,8 @@
 			foreach ($this->contents as $content) echo $content;
 		}
 
+		public function clear(): void {
+			$this->contents = [];
+		}
+
 	}

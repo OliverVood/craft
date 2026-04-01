@@ -1,6 +1,6 @@
 namespace Base {
 
-	type ResponseSuccess			= { history?: ResponseHistory, sections?: ResponseSection[], notices?: ResponseNotice[], debugger?: ResponseDebugger };
+	export type ResponseSuccess			= { history?: ResponseHistory, sections?: ResponseSection[], notices?: ResponseNotice[], debugger?: ResponseDebugger };
 	type ResponseError				= { notices?: ResponseNotice[], data?: ResponseErrorData };
 	type ResponseErrorData			= Record<string, string[]>;
 

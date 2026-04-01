@@ -29,11 +29,11 @@
 			$this->select->fields()->browse->text('object', $this->names['object']);
 			$this->select->fields()->browse->text('action', $this->names['action']);
 			$this->select->fields()->browse->text('params', $this->names['params']);
-			$this->select->text('title', 'Статистика действий клиентов');
+			$this->select->text('title', __('Статистика действий клиентов'));
 		}
 
 		/**
-		 * Возвращает ссылки для управления
+		 * Возвращает ссылки управления
 		 * @param array $item - Данные
 		 * @return Accumulator
 		 */

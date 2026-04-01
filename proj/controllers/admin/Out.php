@@ -5,7 +5,6 @@
 	namespace Proj\Controllers\Admin;
 
 	use Base\Controller;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Editors;
 
 	/**
@@ -24,7 +23,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function home(): void {
+		public function home(): void {
 			response()->history(linkInternal('home'));
 			response()->section('content', view('admin.out.home'));
 			response()->ok();
@@ -35,7 +34,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function error404(): void {
+		public function error404(): void {
 			response()->notFound(__('Страница не найдена'));
 		}
 

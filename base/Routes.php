@@ -204,11 +204,10 @@
 		/**
 		 * Запускает только промежуточное программное обеспечение
 		 * @param Middleware[] $middlewares - Стек программного обеспечения
-		 * @return void
+		 * @return bool
 		 */
-		private function runOnlyMiddleware(array $middlewares): void {
-			$this->runMiddlewaresInlet($middlewares);
-			$this->runMiddlewaresOutlet($middlewares);
+		private function runOnlyMiddleware(array $middlewares): bool {
+			return $this->runMiddlewaresInlet($middlewares) && $this->runMiddlewaresOutlet($middlewares);
 		}
 
 		/**
@@ -218,30 +217,44 @@
 		 * @param string $controller - Контроллер
 		 * @param string $call - Метод
 		 * @param array $params - Параметры из строки запроса
-		 * @return void
+		 * @return bool
 		 */
-		private function runController(array $middlewares, int $source, string $controller, string $call, array $params): void {
-			$this->runMiddlewaresInlet($middlewares);
+		private function runController(array $middlewares, int $source, string $controller, string $call, array $params): bool {
+			if (!$this->runMiddlewaresInlet($middlewares)) return false;
 			app()->controllers->run($source, $controller, $call, $params);
-			$this->runMiddlewaresOutlet($middlewares);
+			if (!$this->runMiddlewaresOutlet($middlewares)) return false;
+
+			return true;
 		}
 
 		/**
 		 * Запускает стек программного обеспечения на вход
 		 * @param Middleware[] $middlewares - Стек программного обеспечения
-		 * @return void
+		 * @return bool
 		 */
-		private function runMiddlewaresInlet(array $middlewares): void {
-			foreach ($middlewares as $middleware) $middleware->inlet();
+		private function runMiddlewaresInlet(array $middlewares): bool {
+			foreach ($middlewares as $middleware) {
+				if (!$middleware->inlet()) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		/**
 		 * Запускает стек программного обеспечения на выход
 		 * @param Middleware[] $middlewares - Стек программного обеспечения
-		 * @return void
+		 * @return bool
 		 */
-		private function runMiddlewaresOutlet(array $middlewares): void {
-			foreach (array_reverse($middlewares) as $middleware) $middleware->outlet();
+		private function runMiddlewaresOutlet(array $middlewares): bool {
+			foreach (array_reverse($middlewares) as $middleware) {
+				if (!$middleware->outlet()) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 	}

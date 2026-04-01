@@ -12,18 +12,22 @@
 	class Clients extends Middleware {
 		/**
 		 * Before
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {
+		public function inlet(): bool {
 			/** @var \Proj\Models\Clients $model */ $model = model('clients');
 
 			$model->init();
+
+			return true;
 		}
 
 		/**
 		 * After
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {  }
+		public function outlet(): bool {
+			return true;
+		}
 
 	}

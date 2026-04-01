@@ -5,7 +5,7 @@
 
 	&.checkbox {
 		> label {
-			display: flex; align-items: center; cursor: pointer;
+			display: inline-flex; align-items: center; cursor: pointer;
 			> input {
 				display: none;
 				&:checked + div {
@@ -13,24 +13,10 @@
 				}
 			}
 			> div {
-				width: $width;
-				height: $height;
-				border-radius: $width * 0.5;
-				display: flex;
-				align-items: center;
-				padding: $gap;
-				border: $border solid $color;
-				&:after {
-					content: "";
-					width: $runnerSize;
-					height: $runnerSize;
-					background-color: $color;
-					border-radius: 50%;
-				}
+				padding: $gap; width: $width; height: $height; display: flex; align-items: center; border-radius: $width * 0.5; border: $border solid $color;
+				&:after { content: ""; border-radius: 50%; width: $runnerSize; height: $runnerSize; background-color: $color; }
 			}
-			> span {
-				padding-left: 20px;
-			}
+			> span { padding-left: 20px; }
 		}
 	}
 

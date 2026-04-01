@@ -7,7 +7,7 @@
 	use Base\Editor\Model;
 
 	/**
-	 * Пользовательская контроллер-модель
+	 * Model-editor
 	 */
 	class <CLASS> extends Model {
 		public function __construct() {

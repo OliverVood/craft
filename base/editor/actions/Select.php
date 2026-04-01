@@ -12,10 +12,10 @@
 	use Base\Helper\Accumulator;
 	use Base\Helper\Pagination;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
+	use Exception;
 
 	/**
-	 * Контроллер-редактор выборки
+	 * Action select
 	 */
 	class Select {
 		use Traits\Entree;
@@ -24,39 +24,38 @@
 
 		private Controller $controller;
 
-		public Closure $fnGetLinksNavigate;
 		public Closure $fnPrepareView;
 		public Closure $fnGetLinksManage;
+		public Closure $fnGetLinksNavigate;
 
-		private string $tpl = 'admin.editor.select';
+		public string $tpl = 'admin.editor.select';
 
 		private int $page_entries = 10;
 
 		/**
-		 * @param Controller $controller - Контроллер
+		 * @param Controller $controller - Controller
 		 */
 		public function __construct(Controller $controller) {
 			$this->controller = $controller;
 
 			$this->access = 'select';
 
-			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
-			$this->fnPrepareView = fn (Response & $item) => $this->prepareView($item);
-			$this->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
-
 			$this->fields = new Fields();
 
-			$this->text('title', 'Выборка');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
-			$this->text('responseErrorNotFound', 'Элемент не найден');
+			$this->text('title', 'Selection');
+			$this->text('responseErrorAccess', 'Insufficient permissions');
+
+			$this->fnPrepareView = fn (mixed & $item) => $this->prepareView($item);
+			$this->fnGetLinksManage = fn (array $item): Accumulator => $this->getLinksManage($item);
+			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 		}
 
 		/**
-		 * Возвращает блок выборки
-		 * @param Set $data - Пользовательские данные
+		 * Returns the select block
+		 * @param Set $data - User data
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data): void {
+		public function get(Set $data): void {
 			$page = $data->defined('page')->int(1);
 
 			$this->inside($page);
@@ -65,12 +64,15 @@
 		}
 
 		/**
-		 * Блок выборки
-		 * @param int $page - Номер страницы
+		 * Select block
+		 * @param int $page - Page
 		 * @return void
 		 */
 		public function inside(int $page): void {
-			if (!$this->allow()) response()->forbidden($this->__('responseErrorAccess'));
+			if (!$this->allow()) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
@@ -88,23 +90,15 @@
 		}
 
 		/**
-		 * Подготовка данных для блока выборки
-		 * @param Response $items
+		 * Prepare data
+		 * @param Response|array $items
 		 * @return void
 		 */
-		private function prepareView(Response & $items): void {  }
+		private function prepareView(mixed & $items): void {  }
 
 		/**
-		 * Возвращает ссылки навигации
-		 * @return Accumulator
-		 */
-		public function getLinksNavigate(): Accumulator {
-			return new Accumulator();
-		}
-
-		/**
-		 * Возвращает ссылки для управления
-		 * @param array $item - Данные
+		 * Returns manage links
+		 * @param array $item - Data
 		 * @return Accumulator
 		 */
 		private function getLinksManage(array $item): Accumulator {
@@ -112,11 +106,27 @@
 
 			$id = isset($item['id']) ? (int)$item['id'] : 0;
 
-			$links->push($this->controller->linkBrowse->linkHrefID($id, $this->controller->browse->__('do'), array_merge($item, (array)$this->controller->params)));
-			$links->push($this->controller->linkUpdate->linkHrefID($id, $this->controller->update->__('do'), array_merge($item, (array)$this->controller->params)));
-			$links->push($this->controller->linkDoDelete->linkHrefID($id, $this->controller->delete->__('do'), array_merge($item, (array)$this->controller->params)));
+			if (!$this->controller->browse) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'browse'])));
+			if (!$this->controller->update) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'update'])));
+			if (!$this->controller->delete) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'delete'])));
+
+			if (!$this->controller->linkBrowse) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'browse'])));
+			if (!$this->controller->linkUpdate) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'update'])));
+			if (!$this->controller->linkDelete) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'delete'])));
+
+			if ($this->controller->linkBrowse->allow()) $links->push($this->controller->linkBrowse->linkHrefID($id, $this->controller->browse->__('do'), array_merge($item, (array)$this->controller->params)));
+			if ($this->controller->linkUpdate->allow()) $links->push($this->controller->linkUpdate->linkHrefID($id, $this->controller->update->__('do'), array_merge($item, (array)$this->controller->params)));
+			if ($this->controller->linkDelete->allow()) $links->push($this->controller->linkDelete->linkHrefID($id, $this->controller->delete->__('do'), array_merge($item, (array)$this->controller->params)));
 
 			return $links;
+		}
+
+		/**
+		 * Returns navigate links
+		 * @return Accumulator
+		 */
+		public function getLinksNavigate(): Accumulator {
+			return new Accumulator();
 		}
 
 	}

@@ -31,4 +31,14 @@
 			return $val !== false ? $val : '';
 		}
 
+		/**
+		 * Очищает стек буфера вывода
+		 * @return void
+		 */
+		public function clear(): void {
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
+		}
+
 	}

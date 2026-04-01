@@ -6,7 +6,6 @@
 	use Base\DB\DB;
 	use Base\Models;
 	use Base\Singleton;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models\Users;
 	use ReflectionClass;
 	use ReflectionClassConstant;
@@ -48,7 +47,7 @@
 		 * @param string $title - Заголовок
 		 * @return void
 		 */
-		#[NoReturn] public function dd(mixed $variable, string $title = ''): void {
+		public function dd(mixed $variable, string $title = ''): void {
 			if (!$this->useDebugger()) return;
 
 			$this->dump($variable, $title);

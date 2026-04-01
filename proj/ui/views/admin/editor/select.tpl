@@ -7,14 +7,16 @@
 
 	$linksManage = $editor->select->fnGetLinksManage;
 	$paginationHTML = $pagination ? (string)$pagination : '';
+	$fnGetLinksNavigate = $editor->select->fnGetLinksNavigate;
 ?>
 <div class = "view editor select">
-	<div class = "navigate">
-		<?php
-			$fnGetLinksNavigate = $editor->select->fnGetLinksNavigate;
-			foreach ($fnGetLinksNavigate()->each() as $link) echo $link;
-		?>
-	</div>
+	<?php if (!$fnGetLinksNavigate()->isEmpty()) { ?>
+		<div class = "navigate">
+			<?php
+				foreach ($fnGetLinksNavigate()->each() as $link) echo $link;
+			?>
+		</div>
+	<?php } ?>
 	<h1><?= $title; ?></h1>
 	<?= $paginationHTML; ?>
 	<table class = "select">
@@ -26,7 +28,7 @@
 				}
 				$count = $linksManage([])->count();
 				if ($count) {
-					?><th colspan = "<?= $count; ?>"><?= __('Управление'); ?></th><?php
+					?><th colspan = "<?= $count; ?>"><?= __('Manage'); ?></th><?php
 				}
 			?>
 		</tr>

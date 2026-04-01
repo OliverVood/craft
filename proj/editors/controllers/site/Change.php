@@ -12,7 +12,6 @@
 	use Base\Editor\Actions\Update;
 	use Base\Editor\Controller;
 	use Base\Helper\Accumulator;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Editors\Models\Site\Change as Model;
 
 	/**
@@ -86,7 +85,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function select(Set $data, mixed ...$params): void {
+		public function select(Set $data, mixed ...$params): void {
 			[$this->params->changes] = $params;
 			parent::select($data, ...$params);
 		}
@@ -98,7 +97,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function browse(Set $data, mixed ...$params): void {
+		public function browse(Set $data, mixed ...$params): void {
 			[$this->params->changes, $id] = $params;
 			parent::browse($data, $id);
 		}
@@ -110,7 +109,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function create(Set $data, mixed ...$params): void {
+		public function create(Set $data, mixed ...$params): void {
 			[$this->params->changes] = $params;
 			parent::create($data, ...$params);
 		}
@@ -122,7 +121,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function update(Set $data, mixed ...$params): void {
+		public function update(Set $data, mixed ...$params): void {
 			[$this->params->changes, $id] = $params;
 			parent::update($data, $id);
 		}
@@ -134,7 +133,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doCreate(Set $data, mixed ...$params): void {
+		public function doCreate(Set $data, mixed ...$params): void {
 			[$this->params->changes] = $params;
 			parent::doCreate($data, ...$params);
 		}
@@ -146,7 +145,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doUpdate(Set $data, mixed ...$params): void {
+		public function doUpdate(Set $data, mixed ...$params): void {
 			[$this->params->changes, $id] = $params;
 			$this->update->set($data, $id);
 		}
@@ -158,7 +157,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doDelete(Set $data, mixed ...$params): void {
+		public function doDelete(Set $data, mixed ...$params): void {
 			[$this->params->changes, $id] = $params;
 			parent::doDelete($data, $id);
 		}

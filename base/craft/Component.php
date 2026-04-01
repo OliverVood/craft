@@ -45,11 +45,11 @@
 
 			$file = "{$path}{$name}.tpl";
 
-			if (file_exists($file)) { Message::error("Компонент '{$file}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error(__('Компонент \':[file]\' уже существует', ['file' => $file])); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 
-			Message::success("Компонент '{$file}' создан");
+			Message::success(__(	'"Компонент \':[file]\' создан', ['file' => $file]));
 
 			return true;
 		}

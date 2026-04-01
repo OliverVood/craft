@@ -33,7 +33,7 @@
 		public function __toString(): string {
 			buffer()->start();
 			if ($this->count > 1) {
-				echo '<div class = "pagination">';
+				echo '<div class = "component pagination">';
 				if ($this->current > 1) {
 					echo $this->first(1);
 					echo $this->previous($this->current - 1);

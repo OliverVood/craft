@@ -5,6 +5,8 @@
 	/** @var Base\Link\Right $action */
 	/** @var string $textBtn */
 	/** @var Base\Editor\Controller $editor */
+
+	if (!$action) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'do_update'])));
 ?>
 <div class = "view editor create">
 	<div class = "navigate">

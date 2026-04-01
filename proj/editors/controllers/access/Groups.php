@@ -21,8 +21,8 @@
 			$this->access->validate([
 				'id' => ['required', 'int', 'foreign:craft,groups,id'],
 			]);
-			$this->access->text('title', 'Права группы');
-			$this->access->text('responseOkSet', 'Права группы установлены');
+			$this->access->text('title', __('Права группы'));
+			$this->access->text('responseOkSet', __('Права группы установлены'));
 		}
 
 		/**

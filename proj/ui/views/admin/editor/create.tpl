@@ -5,6 +5,8 @@
 	/** @var Base\Link\Right $action */
 	/** @var string $textBtn */
 	/** @var Base\Editor\Controller $editor */
+
+	if (!$action) app()->error(new Exception(__("Link ':[link]' for editor is not defined", ['link' => 'do_create'])));
 ?>
 <div class = "view editor create">
 	<div class = "navigate">
@@ -21,11 +23,13 @@
 			<?php foreach ($fields->each() as /** @var Base\Editor\Skins\Skin $field */ $field) { if ($field->isHide()) continue; ?>
 				<tr>
 					<th><?= $field->getTitle(); ?>:</th>
-					<td><?= $field->format(''); ?></td>
+					<td><?= $field->format($item[$field->getName()] ?? ''); ?></td>
 				</tr>
 			<?php } ?>
 			</tbody>
 		</table>
-		<input type = "submit" value = "<?= $textBtn; ?>" onclick = "<?= $action->click(); ?>">
+		<div class = "m-t-24">
+			<input type = "submit" value = "<?= $textBtn; ?>" onclick = "<?= $action->click(); ?>">
+		</div>
 	</form>
 </div>

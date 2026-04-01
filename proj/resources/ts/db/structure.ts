@@ -14,7 +14,7 @@ namespace Admin {
 
 			$structure							: HTMLDivElement;
 			$panel								: HTMLDivElement | null = null;
-			$displayValue						: HTMLAnchorElement | null = null;
+			$displayValueContent						: HTMLAnchorElement | null = null;
 
 			constructor(data: DataDB) {
 				this.displayMode				= Structure.displayDescriptions;
@@ -41,19 +41,21 @@ namespace Admin {
 
 				let $coverDisplay = document.createElement('div');
 				let $displayKey = document.createElement('span');
-				this.$displayValue = document.createElement('a');
+				let $displayValue = document.createElement('span');
+				this.$displayValueContent = document.createElement('a');
 				$displayKey.innerText = __('Отображать');
-				this.$displayValue.className = 'display';
+				this.$displayValueContent.className = 'display';
 
 
 				this.renderDisplayMode();
 
 				this.$structure.append(this.$panel);
 				$coverName.append($nameKey, $nameValue);
-				$coverDisplay.append($displayKey, this.$displayValue)
+				$coverDisplay.append($displayKey, $displayValue);
+				$displayValue.append(this.$displayValueContent);
 				this.$panel.append($coverName, $coverDisplay);
 
-				this.$displayValue.addEventListener('click', () => this.switchDisplayMode());
+				this.$displayValueContent.addEventListener('click', () => this.switchDisplayMode());
 			}
 
 			/**
@@ -79,12 +81,12 @@ namespace Admin {
 					case Structure.displayNames:
 						this.$structure.classList.remove('display_description');
 						this.$structure.classList.add('display_name');
-						(this.$displayValue as HTMLAnchorElement).innerText = __('Названия');
+						(this.$displayValueContent as HTMLAnchorElement).innerText = __('Названия');
 						break;
 					case Structure.displayDescriptions:
 						this.$structure.classList.remove('display_name');
 						this.$structure.classList.add('display_description');
-						(this.$displayValue as HTMLAnchorElement).innerText = __('Описание');
+						(this.$displayValueContent as HTMLAnchorElement).innerText = __('Описание');
 						break;
 				}
 			}

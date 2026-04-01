@@ -6,7 +6,6 @@
 
 	use Base\ControllerAccess;
 	use Base\Data\Set;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models;
 
 	/**
@@ -23,8 +22,11 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function structure(): void {
-			if (!$this->allow('structure')) response()->forbidden(__('Не достаточно прав'));
+		public function structure(): void {
+			if (!$this->allow('structure')) {
+				response()->forbidden(__('Недостаточно прав'));
+				return;
+			}
 
 			/** @var Models\DBs $dbs */ $dbs = model('dbs');
 
@@ -40,8 +42,11 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function check(): void {
-			if (!$this->allow('check')) response()->forbidden(__('Не достаточно прав'));
+		public function check(): void {
+			if (!$this->allow('check')) {
+				response()->forbidden(__('Недостаточно прав'));
+				return;
+			}
 
 			/** @var Models\DBs $dbs */ $dbs = model('dbs');
 
@@ -60,14 +65,20 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function make(Set $data): void {
-			if (!$this->allow('make')) response()->forbidden(__('Не достаточно прав'));
+		public function make(Set $data): void {
+			if (!$this->allow('make')) {
+				response()->forbidden(__('Недостаточно прав'));
+				return;
+			}
 
 			/** @var Models\DBs $dbs */ $dbs = model('dbs');
 
 			$data = $data->inputArray('tables')->data([]);
 
-			if (!$dbs->make($data)) response()->unprocessableEntity(__('Ошибка выполнения'));
+			if (!$dbs->make($data)) {
+				response()->unprocessableEntity(__('Ошибка выполнения'));
+				return;
+			}
 
 			$data = $dbs->check();
 			$action = linkInternal('dbs_make')->path();

@@ -14,9 +14,9 @@
 
 		/**
 		 * Before
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {
+		public function inlet(): bool {
 			/** @var Models\Clients $clients */ $clients = model('clients');
 			/** @var Models\Statistics $statistics */ $statistics = model('statistics');
 
@@ -27,12 +27,16 @@
 			$methodVirtual = request()->methodVirtual();
 
 			$statistics->addRequest($clientId, $ip, $url, $method, $methodVirtual);
+
+			return true;
 		}
 
 		/**
 		 * After
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {  }
+		public function outlet(): bool {
+			return true;
+		}
 
 	}

@@ -14,20 +14,24 @@
 
 		/**
 		 * Before
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {
+		public function inlet(): bool {
 			/** @var Models\Users $users */ $users = model('users');
 
-			if ($users->isAuth()) return;
+			if ($users->isAuth()) return true;
 
 			response()->unauthorized(__('Пожалуйста, авторизуйтесь'));
+
+			return false;
 		}
 
 		/**
 		 * After
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {  }
+		public function outlet(): bool {
+			return true;
+		}
 
 	}

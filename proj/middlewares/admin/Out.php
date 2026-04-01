@@ -10,23 +10,25 @@
 	use Proj\UI\Templates\Admin;
     use stdClass;
 
-    /**
-     * @middleware
+	/**
+	 * @middleware
 	 * Вывод в шаблон
 	 */
 	class Out extends Middleware {
 
 		/**
 		 * Before
-		 * @return void
+		 * @return bool
 		 */
-		public function inlet(): void {  }
+		public function inlet(): bool {
+			return true;
+		}
 
 		/**
 		 * After
-		 * @return void
+		 * @return bool
 		 */
-		public function outlet(): void {
+		public function outlet(): bool {
 			/** @var Admin $template */ $template = template();
 
 			$this->setHead($template->layout->header);
@@ -35,6 +37,8 @@
 			$this->setFooter($template->layout->footer);
 
 			template()->browse();
+
+			return true;
 		}
 
 		/**
@@ -69,11 +73,12 @@
 		private function setMenu(Section $section): void {
 			$menu = new stdClass();
 
-            $menu->items = [];
+			$menu->items = [];
 
 			$this->setMainToMenu($menu);
 			$this->setDevelopmentToMenu($menu);
 			$this->setAccessToMenu($menu);
+			$this->setLocalizationToMenu($menu);
 			$this->setSiteToMenu($menu);
 
 			$section->push(view('admin.out.menu', compact('menu')));
@@ -107,15 +112,15 @@
 			$items = [];
 
 			/* Раздел Craft */
-			if (linkRight('craft')->allow() || linkRight('craft_action')->allow()) {
+			if (allow('craft', 'select') || allow('craft', 'update')) {
 				$items['craft'] = $this->group(__('Ремесло'), 'cr');
 
-				if (linkRight('craft')->allow()) {
-					$items['craft']->data->items[] = $this->link('right', 'craft', __('Документация'));
+				if (allow('craft', 'select')) {
+					$items['craft']->data->items[] = $this->link('right', 'craft_documentation', __('Документация'));
 					$items['craft']->data->items[] = $this->link('right', 'craft_help', __('Помощь'));
 				}
 
-				if (linkRight('craft_action')->allow()) {
+				if (allow('craft', 'update')) {
 					$group = $this->group(__('Создать'), 'create');
 					$group->data->items[] = $this->link('right', 'craft_action', __('Признак'), ['entity' => 'feature', 'action' => 'create']);
 					$group->data->items[] = $this->separator();
@@ -189,6 +194,57 @@
 
 			if (isset($items['groups'])) $block->data->items[] = $items['groups'];
 			if (isset($items['users'])) $block->data->items[] = $items['users'];
+
+			$menu->items[] = $block;
+		}
+
+		/**
+		 * Построение меню: раздел локализации
+		 * @param stdClass $menu - меню
+		 * @return void
+		 */
+		private function setLocalizationToMenu(stdClass $menu): void {
+			$items = [];
+
+			$itemsLanguages = [];
+			if (linkRight('languages_select')->allow()) $itemsLanguages[] = $this->link('right', 'languages_select', __('List'), ['page' => 1]);
+			if (linkRight('languages_create')->allow()) $itemsLanguages[] = $this->link('right', 'languages_create', __('Add'));
+			if ($itemsLanguages) {
+				$items['languages'] = $this->group(__('Languages'), 'languages');
+				$items['languages']->data->items = $itemsLanguages;
+			}
+
+			$itemsContexts = [];
+			if (linkRight('contexts_select')->allow()) $itemsContexts[] = $this->link('right', 'contexts_select', __('List'), ['page' => 1]);
+			if (linkRight('contexts_create')->allow()) $itemsContexts[] = $this->link('right', 'contexts_create', __('Add'));
+			if ($itemsContexts) {
+				$items['contexts'] = $this->group(__('Contexts'), 'contexts');
+				$items['contexts']->data->items = $itemsContexts;
+			}
+
+			$itemsAliases = [];
+			if (linkRight('aliases_select')->allow()) $itemsAliases[] = $this->link('right', 'aliases_select', __('List'), ['page' => 1]);
+			if (linkRight('aliases_create')->allow()) $itemsAliases[] = $this->link('right', 'aliases_create', __('Add'));
+			if ($itemsAliases) {
+				$items['aliases'] = $this->group(__('Aliases'), 'aliases');
+				$items['aliases']->data->items = $itemsAliases;
+			}
+
+			$itemsTranslations = [];
+			if (linkRight('translations_select')->allow()) $itemsTranslations[] = $this->link('right', 'translations_select', __('List'), ['page' => 1]);
+			if ($itemsTranslations) {
+				$items['translations'] = $this->group(__('Translations'), 'translations');
+				$items['translations']->data->items = $itemsTranslations;
+			}
+
+			if (!$items) return;
+
+			$block = $this->block(__('Localization'));
+
+			if (isset($items['languages'])) $block->data->items[] = $items['languages'];
+			if (isset($items['contexts'])) $block->data->items[] = $items['contexts'];
+			if (isset($items['aliases'])) $block->data->items[] = $items['aliases'];
+			if (isset($items['translations'])) $block->data->items[] = $items['translations'];
 
 			$menu->items[] = $block;
 		}

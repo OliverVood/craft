@@ -55,6 +55,7 @@
 						case 'unset_if_empty': $unsetIfEmpty[] = $key; break;
 						case 'foreign': $value = self::foreign($key, $value, $name, $arguments, $errors); break;
 						case 'unique': $value = self::unique($key, $value, $name, $arguments, $errors); break;
+						case 'unique_current_exclude': $value = self::uniqueCurrentExclude($key, $value, $name, $arguments, $data['id'], $errors); break;
 						case 'datetime': $value = self::datetime($key, $value, $name, $errors); break;
 						case 'utc': $value = self::datetimeUTC($key, $value, $name, $errors); break;
 						case 'json': $value = self::json($value); break;
@@ -233,7 +234,7 @@
 		 * @return mixed
 		 */
 		private static function len(string $key, mixed $value, string $name, int $len, & $errors): mixed {
-			if (mb_strlen($value) != $len) return $value;
+			if (mb_strlen($value) == $len) return $value;
 
 			$errors[$key][] = __('Длина поля «:[name]» не может быть отличной :[len]', ['name' => $name, 'len' => $len]);
 
@@ -337,6 +338,7 @@
 				->fields('*')
 				->table($arguments[1])
 				->where($arguments[2], $value)
+				->where('state', 100, '!=')
 				->limit(1)
 				->query();
 
@@ -362,6 +364,33 @@
 				->select()
 				->fields('*')
 				->table($arguments[1])
+				->where($arguments[2], $value)
+				->limit(1)
+				->query();
+
+			if ($response->get()) {
+				$errors[$key][] = __('Значение поля «:[name]» уже существует в таблице «:[table]»', ['name' => $name, 'table' => $arguments[1]]);
+				return null;
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Проверяет значение на уникальность в таблице исключая текущюю
+		 * @param string $key - Ключ
+		 * @param int|float|string|null $value - Значение
+		 * @param string $name - Имя
+		 * @param array $arguments - Параметры запроса
+		 * @param $errors - Ошибки
+		 * @return int|float|string|null
+		 */
+		private static function uniqueCurrentExclude(string $key, int|float|string|null $value, string $name, array $arguments, int $id, & $errors): int|float|string|null {
+			$response = db($arguments[0])
+				->select()
+				->fields('*')
+				->table($arguments[1])
+				->where('id', $id, '!=')
 				->where($arguments[2], $value)
 				->limit(1)
 				->query();

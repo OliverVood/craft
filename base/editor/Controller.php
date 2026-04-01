@@ -8,7 +8,7 @@
 	use Base\ControllerAccess;
 	use Base\Data\Set;
 	use Base\Models;
-	use JetBrains\PhpStorm\NoReturn;
+	use Exception;
 	use stdClass;
 
 	require DIR_BASE_EDITOR . 'Link.php';
@@ -65,7 +65,7 @@
 		 * @return void
 		 * @controllerMethod
 		 */
-		#[NoReturn] public function access(Set $data, mixed ...$params): void { $this->access->get($data, ...$params); }
+		public function access(Set $data, mixed ...$params): void { $this->access->get($data, ...$params); }
 
 		/**
 		 * Блок выборки данных
@@ -74,7 +74,11 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function select(Set $data, mixed ...$params): void { $this->select->get($data, ...$params); }
+		public function select(Set $data, mixed ...$params): void {
+			if (!$this->select) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'select'])));
+
+			$this->select->get($data, ...$params);
+		}
 
 		/**
 		 * Блок просмотра данных
@@ -83,7 +87,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function browse(Set $data, mixed ...$params): void { $this->browse->get($data, ...$params); }
+		public function browse(Set $data, mixed ...$params): void { $this->browse->get($data, ...$params); }
 
 		/**
 		 * Блок создания данных
@@ -92,7 +96,11 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function create(Set $data, mixed ...$params): void { $this->create->get($data, ...$params); }
+		public function create(Set $data, mixed ...$params): void {
+			if (!$this->create) app()->error(new Exception(__("The ':[action]' action is not implemented.", ['action' => 'create'])));
+
+			$this->create->get($data, ...$params);
+		}
 
 		/**
 		 * Блок обновления данных
@@ -101,7 +109,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function update(Set $data, mixed ...$params): void { $this->update->get($data, ...$params); }
+		public function update(Set $data, mixed ...$params): void { $this->update->get($data, ...$params); }
 
 		/**
 		 * Устанавливает доступ
@@ -110,7 +118,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function doAccess(Set $data, mixed ...$params): void { $this->access->set($data, ...$params); }
+		public function doAccess(Set $data, mixed ...$params): void { $this->access->set($data, ...$params); }
 
 		/**
 		 * Создание
@@ -119,7 +127,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doCreate(Set $data, mixed ...$params): void { $this->create->set($data, ...$params); }
+		public function doCreate(Set $data, mixed ...$params): void { $this->create->set($data, ...$params); }
 
 		/**
 		 * Обновление
@@ -128,7 +136,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doUpdate(Set $data, mixed ...$params): void { $this->update->set($data, ...$params); }
+		public function doUpdate(Set $data, mixed ...$params): void { $this->update->set($data, ...$params); }
 
 		/**
 		 * Удаление
@@ -137,7 +145,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function doDelete(Set $data, mixed ...$params): void { $this->delete->set($data, ...$params); }
+		public function doDelete(Set $data, mixed ...$params): void { $this->delete->set($data, ...$params); }
 
 		/**
 		 * Изменение состояния
@@ -146,7 +154,7 @@
 		 * @param mixed ...$params - Параметры запроса
 		 * @return void
 		 */
-		#[NoReturn] public function setState(Set $data, mixed ...$params): void { $this->status->set($data, ...$params); }
+		public function setState(Set $data, mixed ...$params): void { $this->status->set($data, ...$params); }
 
 		/**
 		 * Возвращает модель редактора

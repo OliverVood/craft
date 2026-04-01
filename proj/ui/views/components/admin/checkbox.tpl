@@ -2,9 +2,14 @@
 	/** @var string $text */
 	/** @var array $attributes */
 
+	$class = '';
+	if (isset($attributes['class'])) {
+		$class = " {$attributes['class']}";
+		unset($attributes['class']);
+	}
 	$attrs = array_map(function ($key, $value) { $value = str_replace('"', '&#34', $value); return "{$key} = \"{$value}\""; }, array_keys($attributes), $attributes);
 ?>
-<div class = "component checkbox">
+<div class = "component checkbox<?= $class; ?>">
 	<label>
 		<input type = "checkbox" <?= implode(' ', $attrs); ?> onclick = "this.checked ? this.closest('.component.checkbox').classList.add('active') : this.closest('.component.checkbox').classList.remove('active');">
 		<div></div>

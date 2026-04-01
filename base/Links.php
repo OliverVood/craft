@@ -5,6 +5,7 @@
 	namespace Base;
 
 	use Base\Link\Fundamental;
+	use Exception;
 
 	/**
 	 * Для работы со ссылками
@@ -40,6 +41,8 @@
 		 * @return Fundamental
 		 */
 		public function get(string $alias): Fundamental {
+			if (!$this->check($alias)) app()->error(new Exception(__("Link ':[link]' is not defined", ['link' => $alias])));
+
 			return $this->links[$alias];
 		}
 

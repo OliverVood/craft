@@ -51,11 +51,11 @@
 
 			$file = "{$path}{$class}.php";
 
-			if (file_exists($file)) { Message::error("Структура '{$namespace}\\{$class}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error(__('Структура \':[name]\' уже существует', ['name' => "{$namespace}\\{$class}"])); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 
-			Message::success("Структура '{$namespace}\\{$class}' создана");
+			Message::success(__('Структура \':[name]\' создана', ['name' => "{$namespace}\\{$class}"]));
 
 			return true;
 		}

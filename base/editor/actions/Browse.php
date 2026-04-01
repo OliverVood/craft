@@ -10,7 +10,6 @@
 	use Base\Editor\Model;
 	use Base\Helper\Accumulator;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Контроллер-редактор просмотра
@@ -22,8 +21,8 @@
 
 		private Controller $controller;
 
-		public Closure $fnGetLinksNavigate;
 		public Closure $fnPrepareView;
+		public Closure $fnGetLinksNavigate;
 
 		private string $tpl = 'admin.editor.browse';
 
@@ -35,15 +34,15 @@
 
 			$this->access = 'browse';
 
-			$this->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
-			$this->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
-
 			$this->fields = new Fields();
 
 			$this->text('title', 'Просмотр');
 			$this->text('do', 'Просмотреть');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorAccess', 'Недостаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
+
+			$this->fnGetLinksNavigate = fn (array $item) => $this->getLinksNavigate($item);
+			$this->fnPrepareView = fn (int $id, array & $item) => $this->prepareView($id, $item);
 		}
 
 		/**
@@ -52,10 +51,13 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data, int $id): void {
-			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
+		public function get(Set $data, int $id): void {
+			if ($id < 1) {
+				response()->notFound($this->__('responseErrorNotFound'));
+				return;
+			}
 
-			$this->inside($id);
+			if (!$this->inside($id)) return;
 
 			response()->ok();
 		}
@@ -63,14 +65,20 @@
 		/**
 		 * Блок просмотра
 		 * @param int $id - Идентификатор
-		 * @return void
+		 * @return bool
 		 */
-		public function inside(int $id): void {
-			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
+		public function inside(int $id): bool {
+			if (!$this->allow($id)) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return false;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			if (!$item = $model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
+			if (!$item = $model->browse($id, ['*'])) {
+				response()->unprocessableEntity($this->__('responseErrorNotFound'));
+				return false;
+			}
 
 			$prepareView = $this->fnPrepareView;
 			$prepareView($id, $item);
@@ -81,7 +89,17 @@
 
 			response()->history($this->controller->linkBrowse, array_merge(['id' => $id], (array)$this->controller->params));
 			response()->section('content', view($this->tpl, compact('title', 'fields', 'id', 'item', 'editor')));
+
+			return true;
 		}
+
+		/**
+		 * Подготовка данных для блока просмотра
+		 * @param int $id - Идентификатор
+		 * @param array $item - Данные
+		 * @return void
+		 */
+		private function prepareView(int $id, array & $item): void {  }
 
 		/**
 		 * Возвращает ссылки навигации
@@ -95,13 +113,5 @@
 
 			return $links;
 		}
-
-		/**
-		 * Подготовка данных для блока просмотра
-		 * @param int $id - Идентификатор
-		 * @param array $item - Данные
-		 * @return void
-		 */
-		private function prepareView(int $id, array & $item): void {  }
 
 	}

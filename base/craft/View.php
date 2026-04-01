@@ -45,11 +45,11 @@
 
 			$file = "{$path}{$name}.tpl";
 
-			if (file_exists($file)) { Message::error("Отображение '{$file}' уже существует"); return false; }
+			if (file_exists($file)) { Message::error(__('Отображение \':[file]\' уже существует', ['file' => $file])); return false; }
 
 			Helper::generateFileAndSave($sample, $replace, $file);
 
-			Message::success("Отображение '{$file}' создано");
+			Message::success(__('Отображение \':[file]\' создано', ['file' => $file]));
 
 			return true;
 		}

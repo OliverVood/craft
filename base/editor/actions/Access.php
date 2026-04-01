@@ -12,7 +12,6 @@
 	use Base\Editor\Model;
 	use Base\Helper\Accumulator;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Контроллер-редактор прав
@@ -36,15 +35,15 @@
 
 			$this->access = 'access';
 
-			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
-
 			$this->text('title', 'Права доступа');
 			$this->text('do', 'Установить права доступа');
 			$this->text('btn', 'Изменить');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorAccess', 'Недостаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
 			$this->text('responseErrorValidate', 'Ошибка валидации данных');
 			$this->text('responseOkSet', 'Права доступа установлены');
+
+			$this->fnGetLinksNavigate = fn () => $this->getLinksNavigate();
 		}
 
 		/**
@@ -53,8 +52,11 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function get(Set $data, int $id): void {
-			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
+		public function get(Set $data, int $id): void {
+			if (!$this->allow($id)) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
@@ -79,15 +81,21 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data, int $id): void {
+		public function set(Set $data, int $id): void {
 			$rights = request()->data()->inputArray('rights')->data([]);
 
-			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
+			if (!$this->allow($id)) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
 			$errors = [];
-			if (!$this->validation(['id' => $id], $errors)) response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
+			if (!$this->validation(['id' => $id], $errors)) {
+				response()->unprocessableEntity($this->__('responseErrorValidate'), $errors);
+				return;
+			}
 
 			$model->setAccess($id, $rights);
 

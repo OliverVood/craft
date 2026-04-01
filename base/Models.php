@@ -4,6 +4,8 @@
 
 	namespace Base;
 
+	use Exception;
+
 	/**
 	 * Модели
 	 * @property Model[] $models
@@ -35,10 +37,14 @@
 		 */
 		public function load(string $name, int $source): void {
 			$path = str_replace('.', '/', $name);
-			switch ($source) {
-				case self::SOURCE_MODELS: require_once DIR_PROJ_MODELS . $path . '.php'; break;
-				case self::SOURCE_EDITORS: require_once DIR_PROJ_EDITORS_MODELS . $path . '.php'; break;
-			}
+			$file = match ($source) {
+				self::SOURCE_MODELS => DIR_PROJ_MODELS . $path . '.php',
+				self::SOURCE_EDITORS => DIR_PROJ_EDITORS_MODELS . $path . '.php',
+			};
+
+			if (!file_exists($file)) app()->error(new Exception(__("Model ':[name]' not found", ['name' => $name])));
+
+			require_once $file;
 		}
 
 		/**

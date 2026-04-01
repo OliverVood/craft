@@ -6,7 +6,6 @@
 
 	use Base\Controller;
 	use Base\Data\Set;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models\News as Model;
 	use Proj\UI\Templates\Site;
 
@@ -24,7 +23,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function index(): void {
+		public function index(): void {
 			/** @var Model $news */ $news = model('news');
 
 			/** @var Site $template */ $template = template();
@@ -41,7 +40,7 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function show(Set $data, int $id): void {
+		public function show(Set $data, int $id): void {
 			/** @var Model $changes */ $changes = model('changes');
 
 			/** @var Site $template */ $template = template();

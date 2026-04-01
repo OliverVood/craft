@@ -6,7 +6,6 @@
 
 	use Base\Controller;
 	use Base\Data\Set;
-	use JetBrains\PhpStorm\NoReturn;
 	use Proj\Models;
 
 	/**
@@ -24,7 +23,7 @@
 		 * @param Set $data - Пользовательские данные
 		 * @return void
 		 */
-		#[NoReturn] public function actions(Set $data): void {
+		public function actions(Set $data): void {
 			$errors = [];
 			$validated = validation($data->defined()->all(), [
 				'object' => ['string', 'required'],

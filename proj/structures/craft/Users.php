@@ -52,6 +52,7 @@
 			$this->table_access_groups->uint32('instance', __('Экземпляр '));
 			$this->table_access_groups->uint16('right', __('Право'));
 			$this->table_access_groups->enum('permission', [Access::PERMISSION_UNDEFINED, Access::PERMISSION_YES, Access::PERMISSION_NO], __('Разрешение'));
+			$this->table_access_groups->addForeign('foreign', ['parent'], 'groups', ['id']);
 
 			$this->table_access_users = $structure->table('access_users', __('Безопасность пользователей'));
 			$this->table_access_users->uint32('parent', __('ID пользователя'));
@@ -59,6 +60,7 @@
 			$this->table_access_users->uint32('instance', __('Элемент'));
 			$this->table_access_users->uint16('right', __('Право'));
 			$this->table_access_users->enum('permission', [Access::PERMISSION_UNDEFINED, Access::PERMISSION_YES, Access::PERMISSION_NO], __('Разрешение'));
+			$this->table_access_users->addForeign('foreign', ['parent'], 'users', ['id']);
 		}
 
 	}

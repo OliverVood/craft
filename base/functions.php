@@ -34,7 +34,6 @@
 	use Base\UI\Component;
 	use Base\UI\Template;
 	use Base\UI\View;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Возвращает / инициализирует экземпляр приложения
@@ -203,6 +202,102 @@
 	}
 
 	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorSelect(string $name, string $address = ''): void {
+		if (!$address) $address = "{$name}?page=:[page]";
+		linkRegRight("{$name}_select", $name, 'select', $address, /* @lang JavaScript */ "Base.Request.get('{$address}').then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorBrowse(string $name, string $address = ''): void {
+		if (!$address) $address = "{$name}/:[id]";
+		linkRegRight("{$name}_browse", $name, 'browse', $address, /* @lang JavaScript */"Base.Request.get('{$address}').then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorUpdate(string $name, string $address = ''): void {
+		if (!$address) $address = "{$name}/:[id]/update";
+		linkRegRight("{$name}_update", $name, 'update', $address, /* @lang JavaScript */"Base.Request.get('{$address}').then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorCreate(string $name, string $address = ''): void {
+		if (!$address) $address = "{$name}/create";
+		linkRegRight("{$name}_create", $name, 'create', $address, /* @lang JavaScript */"Base.Request.get('{$address}').then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @param string $addressDo - Адрес удаления
+	 * @param string|null $text
+	 * @return void
+	 */
+	function linkRegEditorDelete(string $name, string $address = '', string $addressDo = '', ?string $text = null): void {
+		if (!$address) $address = "{$name}/:[id]/delete";
+		if (!$addressDo) $addressDo = "{$name}/:[id]";
+		if (is_null($text)) $text = __('Delete item?');
+		$csrf = app()->csrf();
+		linkRegRight("{$name}_delete", $name, 'delete', $address, /* @lang JavaScript */ "new Base.UI.Components.ConfirmDelete('{$text}', '{$addressDo}', '{$csrf}'); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorDoCreate(string $name, string $address = ''): void {
+		if (!$address) $address = $name;
+		linkRegRight("{$name}_do_create", $name, 'create', $address, /* @lang JavaScript */ "Base.Request.submit(this).then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @return void
+	 */
+	function linkRegEditorDoUpdate(string $name, string $address = ''): void {
+		if (!$address) $address = "{$name}/:[id]";
+		linkRegRight("{$name}_do_update", $name, 'update', $address, /* @lang JavaScript */ "Base.Request.submit(this).then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
+	 * Регистрирует стандартную внутреннюю ссылку редактора
+	 * @param string $name - Наименование
+	 * @param string $address - Адрес
+	 * @param string|null $text - Текст
+	 * @return void
+	 */
+	function linkRegEditorDoDelete(string $name, string $address = '', ?string $text = null): void {
+		if (!$address) $address = "{$name}/:[id]";
+		if (is_null($text)) $text = __('Удалить элемент');
+		$csrf = app()->csrf();
+		linkRegRight("{$name}_do_delete", $name, 'delete', $address, /* @lang JavaScript */ "if (confirm({$text})) Base.Request.delete('{$address}', {__csrf: '{$csrf}'}).then(result => Base.Response.execute(result)); return false;");
+	}
+
+	/**
 	 * Возвращает внешнюю ссылку по псевдониму
 	 * @param string $alias - Псевдоним
 	 * @return External
@@ -350,7 +445,7 @@
 	 * @param string $title - Заголовок
 	 * @return void
 	 */
-	#[NoReturn] function dd(mixed $var, string $title = ''): void {
+	function dd(mixed $var, string $title = ''): void {
 		debugger()->dd($var, $title);
 	}
 

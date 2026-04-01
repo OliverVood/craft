@@ -5,20 +5,19 @@
 	namespace Base\Helper;
 
 	use Base\Link\Internal;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Ответы от сервера
 	 */
 	class Response {
-		const TYPE_DATA = 'data';
-		const TYPE_SECTIONS = 'sections';
-		const TYPE_HISTORY = 'history';
-		const TYPE_DEBUGGER = 'debugger';
-		const TYPE_NOTICES = 'notices';
-		const TYPE_NOTICE_OK = 'ok';
-		const TYPE_NOTICE_INFO = 'info';
-		const TYPE_NOTICE_ERROR = 'error';
+		const string TYPE_DATA = 'data';
+		const string TYPE_SECTIONS = 'sections';
+		const string TYPE_HISTORY = 'history';
+		const string TYPE_DEBUGGER = 'debugger';
+		const string TYPE_NOTICES = 'notices';
+		const string TYPE_NOTICE_OK = 'ok';
+		const string TYPE_NOTICE_INFO = 'info';
+		const string TYPE_NOTICE_ERROR = 'error';
 
 		private array $response = [];
 
@@ -28,7 +27,7 @@
 		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function ok(?array $data = null, string $notice = ''): void {
+		public function ok(?array $data = null, string $notice = ''): void {
 			if (!is_null($data)) $this->data($data);
 			if ($notice) $this->noticeOk($notice);
 			$this->send(200);
@@ -40,7 +39,7 @@
 		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function created(?array $data = [], string $notice = ''): void {
+		public function created(?array $data = [], string $notice = ''): void {
 			if (!is_null($data)) $this->data($data);
 			if ($notice) $this->noticeOk($notice);
 			$this->send(201);
@@ -51,7 +50,7 @@
 		 * @param array $data - Данные
 		 * @return void
 		 */
-		#[NoReturn] public function accepted(array $data = []): void {
+		public function accepted(array $data = []): void {
 			if ($data) $this->data($data);
 			$this->send(202);
 		}
@@ -62,7 +61,7 @@
 		 * @param array $data - Данные
 		 * @return void
 		 */
-		#[NoReturn] public function badRequest(string $notice = '', array $data = []): void {
+		public function badRequest(string $notice = '', array $data = []): void {
 			if ($notice) $this->noticeError($notice);
 			if ($data) $this->data($data);
 			$this->send(400);
@@ -73,7 +72,7 @@
 		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function unauthorized(string $notice = ''): void {
+		public function unauthorized(string $notice = ''): void {
 			if ($notice) $this->noticeError($notice);
 			$this->send(401);
 		}
@@ -83,7 +82,7 @@
 		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function forbidden(string $notice = ''): void {
+		public function forbidden(string $notice = ''): void {
 			if ($notice) $this->noticeError($notice);
 			$this->send(403);
 		}
@@ -93,7 +92,7 @@
 		 * @param string $notice - Оповещение
 		 * @return void
 		 */
-		#[NoReturn] public function notFound(string $notice = ''): void {
+		public function notFound(string $notice = ''): void {
 			if ($notice) $this->noticeError($notice);
 			$this->send(404);
 		}
@@ -104,7 +103,7 @@
 		 * @param array $data - Данные
 		 * @return void
 		 */
-		#[NoReturn] public function unprocessableEntity(string $notice = '', array $data = []): void {
+		public function unprocessableEntity(string $notice = '', array $data = []): void {
 			if ($notice) $this->noticeError($notice);
 			if ($data) $this->data($data);
 			$this->send(422);
@@ -115,7 +114,7 @@
 		 * @param int $code - Код
 		 * @return void
 		 */
-		#[NoReturn] private function send(int $code): void {
+		private function send(int $code): void {
 			if (env('APP_DEBUGGER')) $this->debugger(debugger()->getLog());
 			http_response_code($code);
 			$this->sendJSON($this->response);
@@ -126,10 +125,10 @@
 		 * @param array $data - Данные
 		 * @return void
 		 */
-		#[NoReturn] private function sendJSON(array $data): void {
+		private function sendJSON(array $data): void {
 			header("Cache-Control: no-cache, no-store, must-revalidate");
 			header('Content-Type: application/json; charset=utf-8');
-			die(json_encode($data));
+			echo json_encode($data);
 		}
 
 		/**

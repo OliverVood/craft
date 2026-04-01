@@ -21,7 +21,7 @@
 			$this->access->validate([
 				'id' => ['required', 'int', 'foreign:craft,users,id'],
 			]);
-			$this->access->text('title', 'Права пользователя');
+			$this->access->text('title', __('Права пользователя'));
 			$this->access->text('responseOkSet', 'Права пользователя установлены');
 		}
 

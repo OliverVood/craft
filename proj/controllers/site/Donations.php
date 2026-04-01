@@ -5,7 +5,6 @@
 	namespace Proj\Controllers\Site;
 
 	use Base\Controller;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Отвечает за обработку запросов к донатам
@@ -21,7 +20,7 @@
 		 * @controllerMethod
 		 * @return void
 		 */
-		#[NoReturn] public function index(): void {
+		public function index(): void {
 			response()->ok(['html' =>view('site.donations.index')]);
 		}
 

@@ -5,15 +5,15 @@
 		<div data-field = "name"><input type = "text" name = "name" placeholder = "<?= __('Псевдоним редактора'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<div data-field = "feature"><input type = "text" name = "params[feature]" placeholder = "<?= __('Псевдоним признака'); ?>">
+		<div data-field = "feature" class = "m-t-8"><input type = "text" name = "params[feature]" placeholder = "<?= __('Псевдоним признака'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<div data-field = "database"><input type = "text" name = "params[database]" placeholder = "<?= __('Псевдоним базы данных'); ?>">
+		<div data-field = "database" class = "m-t-8"><input type = "text" name = "params[database]" placeholder = "<?= __('Псевдоним базы данных'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<div data-field = "table"><input type = "text" name = "params[table]" placeholder = "<?= __('Название таблицы'); ?>">
+		<div data-field = "table" class = "m-t-8"><input type = "text" name = "params[table]" placeholder = "<?= __('Название таблицы'); ?>">
 			<div class = "errors"></div>
 		</div>
-		<div><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
+		<div class = "m-t-24"><input type = "submit" value = "<?= __('Создать'); ?>" onclick = "<?= linkRight('craft_run')->click(); ?>"></div>
 	</form>
 </div>

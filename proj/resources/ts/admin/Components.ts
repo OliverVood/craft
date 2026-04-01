@@ -13,6 +13,10 @@ namespace Base {
 				public constructor(label: string = '', attrs?: UIElementAttributes) {
 					super('<div/>', {class: 'component checkbox'});
 
+					if (attrs?.class) {
+						this.addClass(...(attrs.class as String).split(' '))
+					}
+
 					let $label = el('<label/>');
 					let $input = el('<input/>', {type: 'checkbox'});
 					let $div = el('<div/>');
@@ -59,6 +63,31 @@ namespace Base {
 					super('ok', text);
 				}
 
+			}
+
+			export class ConfirmDelete {
+				public constructor(text: string, address: string, csrf: string) {
+					let $wrap = el('<div/>', {class: 'view editor delete'});
+					let $text = el('<div/>', {class: 'text', text: text});
+					let $manager = el('<div/>', {class: 'manager'});
+					let $btnConfirm = el('<button/>', {text: __('Удалить')});
+					let $btnCancel = el('<button/>', {text: __('Отмена')});
+
+					$wrap.append(
+						$text,
+						$manager.append(
+							$btnCancel, $btnConfirm
+						)
+					);
+
+					let wind = new (globalThis as any).Base.UI.Window($wrap);
+
+					$btnCancel.on('click', () => wind.Close());
+					$btnConfirm.on('click', () => {
+						(globalThis as any).Base.Request.delete(address, {__csrf: csrf}).then((result: ResponseSuccess) => (globalThis as any).Base.Response.execute(result));
+						wind.Close();
+					});
+				}
 			}
 
 		}

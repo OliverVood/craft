@@ -166,13 +166,13 @@
 		 */
 		public static function getRightsFromFlags(array $flags): ?array {
 			$defaultRights = [
-				'access' => 'Назначение прав',
-				'select' => 'Выборка',
-				'browse' => 'Вывод',
-				'create' => 'Создание',
-				'update' => 'Изменение',
-				'delete' => 'Удаление',
-				'status' => 'Изменение состояния',
+				'access' => 'Permission',
+				'select' => 'Select',
+				'browse' => 'Browse',
+				'create' => 'Create',
+				'update' => 'Update',
+				'delete' => 'Delete',
+				'status' => 'State',
 			];
 
 			$rights = [];

@@ -10,7 +10,6 @@
 	use Base\Editor\Controller;
 	use Base\Editor\Model;
 	use Closure;
-	use JetBrains\PhpStorm\NoReturn;
 
 	/**
 	 * Контроллер-редактор удаления
@@ -31,14 +30,14 @@
 
 			$this->access = 'delete';
 
-			$this->fnPrepareData = fn (int $id) => $this->prepareData($id);
-
 			$this->text('do', 'Удалить');
 			$this->text('confirm', 'Удалить?');
-			$this->text('responseErrorAccess', 'Не достаточно прав');
+			$this->text('responseErrorAccess', 'Недостаточно прав');
 			$this->text('responseErrorNotFound', 'Элемент не найден');
 			$this->text('responseErrorDelete', 'Ошибка удаления');
 			$this->text('responseOk', 'Удалено');
+
+			$this->fnPrepareData = fn (int $id) => $this->prepareData($id);
 		}
 
 		/**
@@ -47,18 +46,30 @@
 		 * @param int $id - Идентификатор
 		 * @return void
 		 */
-		#[NoReturn] public function set(Set $data, int $id): void {
-			if ($id < 1) response()->notFound($this->__('responseErrorNotFound'));
-			if (!$this->allow($id)) response()->forbidden($this->__('responseErrorAccess'));
+		public function set(Set $data, int $id): void {
+			if ($id < 1) {
+				response()->notFound($this->__('responseErrorNotFound'));
+				return;
+			}
+			if (!$this->allow($id)) {
+				response()->forbidden($this->__('responseErrorAccess'));
+				return;
+			}
 
 			/** @var Model $model */ $model = $this->controller->model();
 
-			if (!$model->browse($id, ['*'])) response()->unprocessableEntity($this->__('responseErrorNotFound'));
+			if (!$model->browse($id, ['*'])) {
+				response()->unprocessableEntity($this->__('responseErrorNotFound'));
+				return;
+			}
 
 			$prepareData = $this->fnPrepareData;
 			$prepareData($id);
 
-			if (!$model->delete($id)) response()->unprocessableEntity($this->__('responseErrorDelete'));
+			if (!$model->delete($id)) {
+				response()->unprocessableEntity($this->__('responseErrorDelete'));
+				return;
+			}
 
 			$this->controller->select->inside(old('page')->int(1));
 			response()->ok(null, $this->__('responseOk'));

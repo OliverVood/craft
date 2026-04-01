@@ -50,10 +50,52 @@
 			]),
 
 			route()->group('/craft', [
-				route()->get('', 'admin.craft::index'),
+				route()->get('/documentation', 'admin.craft::documentation'),
 				route()->get('/help', 'admin.craft::help'),
 				route()->get('/:(str)/create', 'admin.craft::create'),
 				route()->post('/:(str)/:(str)', 'admin.craft::run'),
+			]),
+
+			route()->group('/locales', [
+				route()->group('/languages', [
+					route()->get('', 'locales.languages::select', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)', 'locales.languages::browse', Controllers::SOURCE_EDITORS),
+					route()->get('/create', 'locales.languages::create', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)/update', 'locales.languages::update', Controllers::SOURCE_EDITORS),
+					route()->post('', 'locales.languages::doCreate', Controllers::SOURCE_EDITORS),
+					route()->patch('/:(num)', 'locales.languages::doUpdate', Controllers::SOURCE_EDITORS),
+					route()->delete('/:(num)', 'locales.languages::doDelete', Controllers::SOURCE_EDITORS),
+				]),
+
+				route()->group('/contexts', [
+					route()->get('', 'locales.contexts::select', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)', 'locales.contexts::browse', Controllers::SOURCE_EDITORS),
+					route()->get('/create', 'locales.contexts::create', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)/update', 'locales.contexts::update', Controllers::SOURCE_EDITORS),
+					route()->post('', 'locales.contexts::doCreate', Controllers::SOURCE_EDITORS),
+					route()->patch('/:(num)', 'locales.contexts::doUpdate', Controllers::SOURCE_EDITORS),
+					route()->delete('/:(num)', 'locales.contexts::doDelete', Controllers::SOURCE_EDITORS),
+				]),
+
+				route()->group('/aliases', [
+					route()->get('', 'locales.aliases::select', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)', 'locales.aliases::browse', Controllers::SOURCE_EDITORS),
+					route()->get('/create', 'locales.aliases::create', Controllers::SOURCE_EDITORS),
+					route()->get('/:(num)/update', 'locales.aliases::update', Controllers::SOURCE_EDITORS),
+					route()->post('', 'locales.aliases::doCreate', Controllers::SOURCE_EDITORS),
+					route()->patch('/:(num)', 'locales.aliases::doUpdate', Controllers::SOURCE_EDITORS),
+					route()->delete('/:(num)', 'locales.aliases::doDelete', Controllers::SOURCE_EDITORS),
+				]),
+
+				route()->group('/translations', [
+					route()->get('', 'locales.translations::select', Controllers::SOURCE_EDITORS),
+//					route()->get('/:(num)', 'locales.translations::browse', Controllers::SOURCE_EDITORS),
+//					route()->get('/create', 'locales.translations::create', Controllers::SOURCE_EDITORS),
+//					route()->get('/:(num)/update', 'locales.translations::update', Controllers::SOURCE_EDITORS),
+//					route()->post('', 'locales.translations::doCreate', Controllers::SOURCE_EDITORS),
+//					route()->patch('/:(num)', 'locales.translations::doUpdate', Controllers::SOURCE_EDITORS),
+//					route()->delete('/:(num)', 'locales.translations::doDelete', Controllers::SOURCE_EDITORS),
+				]),
 			]),
 
 			route()->group('/news', [
